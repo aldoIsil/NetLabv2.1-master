@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, Muestra el detalle de los datos del catalogo de servicio "Off Line"
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.DetalleCatalogo>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+//Json.Encode(new {Tipo = 1, Maximo = 10, Minmo = 20   });
+}
+
+<h4 class="center">Detalle del Catalogo </h4>
+<br />
+
+@using (Html.BeginForm("Details", "DetalleCatalogoOffline", FormMethod.Post, new { @id = "formCatalogo" }))
+{
+
+    if (Model != null)
+    {
+        if (true)
+        {
+            <table id="tblCatalogo" class="table">
+                <thead>
+                    <tr>
+                        <th class="rowExamen">PRUEBA</th>
+                        <th class="rowExamen">PATOGENO</th>
+                        <th class="rowExamen">MUESTRA</th>
+                        <th class="rowExamen">CARACTERISTICAS</th>
+                        <th class="rowExamen">TRANSPORTE DE MUESTRA</th>
+                        <th class="rowExamen">LABORATORIO</th>
+                        <th class="rowExamen">DIAS HABILES PARA EMITIR RESULTADOS DEL LAB</th>
+                        <th class="rowExamen">DIAS HABILES DE ENTREGA DE RESULTADOS AL CLIENTE</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Prueba)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Patogeno)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Muestra)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Caracteristica)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Transporte)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Laboratorio)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DiasEmision)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DiasEntrega)
+                            </td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        }
+    }
+
+    <br />
+
+    <div class="linksForm">
+        <label id="CerrarPopUp" class="btn-link">Cerrar</label>
+
+    </div>
+
+}

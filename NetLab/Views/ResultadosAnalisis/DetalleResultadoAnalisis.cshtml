@@ -1,0 +1,189 @@
+﻿@*  Descripción: Vista, Permite mostrar el detalle de los componentes configurados y seleccionar un resultado.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.
+                  Se modificó la vista para el registro dinámico de los resultados. - Juan Muga.
+*@
+@model IEnumerable<Model.ResultAnalito>
+<br />
+
+<link href="~/Content/multiple-select.css" rel="stylesheet" />
+
+@if (Model != null)
+{
+    int i = 0;
+    int j = 0;
+    string nombre;
+    string rechazoNom;
+    string idCheck;
+    int k = 0;
+    if (Model.Any())
+    {
+        <div class="table-wrapper-scroll-x my-custom-scrollbar">
+            <table id="tblAnalito" class="table">
+                <thead>
+                    <tr>
+                        <th class="rowExamen2">Examen</th>
+                        <th class="rowExamen2">Componente</th>
+                        <th class="rowExamen">Resultado</th>
+                        <th class="rowExamen2">Observaciones</th>
+                        <th class="rowExamen">Unidad</th>
+                        <th class="rowExamen">Valor Normal / Referencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        rechazoNom = k.ToString();
+                        j++;
+                        k++;
+                        nombre = "ost_" + i.ToString() + "_" + j.ToString();
+                        idCheck = "chkOm_" + item.IdAnalito;
+                        var disable = string.Empty;
+
+                        if (item.estatusE == 10 || item.estatusE == 11)
+                        {
+                            disable = "disabled = disabled";
+                        }
+
+                        var tipoValorAnalito = item.tipo;
+
+                        if (item.tipo == 1 && item.ValorSuperior <= 0 && item.ValorInferior <= 0) { tipoValorAnalito = 100; }
+                        if (item.tipo == 3 && item.ValorReferencia == "") { tipoValorAnalito = 100; }
+
+                        var _Analitos = item.Metodos.Where(model => model.IdAnalitoOpcionParent.Trim().Equals(item.IdAnalito.ToString().ToUpper())).ToList();  //(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+                        var _Opciones = item.Metodos.Where(model => !model.IdAnalitoOpcionParent.Trim().Equals(item.IdAnalito.ToString().ToUpper())).ToList();
+                        ViewBag.ListaOpciones = _Opciones;
+                        var selectListItems = _Opciones.Select(x => new SelectListItem() { Value = x.IdAnalitoOpcionResultado.ToString().Trim(), Text = x.Glosa.Trim() }).ToList();
+                        var lista = Json.Encode(_Opciones);//SubCombo/subchecklist
+
+                    <tr class="rowResultados @item.IdAnalito" validacion="@Json.Encode(new { Tipo = tipoValorAnalito, Maximo = item.ValorSuperior, Minimo = item.ValorInferior, ValorNormal = item.ValorReferencia })">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Examen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Analito)
+                            <input type="hidden" name="idOrdenResultadoAnalito[]" class="form-control" value="@item.IdOrdenResultadoAnalito" />
+                            <input type="hidden" name="idAnalito[]" class="form-control" value="@item.IdAnalito" />
+                        </td>
+                        <td>
+                            @if (item.tipo == 1 || item.tipo == 4)
+                            {
+                        <input type="text" name="resultado[]" class="form-control resultadoAnalito" value="@item.Resultado" @disable />
+                            }
+                            @if (item.tipo == 2)
+                            {
+
+                            }
+                            @if (item.tipo == 3)
+                            {
+                        <input type="checkbox" name="resultado[]" class="form-control resultadoAnalito" value="@item.Resultado" @disable />
+                            }
+                            @if (item.tipo == 6)
+                            {
+                        <select id="ddl01" class="ms-choice" @disable onchange="MostrarDetalleOpciones(this, @lista)">
+                            @foreach (var opcion in item.Metodos)
+                            {
+                                if (opcion.IdAnalitoOpcionParent.ToString().Trim().ToUpper() == item.IdAnalito.ToString().Trim().ToUpper())
+                                {
+                                    var selectedItemOpcion = "";
+                                    if (item.Resultado == opcion.Glosa)
+                                    {
+                                        selectedItemOpcion = "selected";
+                                    }
+                                <option value="@opcion.IdAnalitoOpcionResultado" @selectedItemOpcion>@opcion.Glosa</option>
+                                }
+                            }
+                        </select>
+                        <div id="divDetalles" class="selMotivoRechazoDiv">
+                            <select id="ddl02" class="combo-cascading" onchange="MostrarDetalleOpciones(this, @lista)"></select><br />
+                            <select id="ddl03" class="combo-cascading" onchange="MostrarDetalleOpciones(this, @lista)"></select><br />
+                            <select id="ddl04" class="combo-cascading"></select><br />
+                        </div>
+                            }
+                        </td>
+                        <td>
+                            <input type="text" name="observacion[]" class="form-control" @disable />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Unidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ValorReferencia)
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            @*<div id="divdetalles">
+
+                </div>*@
+            }
+            <br />
+        </div>
+    }
+}
+
+            <script type="text/javascript">
+                $(document).ready(function (e) {
+                    $('.combo-cascading').each(function() {
+                        configSelect($(this).attr('id'));
+                    }).change(function(){
+                        //console.log($(this).val());
+                    });
+                });
+
+                function configSelect(selectName){
+                    $('#'+selectName).multipleSelect({
+                        width: '100%',
+                        placeholder: 'Seleccione',
+                        selectAllText: 'Seleccionar todo',
+                        allSelected: 'Todos seleccionados',
+                        noMatchesFound: 'No se encontraron coincidencias',
+                    });
+                }
+
+                function MostrarDetalleOpciones(selectParentData, allChilds) {
+                    var selectParentName = $(selectParentData).attr('id');
+                    var selectParentSelectedValue = selectParentData.value.trim();
+                    var selectChildName = '';
+
+                    if (selectParentName=='ddl01') {
+                        $("#ddl02").empty();
+                        $("#ddl03").empty();
+                        $("#ddl04").empty();
+                        configSelect('ddl02');
+                        configSelect('ddl03');
+                        configSelect('ddl04');
+                        selectChildName = 'ddl02';
+                    }
+                    else if(selectParentName=='ddl02'){
+                        $("#ddl03").empty();
+                        $("#ddl04").empty();
+                        configSelect('ddl03');
+                        configSelect('ddl04');
+                        selectChildName = 'ddl03';
+                    }
+                    else if(selectParentName=='ddl03'){
+                        $("#ddl04").empty();
+                        configSelect('ddl04');
+                        selectChildName = 'ddl04';
+                    }
+
+                    var selectChildCtrl = document.getElementById(selectChildName);
+                    for (i = 0; i <= allChilds.length - 1 ; i++) {
+                        val = allChilds[i].IdAnalitoOpcionParent;
+                        if (val.trim() == selectParentSelectedValue) {
+                            var option = document.createElement('option');
+                            option.value = allChilds[i]["IdAnalitoOpcionResultado"];
+                            option.innerHTML = allChilds[i]["Glosa"];
+                            selectChildCtrl.options.add(option);
+                        }
+                    }
+                    if(selectChildCtrl.options.length > 0){
+                        $("#" + selectChildName).multipleSelect("uncheckAll");
+                        $("#" + selectChildName).multipleSelect('refresh');
+                    }
+                }
+            </script>

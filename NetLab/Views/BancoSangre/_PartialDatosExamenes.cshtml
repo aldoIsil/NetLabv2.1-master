@@ -1,0 +1,102 @@
+﻿@*  Descripción: Vista, para mostrar informacion de los examenes seleccionados.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model Model.Orden
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+    #cmbEnfermedad, #cmbExamen {
+        width: 100%;
+    }
+
+    .form-horizontal {
+        padding-left: 15px;
+    }
+
+        .form-horizontal h2 {
+            margin-left: -15px;
+        }
+
+        .form-horizontal legend {
+            margin-left: -15px;
+        }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    #nombrePaciente {
+        position: absolute;
+        padding-top: 30px;
+    }
+
+    #btnBuscarPaciente {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #CerrarPopUp {
+        padding-left: 20px;
+    }
+
+    #dvTblTipoMuestra table, #dvTblMaterial table, #dvTblDatoClinico table {
+        width: 550px !important;
+    }
+
+        #dvTblTipoMuestra table input, #dvTblMaterial table input, #dvTblDatoClinico input {
+            width: 120px !important;
+        }
+</style>
+
+
+<div class="form-horizontal">
+    
+    <form role="form" action="@(Url.Action("Guardar", "BancoSangre",null, Request.Url.Scheme))" method="post">
+        <fieldset>
+            <!--Enfermedad-->
+            <div class="cont-line">
+                <div class="block-line">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.enfermedad)
+                        <div>
+                            <select id="cmbEnfermedad" name="cmbEnfermedad"
+                                    data-url="@Url.Action("GetEnfermedades")"
+                                    data-url-examenes="@Url.Action("GetExamenes")"
+                                    data-loading-image="@Url.Content("~/Content/images/loading.gif")"><option value=""></option></select>
+                        </div>
+
+                        @Html.Label("Examenes:")
+                        <div id="dvCmbExamen">
+                                @Html.DropDownList("cmbExamen",
+                                new MultiSelectList(ViewBag.examenList, "idExamen", "nombre", ViewBag.examenesSeleccionados),
+                                new { value = "0" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </fieldset>
+       
+        <label id="AgregarDatosExamen" class="btn-link" >Agregar</label>
+        <label id="CerrarPopUp" class="btn-link">Cancelar</label>
+    </form>
+</div>
+

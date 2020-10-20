@@ -1,0 +1,13 @@
+﻿@* Descripción: PartialForm para mostrar el combobox de los materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Material>
+@{ 
+    int defaultValue = ViewBag.MaterialPorDefecto != null ? ViewBag.MaterialPorDefecto : 0;
+}
+@Html.DropDownList("idMaterial",
+new SelectList(Model, "idMaterial", "descripcion"),
+new { value = "0", @class = "form-control sizeChosen" })
+@Html.Hidden("idMaterialDefecto", defaultValue)

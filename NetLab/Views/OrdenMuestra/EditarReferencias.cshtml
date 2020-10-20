@@ -1,0 +1,208 @@
+﻿@*  Descripción: Vista, realizar la Edicion de muestras referenciadas. 
+    Permite agregar alicuotas a otros Laboratorios
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+@using (Html.BeginForm("EditarReferencias", "OrdenMuestra", new {ViewBag.page, ViewBag.search }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <link rel="stylesheet" href="../Content/multiple-select.css" />
+
+    <h4 class="centered" align="center">Orden de Análisis N° @Model.codigoOrden</h4>
+    <input type="hidden" id="asd24dgs" autofocus/>
+
+    <div id="accordionRecepcionado">
+
+        <h3 style="font-weight:bold" aria-expanded="false" aria-selected="false">Examenes</h3>
+        <div style="height:200px">
+            <table name="tblDatosRecepcion" class="table">
+                <thead>
+                <th>Enfermedad</th>
+                <th>Tipo Muestra</th>
+                <th>Examen</th>
+                </thead>
+                @if (Model != null && Model.ordenInfoList != null)
+                {
+                    <tbody>
+                        @foreach (var item in Model.ordenInfoList)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.nombreEnfermedad)</td>
+                                <td>@Html.DisplayFor(modelItem => item.nombreTipoMuestra)</td>
+                                <td>@Html.DisplayFor(modelItem => item.nombreExamen)</td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        <h3 style="font-weight:bold">Materiales</h3>
+        <div style="height:200px">
+            <table name="tblDatosRecepcion" class="table">
+                <thead>
+                <th>Tipo Muestra</th>
+                <th>Presentacion</th>
+                <th align="center">Cantidad</th>
+                <th>Reactivo</th>
+                </thead>
+                @if (Model != null && Model.ordenMaterialVdList != null)
+                {
+                    <tbody>
+                        @foreach (var item in Model.ordenMaterialVdList)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</td>
+                                <td>@Html.DisplayFor(modelItem => item.presentacionNombre)</td>
+                                <td align="center">@Html.DisplayFor(modelItem => item.cantidad)</td>
+                                <td>@Html.DisplayFor(modelItem => item.reactivoNombre)</td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        <h3 style="font-weight:bold">Muestras</h3>
+        <div id="divDatosReferencia" style="height: 340px" aria-expanded="true" aria-selected="true">
+
+        @if (Model != null && Model.ordenMaterialList != null)
+        {
+            int i = 0;
+            int j = 0;
+            string nombre;
+            string chkNombre;
+            string cmbLab;
+            
+            @*@if (Model != null && Model.ordenMuestraRecepcionadaList != null){*@
+
+        foreach (var item in Model.ordenMaterialList)
+        {
+            i++;
+            j = 0;
+
+            if (item.ordenMuestraRecepcionList != null && item.ordenMuestraRecepcionList.Count() > 0)
+            {
+                <h5>@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</h5>
+                <hr>
+                <table id="tblDatosRecepcionEdicion" class="table tblReferenciaRecepcion">
+                    <thead>
+                    <th>Editar</th>
+                    <th width="100px" align="center">Item</th>
+                    <th hidden="hidden">Id</th>
+                    <th>Examen</th>
+                    <th>Tipo</th> <!--muestra primaria: 1 / alicuota: 2-->
+                    <th>Laboratorio Destino</th>
+                    <th>Nuevo Laboratorio </th>
+                    </thead>
+                    <tbody>
+                        @foreach (var item1 in item.ordenMuestraRecepcionList)
+                        {
+                            j++;
+                            nombre = "ost_" + i.ToString() + "_" + j.ToString();
+                            chkNombre = "chkNom_" + item1.idOrdenMuestraRecepcion;
+                            <tr>
+                                <td class="text-center">
+                                    <input id=@chkNombre type="checkbox" class="chkReferenciar" name=@chkNombre>
+                                </td>
+                                <td>@Html.Label(item1.presentacionNombreNro)</td>
+                                <td class="left" hidden="hidden">@Html.Hidden("idOrdenRecepcion", item1.idOrdenMuestraRecepcion)</td>
+                                <td>@Html.Label(item1.examenNombre)</td>
+                                <td>
+                                    @if (item1.Tipo == 1)
+                                    {
+                                        @Html.Label("idTipo", "Muestra Primaria")
+                                    }
+                                    else
+                                    {
+                                        @Html.Label("idTipo", "Alícuota")
+                                    }
+                                </td>
+                                <td>@item1.nombreLaboratorioDestino</td>
+                                <td>
+                                    <div>
+                                        <select id=@nombre class="form-control idLaboratorioDestinoR" name="idLaboratorioDestino" disabled="disabled">
+                                            <option value="0"></option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                }
+              }
+            }
+        </div>
+    </div>
+
+      
+                <td><input type="submit" value="Guardar" class="btn btn-primary" /></td>
+                <td><a id="btnCancelar" class="btn btn-default">Cancelar</a></td>
+
+
+
+
+
+
+    @*<td>
+        <button class="btn btn-primary" value="Guardar" type="submit"> <span class="fa fa-floppy-o"></span> Guardar</button>
+    </td>
+
+
+
+
+
+    <td>
+        <button class="btn btn-default" id="btnCancelar3"> <span class="fa fa-times"></span> Cancelar</button>
+    </td>*@
+
+
+
+
+
+
+}
+
+        <style type="text/css" media="all">
+            .left {
+                text-align: left !important;
+            }
+
+            .tblDatosRecepcion {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+                .tblDatosRecepcion, .tblDatosRecepcion td, .tblDatosRecepcion th {
+                    border: 1px solid black;
+                    padding: 3px;
+                }
+
+            .labelHeaderWidth {
+                width: 130px;
+                font-size: medium !important;
+            }
+
+            /*.datePickerWidth {
+                text-align: center;
+                width: 90px !important;
+            }
+
+            .hourPickerWidth {
+                text-align: center;
+                width: 70px !important;
+            }*/
+
+            .idLaboratorioDestinoR {
+                text-align: center;
+                width: 300px !important;
+            }
+        </style>
+        @*@section Scripts {
+                @Scripts.Render("~/Scripts/App/RecepcionMuestra.js")
+            }*@

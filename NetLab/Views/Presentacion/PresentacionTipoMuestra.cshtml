@@ -1,0 +1,74 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de un tipo de muestra para una presentacion.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+
+@model NetLab.Models.PresentacionTipoMuestraViewModels 
+
+@{
+    ViewBag.Title = "Registro de Tipos de Muestra por Presentacion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2>Tipos de Muestra para la Presentación: "@Model.Presentacion.glosa "</h2>
+<br />
+<p>
+    @Html.ActionLink(" Agregar Tipos de Muestra", "AgregarTipoMuestra", new { Model.Presentacion.idPresentacion }, new { id = "openDialog", @class = "btn btn-primary fa fa-plus-square-o" })
+</p>
+<br />
+@if (Model != null && Model.Tipomuestras.Count > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tipomuestras.First().nombre)
+                </th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.Tipomuestras)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @Html.ActionLink(" ", "EliminarTipoMuestra", new { item.idTipoMuestra, Model.Presentacion.idPresentacion }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*Alexander Buchelli - inicio - fecha 7/12/18 - Se comentaron los actionlink y se coloco un boton de retroceso que regresa en a la pantalla de la ultima busqueda sin mostrar nuevamente toda la tabla de datos*@
+
+
+
+    @*@Html.ActionLink("Retroceder", "Index")*@
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/PresentacionTipoMuestra.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

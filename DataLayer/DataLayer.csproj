@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A7C12F64-A37D-468D-A3AA-47BB91D79168}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataLayer</RootNamespace>
+    <AssemblyName>DataLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalitoInterpretacionDal.cs" />
+    <Compile Include="AnalitoValorDal.cs" />
+    <Compile Include="AnalitoOpcionDal.cs" />
+    <Compile Include="AnalitoMetodoDal.cs" />
+    <Compile Include="AreaProcesamientoDal.cs" />
+    <Compile Include="AnalitoExamenDal.cs" />
+    <Compile Include="Anotations\Columna.cs" />
+    <Compile Include="Area\Animal\AnimalDal.cs" />
+    <Compile Include="Area\Animal\AnimalEspecieDal.cs" />
+    <Compile Include="Area\Animal\AnimalRazaDal.cs" />
+    <Compile Include="Area\AreaProcesamiento\AreaExamenDal.cs" />
+    <Compile Include="Area\AreaProcesamiento\AreaProcesamientoDal.cs" />
+    <Compile Include="Area\DatoClinico\CategoriaDatoDal.cs" />
+    <Compile Include="Area\DatoClinico\DatoClinicoDal.cs" />
+    <Compile Include="Area\DatoClinico\ListaDatoDal.cs" />
+    <Compile Include="Area\Pacientes\IPacienteDal.cs" />
+    <Compile Include="Area\Pacientes\PacienteDal.cs" />
+    <Compile Include="CatalogoDal.cs" />
+    <Compile Include="Compartido\Common.cs" />
+    <Compile Include="Compartido\ListaDal.cs" />
+    <Compile Include="Compartido\ListaDetalleDal.cs" />
+    <Compile Include="ContactarDal.cs" />
+    <Compile Include="Core\CoreDal.cs" />
+    <Compile Include="DalConverter\CatalogoConvertTo.cs" />
+    <Compile Include="DalConverter\DetalleCatalogoConvertTo.cs" />
+    <Compile Include="DalConverter\DisaMantConverterTo.cs" />
+    <Compile Include="DalConverter\ExamenResultadoConvertTo.cs" />
+    <Compile Include="DalConverter\ExamenResultadoDetalleConvertTo.cs" />
+    <Compile Include="DalConverter\MaterialConvertTo.cs" />
+    <Compile Include="DalConverter\MicroRedMantConvertTo.cs" />
+    <Compile Include="DalConverter\MuestraResultadoConvertTo.cs" />
+    <Compile Include="DalConverter\OrdenResultadoConvertTo.cs" />
+    <Compile Include="DalConverter\ReactivoConvertTo.cs" />
+    <Compile Include="DalConverter\DISAConvertTo.cs" />
+    <Compile Include="DalConverter\SerializarResultado.cs" />
+    <Compile Include="DalConverter\UsuarioEstablecimientoConvertTo.cs" />
+    <Compile Include="DalConverter\RedMantConverterTo.cs" />
+    <Compile Include="DetalleAnalitoDal.cs" />
+    <Compile Include="DetalleCatalogoDal.cs" />
+    <Compile Include="DisaMantDal.cs" />
+    <Compile Include="IndicadorDal.cs" />
+    <Compile Include="MenuDal.cs" />
+    <Compile Include="DalConverter\AnalitoConvertTo.cs" />
+    <Compile Include="DalConverter\AnimalConvertTo.cs" />
+    <Compile Include="DalConverter\AreaProcesamientoConvertTo.cs" />
+    <Compile Include="DalConverter\CategoriaDatoConvertTo.cs" />
+    <Compile Include="DalConverter\RolConvertTo.cs" />
+    <Compile Include="DalConverter\CriterioRechazoConvertTo.cs" />
+    <Compile Include="DalConverter\DatoCategoriaDatoConvertTo.cs" />
+    <Compile Include="DalConverter\DatoConvertTo.cs" />
+    <Compile Include="DalConverter\EnfermedadCategoriaDatoConvertTo.cs" />
+    <Compile Include="DalConverter\EnfermedadConvertTo.cs" />
+    <Compile Include="DalConverter\EspecieConvertTo.cs" />
+    <Compile Include="DalConverter\EstablecimientoConvertTo.cs" />
+    <Compile Include="DalConverter\ExamenConvertTo.cs" />
+    <Compile Include="DalConverter\EnfermedadExamenConvertTo.cs" />
+    <Compile Include="DalConverter\ExamenLaboratorioConvertTo.cs" />
+    <Compile Include="DalConverter\ExamenTipoMuestraConvertTo.cs" />
+    <Compile Include="DalConverter\LiberadosConvertTo.cs" />
+    <Compile Include="DalConverter\ListaConvertTo.cs" />
+    <Compile Include="DalConverter\ListaDatoConvertTo.cs" />
+    <Compile Include="DalConverter\ListaDetalleConvertTo.cs" />
+    <Compile Include="DalConverter\PlantillaConvertTo.cs" />
+    <Compile Include="DalConverter\PlantillaEnfermedadExamenConvertTo.cs" />
+    <Compile Include="DalConverter\ProyectoConvertTo.cs" />
+    <Compile Include="DalConverter\PresentacionConvertTo.cs" />
+    <Compile Include="DalConverter\RazaConvertTo.cs" />
+    <Compile Include="DalConverter\ResultadosConvertTo.cs" />
+    <Compile Include="DalConverter\TipoDatoConvertTo.cs" />
+    <Compile Include="DalConverter\UbigeoConvertTo.cs" />
+    <Compile Include="DalConverter\UsuarioConvertTo.cs" />
+    <Compile Include="DalConverter\LaboratorioConvertTo.cs" />
+    <Compile Include="DalConverter\ValidaResultConvertTo.cs" />
+    <Compile Include="ExamenTipoMuestraDal.cs" />
+    <Compile Include="InstitucionDal.cs" />
+    <Compile Include="LaboratorioDal.cs" />
+    <Compile Include="LaboratorioExamenDal.cs" />
+    <Compile Include="LiberadosDal.cs" />
+    <Compile Include="MicroRedMantDal.cs" />
+    <Compile Include="PEED\ConfiguracionEvalControlCalidadDal.cs" />
+    <Compile Include="PEED\ConfiguracionMaterialControlCalidadDal.cs" />
+    <Compile Include="PEED\ConfiguracionPanelControlCalidadDal.cs" />
+    <Compile Include="PEED\IngresoResultadosControlCalidadDal.cs" />
+    <Compile Include="Plantilla\EstablecimientoPlantillaDal.cs" />
+    <Compile Include="Plantilla\PlantillaEnfermedadExamenDal.cs" />
+    <Compile Include="PresentacionReactivoDal.cs" />
+    <Compile Include="ProyectoDal.cs" />
+    <Compile Include="PacienteDal.cs" />
+    <Compile Include="EstablecimientoDal.cs" />
+    <Compile Include="DalConverter\TipoMuestraConvertTo.cs" />
+    <Compile Include="EnfermedadExamenDal.cs" />
+    <Compile Include="AnalitoDal.cs" />
+    <Compile Include="OrdenExamenDal.cs" />
+    <Compile Include="OrdenDal.cs" />
+    <Compile Include="MaterialDal.cs" />
+    <Compile Include="OrdenMuestraDal.cs" />
+    <Compile Include="PresentacionTipoMuestraDal.cs" />
+    <Compile Include="ReactivoDal.cs" />
+    <Compile Include="RecepcionDal.cs" />
+    <Compile Include="RedMantDal.cs" />
+    <Compile Include="ReporteDal.cs" />
+    <Compile Include="Reportes\ReporteResultadoDal.cs" />
+    <Compile Include="ResultadosDal.cs" />
+    <Compile Include="RolDal.cs" />
+    <Compile Include="PresentacionDal.cs" />
+    <Compile Include="SeguimientoDAl.cs" />
+    <Compile Include="SolicitanteDal.cs" />
+    <Compile Include="TempOrdenDal.cs" />
+    <Compile Include="UsuarioAreaProcesamientoDal.cs" />
+    <Compile Include="UsuarioExamenDal.cs" />
+    <Compile Include="UsuarioRolDal.cs" />
+    <Compile Include="RolMenuDal.cs" />
+    <Compile Include="TipoMuestraCriterioRechazoDal.cs" />
+    <Compile Include="TipoMuestraDal.cs" />
+    <Compile Include="DatoDal.cs" />
+    <Compile Include="EnfermedadDal.cs" />
+    <Compile Include="ExamenDal.cs" />
+    <Compile Include="MuestraConvertTo.cs" />
+    <Compile Include="DisaDal.cs" />
+    <Compile Include="UsuarioConvertTo.cs" />
+    <Compile Include="NetlabConvertTo.cs" />
+    <Compile Include="MuestraDal.cs" />
+    <Compile Include="CriterioRechazoDal.cs" />
+    <Compile Include="UsuarioDal.cs" />
+    <Compile Include="NetlabDal.cs" />
+    <Compile Include="UbigeoDal.cs" />
+    <Compile Include="Plantilla\PlantillaDal.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidaResultDal.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework.DAL.Settings\Framework.DAL.Settings.csproj">
+      <Project>{12c409a1-80fc-45af-b511-80d95bf39d1e}</Project>
+      <Name>Framework.DAL.Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.DAL\Framework.DAL.csproj">
+      <Project>{91d2fff9-8031-4c62-9ded-4ff7ac3acb13}</Project>
+      <Name>Framework.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.WebCommon\Framework.WebCommon.csproj">
+      <Project>{36960b03-0723-4535-b229-d82ae39b04cf}</Project>
+      <Name>Framework.WebCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{2e588952-5389-42e5-8ed8-c42b9e38f6d7}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilitario\Utilitario.csproj">
+      <Project>{663df441-4f38-44f3-865c-cd9bc296c7a4}</Project>
+      <Name>Utilitario</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,224 @@
+﻿@model PagedList.IPagedList<Model.Paciente>
+@{
+    ViewBag.Title = "PacienteVIH";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("PacienteVIH", "Paciente", FormMethod.Get))
+{
+    <fieldset class="default">
+        <legend class="default">
+            SEGUIMIENTO ORDEN PACIENTE VIH
+        </legend>
+        <div id="dvBusquedaUsuario">
+            <div class="form-group">
+                <div>
+                    @Html.Label("Tipo de Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                    @Html.Label("Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-3" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control keypresssearch", autocomplete = "off" })
+                </div>
+            </div>
+            <br /><br /><br />
+            <div class="form-group">
+                <div>
+                    @Html.Label("Apellido Paterno:", new { @class = "-label col-xs-6 col-sm-3  col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoPaterno", (string)ViewBag.apellidoPaterno, new { @class = "form-control input-sm keypresssearch", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Apellido Materno:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoMaterno", (string)ViewBag.apellidoMaterno, new { @class = "form-control keypresssearch", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Nombre:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("nombre", (string)ViewBag.nombre, new { @class = "form-control keypresssearch", autocomplete = "off" })
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  col-sm-offset-5 col-md-offset-5 col-lg-offset-5">
+                    <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                    <span>
+                        <img src="~/img/001_76.png" title="Debe ingresar mínimo 8 caracteres para búsqueda por Nro. Documento.
+Debe ingresar mínimo 3 caracteres para realizar búsqueda por nombres y apellidos." />
+                    </span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+}
+<br /><br />
+<br /><br />
+<br /><br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table id="dtPacienteBusqueda" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    Paciente
+                </th>
+                <th>
+                    Nro Oficio
+                </th>
+                <th>
+                    Código Orden
+                </th>
+                <th>
+                    Fecha Obtención
+                </th>
+                <th>
+                    Enfermedad
+                </th>
+                <th>
+                    Examen
+                </th>
+                <th>
+                    Componente
+                </th>
+                <th>
+                    Resultado
+                </th>
+                <th>
+                    Fecha Publicacion Resultado
+                </th>
+                <th>
+                    EESS-Origen
+                </th>
+                <th>
+                    EESS-Destino
+                </th>
+                <th>
+                        Estado
+                    </th>
+                    <th>
+                        Criterio de Rechazo
+                    </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+                {
+            <tr>
+                <td>
+                    @if (item.EstatusE == 11 && !string.IsNullOrEmpty(item.Resultado))
+                    {
+                        <a href="@(Url.Action( "ImprimirResultadosBusqueda", "ReporteResultados", new { idOrden = item.idOrden, idLaboratorio = item.idEstablecimiento,idExamen=item.idExamen }))" target="_blank" class="lnkForm">
+                            <img src="~/img/imgPdf.gif" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroOficio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoOrden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaObtencion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enfermedad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Examen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Componente)
+                </td>
+                <td>
+                    @if (item.EstatusE == 11 && !string.IsNullOrEmpty(item.Resultado))
+                    {
+                        @Html.DisplayFor(modelItem => item.Resultado)
+                    }
+
+                </td>
+                <td>
+                    @if (item.EstatusE == 11 && !string.IsNullOrEmpty(item.Resultado))
+                    {
+                        @Html.DisplayFor(modelItem => item.FechaValidacion)
+                    }
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EESSOrigen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstablecimientoDestino)
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.EstadoResultado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CriteriosRechazo)
+                    </td>
+            </tr>
+        }
+    </table>
+}
+    @*else
+        {
+            <div class="alert alert-danger">@ViewBag.notFound</div>
+        }*@
+
+    @section Scripts {
+        @Scripts.Render("~/Scripts/datatables.js")
+        @Scripts.Render("~/Scripts/datatables.min.js")
+        @Styles.Render("~/Content/datatables.min.css")
+        @Styles.Render("~/Content/TablaCSS.css")
+
+        @Scripts.Render("~/Scripts/dataTables.bootstrap.js")
+        @Scripts.Render("~/Scripts/dataTables.bootstrap.min.js")
+        @Scripts.Render("~/Scripts/dataTables.bootstrap4.js")
+        @Scripts.Render("~/Scripts/dataTables.bootstrap4.min.js")
+        @Scripts.Render("~/Scripts/dataTables.foundation.js")
+        @Scripts.Render("~/Scripts/dataTables.foundation.min.js")
+        @Scripts.Render("~/Scripts/dataTables.jqueryui.js")
+        @Scripts.Render("~/Scripts/dataTables.jqueryui.min.js")
+        @Scripts.Render("~/Scripts/datatables.js")
+        @Scripts.Render("~/Scripts/datatables.min.js")
+        @Scripts.Render("~/Scripts/dataTables.semanticui.js")
+        @Scripts.Render("~/Scripts/dataTables.semanticui.min.js")
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $('#dtPacienteBusqueda').DataTable({
+                    "scrollCollapse": true
+                });
+                $('.dataTables_length').addClass('bs-select');
+                validarfiltrosbusqueda();
+                $(".keypresssearch").keyup(function () {
+                    validarfiltrosbusqueda();
+                });
+            });
+
+            function validarfiltrosbusqueda() {
+                var nd = $("#nroDocumento").val();
+                var ap = $("#apellidoPaterno").val();
+                var am = $("#apellidoMaterno").val();
+                var nm = $("#nombre").val();
+                var disabled = true;
+                if (nd.trim().length > 7 || ap.trim().length > 2 || am.trim().length > 2 || nm.trim().length > 2) {
+                    disabled = false;
+                }
+
+                $('#btnBuscar').prop('disabled', disabled);
+            }
+        </script>
+        }

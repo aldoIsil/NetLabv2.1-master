@@ -1,0 +1,61 @@
+﻿@*  Descripción: Vista, Permite mostrar el link para seleccionar la prueba e ingresar los resultados.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.ViewData.OrdenIngresarResultadoVd
+
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+
+    <table id="tblResultados">
+        <thead>
+            <tr>
+                <th>Area de Procesamiento</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.areas) {
+                <tr>
+                    <td>
+                        @item.Nombre
+                    </td>
+                    <td>
+                        @*@Html.ActionLink(" Seleccionar", "IngresarResultados", new { }, new { @class = "btn btn btn-default btn-xs fa fa-check-square irIngresarResultados", idarea = item.IdAreaProcesamiento, idorden = Model.idOrden, idExamen = Model.idExamen })*@
+                        <button type="button" class="btn btn-success" onclick="IngresarResultadoClick('@Model.idOrden', '@Model.idOrdenExamen','@item.IdAreaProcesamiento')" data-toggle="modal"
+                                data-target="#IngresarResultado">
+                            Seleccionar
+                        </button>
+
+
+                        @*@Html.ActionLink("Seleccionar", "IngresarResultados", new { }, new { @class = "irIngresarResultados", idarea = item.IdAreaProcesamiento, idorden = Model.idOrden })*@
+                    </td>
+                </tr>
+        }
+        </tbody>
+    </table>
+    <br />
+    <div class="linksForm">
+        @*<label id="CerrarPopUp" class="btn-link">Cancelar</label>
+
+            <label id="CerrarPopUp" class="btn btn-default btn-md"><span class="fa fa-times-circle"></span> Cancelar</label>*@
+    </div>
+
+
+    @section Scripts {
+        @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+        @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+        @Scripts.Render("~/Scripts/App/ResultadosAnalisis.js?updated=2")
+        @Scripts.Render("~/Scripts/App/NetLab.js")
+    }
+<style>
+     .my-custom-scrollbar {
+            position: relative;
+            height: 200px;
+            overflow: auto;
+        }
+
+    .table-wrapper-scroll-x {
+        display: block;
+    }
+</style>

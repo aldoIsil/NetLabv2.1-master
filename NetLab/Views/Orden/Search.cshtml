@@ -1,0 +1,356 @@
+﻿@* Descripción: Vista para realizar la busqueda de ordenes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Orden>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+
+@{
+    ViewBag.Title = "Busqueda de Orden";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool checkedFRegistro = true;
+    bool checkedFColeccion = false;
+
+    if (ViewBag.esFechaRegistro == 1)
+    {
+        checkedFRegistro = true;
+    }
+    if (ViewBag.esFechaRegistro == 2)
+    {
+        checkedFColeccion = true;
+    }
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+@using (Html.BeginForm("Search", "Orden", FormMethod.Post))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Orden</legend>
+        <div id="dvBusquedaUsuario2">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3 divWidth">
+                        <div class="input-group radioButtonWidthReg">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaSolicitud", "1", checkedFRegistro)
+                            </span>
+                            <label for="esFechaRegistro" type="text" class="form-control radioButtonWidth">Fecha de Solicitud de la Orden</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="input-group radioButtonWidthColec">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaSolicitud", "2", checkedFColeccion, new { @id = "esFechaColeccion" })
+                            </span>
+                            <label for="esFechaColeccion" type="text" class="form-control radioButtonWidth">Fecha de Obtención de la Muestra</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                    </div>
+                </div>
+            </div>
+
+
+            @*Alexander Buchelli - inicio - fecha 24/08/17 - se agregaron los valores modales de bootstrap para las diferentes redimensiones de la pantalla*@
+
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Desde: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                        @*@Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = "form-control datepickerDesde datePickerWidth", autocomplete = "off" })*@
+
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = "form-control datepickerTelerik datePickerWidth inFechaRec1 dateOnly", autocomplete = "off" })
+
+                    </div>
+                    @Html.Label("Fecha Hasta: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                        @*@Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = "form-control datepickerHasta datePickerWidth", autocomplete = "off" })*@
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = "form-control datepickerTelerik datePickerWidth inFechaRec1 dateOnly", autocomplete = "off" })
+
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Estado:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.DropDownList("estadoOrden", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="Borrador", Value = "1" },
+                            new SelectListItem{ Text="Finalizados", Value = "2" }
+                          }, (string)ViewBag.estadoOrden, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    <!--
+                    @Html.Label("Tipo Orden:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-sm-3">
+                        @Html.DropDownList("tipoOrden", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="Personas", Value = "1" },
+                            new SelectListItem{ Text="Animales", Value = "2" },
+                            new SelectListItem{ Text="Banco Sangre/Cepas", Value = "3" }
+                          }, (string)ViewBag.tipoOrden, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    <div class="col-sm-2">
+                    </div>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Nro Oficio/Documento:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    @Html.Label("Doc de Identidad/Código Orden/Código Muestra:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("docIdentidad", (string)ViewBag.docIdentidad, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                        <br />
+                        <button class="btn btn-primary" id="iBuscar" value="Buscar" type="submit" onclick="return FechaValidaBusqueda('datepickerDesde', 'datepickerHasta');"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    @*<div class="table-responsive"> se agrego la clase table responsive en un div para la redimension de las tablas*@
+
+    <table id="dtOrden" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Fecha Solicitud
+                </th>
+                <th>
+                    Fecha Registro
+                </th>
+                <th>
+                    Código de Orden
+                </th>
+                <th>
+                    Tipo Orden
+                </th>
+                <th>
+                    EESS/LAB Origen
+                </th>
+                <th>
+                    Documento Referencia
+                </th>
+                <th>
+                    Documento Identidad
+                </th>
+                <th>
+                    Género
+                </th>
+                <th>
+                    Paciente
+                </th>
+                <th>
+                    Fecha Nacimiento
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>Ver</th>
+                @*<th>Ficha</th>*@
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @Html.HiddenFor(modelItem => item.idOrden)
+                <td>
+                    @Html.Raw(String.Format("{0:dd/MM/yyyy}", item.FechaRegistro))
+                </td>
+                <td>
+                    @Html.Raw(String.Format("{0:dd/MM/yyyy}", item.fechaSolicitud))
+                </td>
+                <td>
+                    <button type="button" class="btn-link" onclick="VerOrden('@item.idOrden','Search','Orden')" data-toggle="modal"
+                            data-target="#VerOrden2" data-idOrden="@item.idOrden" data-Origen="Search" data-Controlador="Orden">
+                        @Html.DisplayFor(modelItem => item.codigoOrden)
+                    </button>
+                </td>
+                <td>
+                    Persona
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.establecimiento.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nroOficio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Paciente.tipoDocumentoNombre)  @Html.DisplayFor(modelItem => item.Paciente.NroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Paciente.generoNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Paciente.Nombres)
+                </td>
+                <td>
+                    @if (item.Paciente.FechaNacimiento != null)
+                    {
+                        @Html.Raw(item.Paciente.FechaNacimiento.Value.ToShortDateString())
+                    }
+                </td>
+                <td>
+                    @if (item.estatus == 0)
+                    {
+
+                        @*@Html.Label("Borrador", new { @class = " fa fa-external-link " })*@
+
+
+                        <button class="btn btn-danger btn-block"><span class="fa fa-eraser"></span> Orden No Finalizada</button>
+
+                    }
+                    else if (item.estatus == 1)
+                    {
+
+                        @*@Html.Raw("Finalizado")*@
+
+                        <button class="btn btn-success btn-block"><span class="fa fa-flag-checkered"></span> Muestras Enviadas por UTM</button>
+
+                    }
+                    else if (item.estatus == 2)
+                    {
+
+                        @*@Html.Raw("Parcialmente Recepcionado")*@
+                        <button class="btn btn-warning btn-block"><span class="fa fa-minus-square"></span> Parcialmente Recepcionado</button>
+                    }
+                    else if (item.estatus == 3)
+                    {
+
+                        @*@Html.Raw("Recepcionado")*@
+                        <button class="btn btn-info btn-block"><span class="fa fa-check-square"></span> Recepcionado</button>
+
+                    }
+                </td>
+
+                <td>
+                    @Html.ActionLink(" ", "Show", new { idOrden = item.idOrden, page = Model.PageNumber, ViewBag.search }, new { @class = "editDialog btn btn-default fa fa-external-link ", id = item.idOrden })
+
+                </td>
+                @*<td>
+                    @if (item.file != null)
+                    {
+                        <center>
+                            @Html.ActionLink(" ", "ObtenerFicha", new { idOrden = item.idOrden }, new { @class = "btn btn-default glyphicon glyphicon-list-alt ", id = item.idOrden, target = "_blank" })
+                        </center>
+                        
+                    }
+
+                </td>*@
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<div class="modal Adapterscreen-modal fade" id="VerOrden2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataVerOrden2" class="modal-body">
+                @*<div class="loader">
+                    <p>
+                        <img src="~/img/carga.gif" />
+                    </p>
+                </div>*@
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-hidden" style="visibility: hidden">
+</div>
+
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/jquery.alerts/jquery.alerts.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Search.js?updated={0}", new Random().Next(0, 999))))
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}
+
+<style type="text/css" media="all">
+    .loader {
+        position: relative;
+        text-align: center;
+        margin: 15px auto 35px auto;
+        z-index: 9999;
+        display: block;
+        width: 80px;
+        height: 80px;
+        border: 10px solid rgba(0, 0, 0, .3);
+        border-radius: 50%;
+        border-top-color: #000;
+        animation: spin 1s ease-in-out infinite;
+        -webkit-animation: spin 1s ease-in-out infinite;
+    }
+    /*.cmbxBusqueda {
+        width: 230px !important;
+    }*/
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    /*.form-group {
+        margin-bottom: 6px;
+    }*/
+
+    .radioButtonWidthReg {
+        width: 250px !important;
+    }
+
+    .radioButtonWidthColec {
+        width: 275px !important;
+    }
+
+    .divWidth {
+        width: 260px !important;
+    }
+</style>
+@*Alexander Buchelli - fin*@

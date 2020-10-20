@@ -1,0 +1,54 @@
+﻿@model List<Model.ReportesDTO.ReporteResultadoInformado>
+@{
+    ViewBag.Title = "Consulta Cantidad Resultados Informados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Count > 0)
+{
+    <h4>Examen: @Model[0].Examen</h4>
+
+    <h5>Cantidad de resultados emitidos: @Model[0].CantidadExamenTotal</h5>
+
+    <h5>Cantidad de Pacientes: @Model[0].CantidadPaciente</h5>
+
+    <table id="dtPaciente">
+        <thead>
+            <tr>
+                <th>Examen</th>
+                <th>Paciente</th>
+                <th>Cantidad Examen</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Examen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Paciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantidadExamen)
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dtPaciente').DataTable({
+                    "destroy": true,
+                    "scrollY": "auto",
+                    "scrollCollapse": true,
+                });
+                $('.dataTables_length').addClass('bs-select');
+            });
+    </script>
+}
+

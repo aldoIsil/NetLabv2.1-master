@@ -1,0 +1,99 @@
+﻿@*  Descripción: Vista, muestra la busqueda y mantenimiento de las Plantillas
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.Plantilla>
+
+@{
+    ViewBag.Title = "Mantenimiento de Plantillas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Plantillas</h2>
+@using (Html.BeginForm("Index", "Plantilla", FormMethod.Get))
+{
+    <label>Ingrese un nombre o descripción:</label>
+    @Html.TextBox("search", (string)ViewBag.search)
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+    @Html.ActionLink("+ Nueva Plantilla", "NuevaPlantilla", new { page = Model.PageNumber, ViewBag.search }, new { @id = "openDialog", @class = "btn btn-primary" })
+
+}
+<br />
+
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Tipo)
+                </th>
+                <th>Editar / Eliminar</th>
+                <th>Establecimientos </th>
+                <th> Muestras </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarPlantilla", new { id = item.IdPlantilla, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default fa fa-pencil-square-o editDialog" }) |
+
+
+                    @Html.ActionLink(" ", "EliminarPlantilla", new { id = item.IdPlantilla, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default fa fa-trash confirmDialog" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "AgregarEstablecimientos", new { id = item.IdPlantilla }, new { @class = "btn btn-default btn-block fa fa-hospital-o" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "AgregarMuestras", new { id = item.IdPlantilla }, new { @class = "btn btn-default btn-block fa fa-tint" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{ //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Plantilla/Plantilla.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

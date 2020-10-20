@@ -1,0 +1,115 @@
+﻿@model List<Model.OrdenSolicitudSalidaMuestra>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+    <title>Exportar Solicitud PDF</title>
+    @*@Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssHeader")
+    @Styles.Render("~/Content/telerik/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery-ui")*@
+</head>
+<body>
+    <center><h3>FORMATO SOLICITUD SALIDA DE MUESTRA N° @Model[0].formato</h3></center>
+    <br />
+    <br />
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Formulario
+                </th>
+                <th>
+                    Número Oficio
+                </th>
+                <th>
+                    Código Lineal
+                </th>
+                <th>
+                    Código de Muestra
+                </th>
+                <th>
+                    Fecha Envío Muestra
+                </th>
+                <th>
+                    Establecimiento Origen
+                </th>
+                <th>
+                    Paciente
+                </th>
+                <th>
+                    Documento Identidad
+                </th>
+            </tr>
+        </thead>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.formato)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nroOficio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.codigoLineal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.codigoMuestra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaEnvioMuestra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Establecimiento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Paciente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentoIdentidad)
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>
+<style type="text/css">
+
+/*    tr {
+        page-break-inside: avoid;
+    }*/
+
+    table, td, th {
+        border: 1px solid black;
+        font: 90% Arial;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    thead {
+        background-color: #337ab7;
+    }
+
+    th {
+        font-weight: bold;
+        height: 50px;
+        color: white;
+    }
+</style>

@@ -1,0 +1,48 @@
+﻿@using Model;
+@model List<Model.Plantilla>
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+@*@using (Html.BeginForm("NewOrdenPlantilla", "Orden", FormMethod.Get))
+{*@
+    @if (Model != null && Model.Any())
+    {
+        <div class="divRow">
+            @Html.Label("Plantilla:", htmlAttributes: new { @class = "control-label4 col-md-2" })
+            <div id="dvPopupEnfermedadExamen" class="col-md-10">
+                <select id="idPlantilla" name="idPlantilla" class="form-control sizeChosen">
+                    @foreach (Plantilla plantilla in Model)
+                    {
+                        <option value="@plantilla.IdPlantilla"> @plantilla.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div class="divRow">
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary" id="btnSelectPlantilla" onclick="btnSelectPlantilla()">Agregar Exámen</button>
+                </div>
+            </div>
+            <div class="col-md-8"></div>
+        </div>
+    }
+    else
+    {
+        <p>No existen plantillas para mostrar.</p>
+    }
+
+
+    <script type="text/javascript">
+
+        $("#idPlantilla").chosen({ placeholder_text_single: "Seleccione una plantilla", no_results_text: "No existen coincidencias" });
+
+    </script>
+@*}*@
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/ResultadosAnalisis.js?updated=1")
+}

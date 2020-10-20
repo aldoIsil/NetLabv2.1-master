@@ -1,0 +1,120 @@
+﻿@*  Descripción: Vista, para el registro de las ordenes cuyas muestras sean de animales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, formulario no usado.*@
+@model NetLab.Models.Orden.OrdenAnimalViewModels
+@{
+    ViewBag.Title = "Registro de Orden de Análisis para Animales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2 class="centered">Registro de Orden de Análisis para Animales</h2>
+<br />
+
+@using (Html.BeginForm("NuevaOrden", "OrdenAnimal", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Animal.FullName)
+    @Html.HiddenFor(model => model.Animal.Nombre)
+    @Html.HiddenFor(model => model.Animal.Codificacion)
+
+    <div class="form-horizontal">
+        <fieldset class="default">
+            <legend class="default">Datos del Animal</legend>
+            <div class="form-group">
+                @Html.Label("Codigo:", new { @class = "control-label col-xs-2 input-sm" })
+                <div class="col-xs-2">
+                    <span class="form-control input-sm">@Html.Raw(Model.Animal.Codificacion)</span>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Propietario:", new { @class = "control-label col-xs-2 input-sm" })
+                <div class="col-xs-5">
+                    <div class="form-control input-sm">@Html.Raw(Model.Animal.FullName)</div>
+                </div>
+                @Html.Label("Nombre:", new { @class = "control-label col-xs-2 input-sm" })
+                <div class="col-xs-3">
+                    <span class="form-control input-sm">@Html.Raw(Model.Animal.Nombre)</span>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset class="default">
+            <legend class="default">Proyecto y EESS/LAB</legend>
+            <div class="cont-line">
+                <div class="block-line">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Orden.idProyecto, new { @class = "control-label col-xs-2 input-sm" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(p => p.Proyecto.IdProyecto, Model.Proyecto.Proyectos, "-Seleccione si aplica-", new {@class = "form-control input-sm" })
+                        </div>
+                        @Html.LabelFor(model => model.Orden.nroOficio, new { @class = "control-label col-xs-3 input-sm" })
+                        <div class="col-xs-4">
+                            @Html.TextBoxFor(model => model.Orden.nroOficio, new { @class = "form-control input-sm", placeholder = "Ingrese Número de oficio" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Orden.establecimiento, new { @class = "control-label col-xs-2 input-sm" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(model => model.Establecimiento.IdEstablecimiento,
+                                Model.Establecimiento.Establecimientos,
+                                new
+                                {
+                                    @id = "cmbEstablecimiento",
+                                    @class = "form-control input-sm",
+                                    @data_url = @Url.Action("GetEstablecimientos", "BancoSangre"),
+                                    @data_loading_image = @Url.Content("~/Content/images/loading.gif")
+                                })
+                        </div>
+                        @Html.Label("Establecimientos Frecuentes:", new { @class = "control-label col-xs-3 input-sm" })
+                        <div class="col-xs-4">
+                            <select class="col-xs-12" multiple="multiple" id="cmbEstablecimientoFrecuente" name="cmbEstablecimientoFrecuente">
+                                <option value="@ViewBag.establecimientoUsuarios.idEstablecimiento">@ViewBag.establecimientoUsuarios.nombre</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset class="default">
+            <legend class="default">Examenes <span>@Html.ActionLink("+ Agregar", "ShowPopupEnfermedadExamen", "Orden", null, new { @id = "btnShowPopupEnfermedadExamen", @class = "btn-link", style = "fontSize:12px" })</span></legend>
+            <div id="dvTblExamen" data-url="@Url.Action("DelExamen","Orden")"  class="col-xs-12">
+                @Html.Partial("~/Views/Orden/_TblExamen.cshtml", Model.OrdenExamen)
+            </div>
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default">Muestras</legend>
+            <div id="dvTblOrdenMuestra" class="col-xs-12">
+                @Html.Partial("~/Views/Orden/_TblOrdenMuestra.cshtml", Model.OrdenMuestra)
+            </div>
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default">Materiales</legend>
+            <div id="dvTblMaterial" class="col-xs-12">
+                @Html.Partial("~/Views/Orden/_TblMaterial.cshtml", Model.OrdenMaterial)
+            </div>
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default">Observación</legend>
+            <div class="form-group allWidth divObservacion dl-horizontal map">
+                @Html.TextAreaFor(model => model.Observacion, new { @class = "form-control", placeholder = "Ingrese observación" })
+            </div>
+        </fieldset>
+        <br />
+        <br />
+        <div class="form-group">
+            <div class="text-center">
+                <input type="submit" value="Guardar" class="btn btn-default btn-link" />
+            </div>
+        </div>
+    </div>
+    <div id="dialog-open" style="display: none">
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/OrdenAnimal.js")
+}

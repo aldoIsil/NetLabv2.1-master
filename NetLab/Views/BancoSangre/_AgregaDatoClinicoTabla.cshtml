@@ -1,0 +1,84 @@
+﻿@*  Descripción: Vista, muestra dato clinicos configurados.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.ViewData.OrdenDatoClinicoVd>
+<script>
+    //
+    //$('.chosen-select-width').on('change', function (evt, params) {
+
+    //  var idExamen = $(this).parent().attr('class');
+    //  var idAnalito = "";
+    //  $('.chosen-select-width :selected').each(function (i, selected) {
+
+    //      idAnalito = idAnalito+"idAnalito=" + $(selected).val()+"&";
+    //  });
+    //  $.ajax(
+    //         {
+    //             url: '@(Url.Action("AgregarAnalito", "Orden",null, Request.Url.Scheme))?'+idAnalito+'idExamen=' + idExamen,
+    //             cache: false,
+    //             method: "GET"
+    //         }).done(function (msg) {
+    //         }
+    //         )
+    //
+
+    //});
+
+
+
+</script>
+
+
+<table class="table" width="80" >
+    <tr>
+        <th>
+            Dato Clínico
+        </th>
+        <th>
+            Valor
+        </th>
+        <th></th>
+    </tr>
+
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+
+            <tr>
+             
+                <td>
+                    @Html.DisplayFor(modelItem => item.ordenDatoClinico.Dato.Prefijo)
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.ordenDatoClinico.Dato.IdDato)>
+                    @Html.DropDownList("cmbTipoMuestra",
+                    new SelectList(ViewBag.examen.tipoMuestraList, "idTipoMuestra", "nombre"), new { value = "0", @class = "chosen-select" })
+                </td>
+                <td>
+                    <a id=@Html.DisplayFor(modelItem => item.ordenDatoClinico.Dato.IdDato) class="eliminarDatoClinico">Eliminar</a>
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+@if (Model != null && Model.Count() > 0 )
+{
+
+<script type="text/javascript">
+        var config = {
+            //'.chosen-select': {},
+            //'.chosen-select-deselect'  : {allow_single_deselect:true},
+            //'.chosen-select-no-single' : {disable_search_threshold:10},
+            //'.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+            '.chosen-select-width'     : {width:"95%"}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+</script>
+
+}

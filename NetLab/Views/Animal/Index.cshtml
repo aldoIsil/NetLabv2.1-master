@@ -1,0 +1,96 @@
+﻿@*  Descripción: Vista, muestra la pantalla para realizar la busqueda y dar mantenimineto a un registro de un Animal
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList <Model.Animal>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Buscar Animal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Buscar Animal</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <br/>
+            @using (Html.BeginForm("Index", "Animal", FormMethod.Get))
+            {
+                <label>Buscar por código, nombre, responsable o refugio:</label>
+                @Html.TextBox("search", (string) ViewBag.search)
+                <input type="submit" value="Buscar" class="btn btn-default btn-link"/><label>|</label>
+                @Html.ActionLink("Nuevo", "Agregar", null, new { @class= "btn btn-default btn-link", style = "padding-left:7px"})
+            }
+            <br/>
+            <br/>
+            @if (Model != null && Model.TotalItemCount > 0)
+            {
+                <table class="table">
+                    <tr>
+                        <th>
+                            Código
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Sexo
+                        </th>
+                        <th>
+                            Especie
+                        </th>
+                        <th>
+                            Propietario
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Codificacion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sexo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Raza.Especie.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Editar", "Editar", "Animal", new { item.IdAnimal }, null)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Nueva Orden", "Index", "OrdenAnimal", new { item.IdAnimal }, null)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                if (ViewBag.search != null)
+                {
+                    @(ViewBag.search == string.Empty ? Html.EmptyTable("Por favor digite el código / nombre") : Html.EmptyTable())
+                }
+            }
+            @if (Model != null)
+            {
+                @Html.PagedListPager(Model, page => Url.Action("Index", new {page, ViewBag.search}))
+            }
+        </div>
+    </div>
+</div>

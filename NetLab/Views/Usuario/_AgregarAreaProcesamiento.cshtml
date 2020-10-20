@@ -1,0 +1,90 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la busqueda de areas de procesamiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.AreaProcesamiento>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarAreaProcesamiento", new { ViewBag.idUsuario }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <br />
+    <div class="row">
+
+        @Html.Label("Ingrese filtro de búsqueda:", new { @class = "control-label col-md-3" })
+        @Html.TextBox("search", (string)ViewBag.search, new { @class = "form-control col-md-2 txtBusqueda" }) &nbsp;
+        @*<input type="submit" value="Buscar" class="btn-link col-md-2" />*@
+        <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+
+
+    </div>
+}
+<br />
+@using (Html.BeginForm("GuardarAreaProcesamiento", "Usuario", new { ViewBag.idUsuario }, FormMethod.Post, new { @id = "formAgregarAreaUsuario" }))
+{
+    @Html.AntiForgeryToken()
+    if (Model != null)
+    {
+        <table class="table" id="TableAreaProcesamiento">
+
+
+            <tr>
+                <th>
+                    <input type='checkbox' name="chkAll" id="chkAll" />
+                </th>
+                <th>Área de Procesamiento</th>
+
+            </tr>
+
+
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width:15px">
+                        <input type="checkbox" name="areas" value="@item.IdAreaProcesamiento" class="chkAreaAgregar" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                </tr>
+            }
+        </table>
+
+        @*<input id="btnCerrar" type="submit" value="Volver a la Lista" class="btn-link" />
+            <input type="Submit" value="Guardar" class="btn btn-primary" id="guardarAreas" />*@
+
+        <button type="submit" value="Volver a la Lista" id="btnCerrar" class="btn btn-default"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+        <button type="submit" value="Guardar" class="btn btn-primary" id="guardarAreas"><span class="fa fa-floppy-o"></span> Guardar</button>
+
+        @Html.PagedListPager(Model, page => Url.Action("AgregarAreaProcesamiento", new { page, ViewBag.search, ViewBag.idUsuario }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+    }
+    else
+    {
+        @*<input id="btnVolverRolArea2" type="submit" value="Volver a la Lista" class="btn-link" />*@
+        <button type="submit" value="Volver a la Lista" id="btnVolverRolUsuario2" class="btn btn-default"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+    }
+}
+
+
+
+<style type="text/css" media="all">
+    .txtBusqueda {
+        width: 200px !important;
+    }
+</style>
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>

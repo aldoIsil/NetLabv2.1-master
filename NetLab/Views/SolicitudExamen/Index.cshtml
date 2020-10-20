@@ -1,0 +1,148 @@
+﻿@model List<Model.Paciente>
+
+@{
+    ViewBag.Title = "Busqueda de Pacientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/font-awesome.css">
+
+@using (Html.BeginForm("Index", "SolicitudExamen", FormMethod.Post, new { id = "frmGenotipificacion" }))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Pacientes</legend>
+        <div class="form-group">
+            <div>
+                @Html.Label("Tipo de Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-3" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control  numericOnly", autocomplete = "off" })
+            </div>
+        </div>
+        <br /><br />
+        <div class="form-group">
+            <div>
+                @Html.Label("Apellido Paterno:", new { @class = "-label col-xs-6 col-sm-3  col-md-2 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("apellidoPaterno", (string)ViewBag.apellidoPaterno, new { @class = "form-control input-sm", autocomplete = "off" })
+            </div>
+            <div>
+                @Html.Label("Apellido Materno:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("apellidoMaterno", (string)ViewBag.apellidoMaterno, new { @class = "form-control", autocomplete = "off" })
+            </div>
+            <div>
+                @Html.Label("Nombre:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("nombre", (string)ViewBag.nombre, new { @class = "form-control", autocomplete = "off" })
+            </div>
+        </div>
+        <br /><br />
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  col-sm-offset-5 col-md-offset-5 col-lg-offset-5">
+                <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+            </div>
+        </div>
+    </fieldset>
+
+}
+<br /><br />
+
+@if (Model != null && Model.Count > 0)
+{
+    <table id="dtPaciente">
+        <thead>
+            <tr>
+                <th width="150">
+                    Tipo de Documento
+                </th>
+                <th width="100">
+                    Número de Documento
+                </th>
+                <th>
+                    Apellido Paterno
+                </th>
+                <th>
+                    Apellido Materno
+                </th>
+                <th>
+                    Nombres
+                </th>
+                <th>Ver Historial</th>
+                <th>Genotipificación</th>
+                <th>Tropismo</th>
+                <th>HLA B*5701</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+                {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tipoDocumentoNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombres)
+                </td>
+                <td>
+                    <button type='button' class='btn btn-default btn-block fa fa-user-md' onclick=HistorialPacienteVIH('@item.IdPaciente')></button>
+                </td>
+                <td>
+                    @*@Html.ActionLink(" ", "SolicitudExamenVih", "SolicitudExamen", new { idPaciente = item.IdPaciente, tipoSolicitud = "1" }, new { @class = "btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })*@
+                    <button class="btn btn-default btn-block fa fa-file-text-o" onclick="ValidaDatosExamen('@item.IdPaciente','1')" ></button>
+                </td>
+                <td>
+                    @*@Html.ActionLink(" ", "SolicitudExamenVih", "SolicitudExamen", new { idPaciente = item.IdPaciente, tipoSolicitud = "2" }, new { @class = "historial btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })*@
+                    <button class="btn btn-default btn-block fa fa-file-text-o" onclick="ValidaDatosExamen('@item.IdPaciente','2')"></button>
+                </td>
+                <td>
+                    @*@Html.ActionLink(" ", "SolicitudExamenVih", "SolicitudExamen", new { idPaciente = item.IdPaciente, tipoSolicitud = "3" }, new { @class = "historial btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })*@
+                    <button class="btn btn-default btn-block fa fa-file-text-o" onclick="ValidaDatosExamen('@item.IdPaciente','3')"></button>
+                </td>
+                
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">No se encontraron resultados</div>
+}
+<br />
+<div id="HistorialVIH">
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/SolicitudExamen.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtPaciente').DataTable({
+                "scrollY": "600px",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });        
+    </script>
+}
+

@@ -1,0 +1,251 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la generacion de codigos de muestra e imprimirlos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using Model;
+@{
+    ViewBag.Title = "Generar Códigos de Muestras";
+}
+<h2>@ViewBag.Title.</h2>
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+@if (!ViewBag.isPost)
+{
+    <form id="frmGenerar" method="post">
+        <div class="form-group">
+            <label for="selTipo" class="col-md-1 control-label">EESS/LAB</label>
+            <div class="col-md-6">
+                @Html.TextBox("CodigoUnico", (string)ViewBag.textoLaboratorioPreSeleccionada, new { @class = "form-control" })
+                @Html.Hidden("idEstablecimiento", (string)ViewBag.valueLaboratorioPreSeleccionada)
+
+                @*<select class="form-control input-sm" id="idEstablecimiento" name="idEstablecimiento">
+                        <option value=""></option>
+                    </select>*@
+
+                @*<select id="selEstablecimiento" name="se
+                    <a href="~/Views/Muestra/GenerarCodigo.cshtml">~/Views/Muestra/GenerarCodigo.cshtml</a>lEstablecimiento" class="form-control">
+                                            @foreach (Establecimiento item in ViewBag.establecimientosUsuario) {
+                                                <option value="@item.IdEstablecimiento">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                                            }
+                                        </select>*@
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="txtCantidad" class="col-md-1 control-label">Cantidad de Tipos de Muestra</label>
+            <div class="col-md-2">
+                <input id="txtCantidad" name="txtCantidad" class="form-control ValidateLength" type="number" min="1" max="50" value="1" onkeypress="return isNumberKey(event)" />
+            </div>
+            @if (ViewBag.idExtablecimientoUsuario == 991)
+            {
+                <div class="control-text text-info">
+                    Crear Codigo Lineal
+                    <input type="checkbox" name="chkCodigoLineal" />
+                </div>
+            }
+        </div>
+        <br />
+        <div class="form-group">
+
+            <div class="col-md-offset-2 col-md-3">
+                @*<a id="btnGenerar" class="lnkForm" href="#" >Generar</a>*@
+                <button id="btnGenerar" class="lnkForm btn btn-primary" href="#"><span class="fa fa-qrcode" aria-hidden="true"></span> Generar </button>
+            </div>
+        </div>
+
+    </form>
+}
+else
+{
+    <h3 class="msg-ok">Se generaron correctamente los códigos.</h3>
+    <a href="@(Url.Action("ExportExcel", "Muestra", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Códigos Generados</a>
+    @*@Html.ActionLink("Descargar Códigos Generados", "ExportExcel","Muestra")*@
+    <br />
+    <br />
+    <form id="frmImprimir" method="post" action="@(Url.Action("ImprimirGenerados", "Muestra", null, Request.Url.Scheme))" target="_blank">
+        <div class="form-group">
+            <label for="txtCantidad" class="col-md-1 control-label">N° de Copias</label>
+            <div class="col-md-2">
+                <input id="txtCantidad" name="txtCantidad" class="form-control ValidateLength" type="number" min="1" max="50" maxlength="2" value="1" onkeypress="return isNumberKey(event)" />
+            </div>
+            @if (ViewBag.idExtablecimientoUsuario == 991)
+            {
+                <div class="control-text text-info">
+                    Crear Codigo Lineal
+                    <input type="checkbox" name="chkCodigoLineal" id="chkCodigoLineal"/>
+                </div>
+            }
+        </div>
+
+        <br />
+        <a id="lnkImprimir" href="#" class="lnkForm">Imprimir Códigos Generados</a>
+    </form>
+    @*if (ViewBag.tipo == 0)
+    {
+        <form id="frmImprimir" method="post" action="@(Url.Action("ImprimirGenerados", "Muestra", null, Request.Url.Scheme))" target="_blank">
+            <div class="form-group">
+                <label for="txtCantidad" class="col-md-1 control-label">N° de Copias</label>
+                <div class="col-md-2">
+                    <input id="txtCantidad" name="txtCantidad" class="form-control ValidateLength" type="number" min="1" max="99" maxlength="2" value="1" onkeypress="return isNumberKey(event)" />
+                </div>
+            </div>
+
+            <br />
+            <a id="lnkImprimir" href="#" class="lnkForm">Imprimir Códigos Generados</a>
+        </form>
+    }*@
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+}
+
+<style type="text/css">
+    .form-group {
+        padding-top: 15px;
+    }
+
+        .form-group label {
+            width: 110px !important;
+        }
+
+    .lnkForm {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+        .lnkForm img {
+            height: 26px;
+        }
+</style>
+
+
+<script type="text/javascript">
+
+    function ValidateTextboxLength(event, newvalue) {
+        if (EsCombinacionEspecial(event))
+            return true;
+
+        var controlId = event.target.id;
+        var textbox = $.trim($('#' + controlId).val());
+        var newTextValue = textbox + newvalue;
+
+        var lengthToCompare;
+
+        switch (controlId) {
+            case "txtCantidad":
+                lengthToCompare = 5;
+                break;
+            default:
+                lengthToCompare = 5;
+        }
+
+        if (textbox.length === lengthToCompare || newTextValue.length > lengthToCompare)
+            return false;
+
+        return true;
+    }
+
+    function EsCombinacionEspecial(event) {
+        return event.charCode === 0 ||  //Esto es para firefox: delete,supr,arrow keys.
+               (event.ctrlKey && event.key === "x") ||
+               (event.ctrlKey && event.key === "c") ||
+               (event.ctrlKey && event.key === "v");
+    }
+
+    window.onload = function () {
+        //$("#selEstablecimiento").chosen({ placeholder_text_single: "Seleccione un EESS/LAB", no_results_text: "No existen coincidencias" });
+        //$("#idEstablecimiento").chosen({ placeholder_text_single: "Seleccione el Establecimiento", no_results_text: "No existen coincidencias" });
+        //$("#idEstablecimiento").ajaxChosen({
+        //    dataType: "json",
+        //    type: "POST",
+        //    minTermLength: 5,
+        //    afterTypeDelay: 1000,
+        //    cache: false,
+        //    url: URL_BASE + "Muestra/GetEstablecimientos"
+        //}, {
+        //    loadingImg: URL_BASE + "Content/images/loading.gif"
+        //});
+
+        $("#CodigoUnico").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: URL_BASE + "Muestra/GetEstablecimientos?prefix=" + request.term,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Nombre, value: item.IdEstablecimiento };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                $("#idEstablecimiento").val(i.item.value);
+                $("#CodigoUnico").val(i.item.label);
+            },
+            minLength: 2
+        });
+        $("#CodigoUnico").click(function () {
+            $("#idEstablecimiento").val("");
+            $("#CodigoUnico").val("");
+        });
+        $('#btnGenerar').click(function (e) {
+            e.preventDefault();
+            var ok = true;
+
+            var cantidad = $("#txtCantidad").val();
+            var idEstablecimiento = $("#idEstablecimiento").val();
+
+            if (idEstablecimiento == undefined || idEstablecimiento == "" || idEstablecimiento == 0) {
+                jAlert("Seleccione un EESS/LAB.", "Alerta!");
+                ok = false;
+            }
+
+            if (cantidad == undefined || cantidad == "" || cantidad == 0) {
+                jAlert("Ingrese la cantidad de códigos a generar.", "Alerta!");
+                ok = false;
+            }
+
+            if (ok) {
+                $('#frmGenerar').submit();
+            }
+        });
+
+        $('#lnkImprimir').click(function (e) {
+            e.preventDefault();
+            var ok = true;
+            var lineal = 0;
+            var cantidad = $("#txtCantidad").val();
+
+            if (cantidad == undefined || cantidad == "") {
+                jAlert("Ingrese la cantidad de copias a imprimir.", "Alerta!");
+                ok = false;
+            }
+            debugger;
+            if ($('#chkCodigoLineal').is(':checked')) {
+                lineal = 1;
+            }
+            if (ok) {
+                //$.ajax({
+                //    url: URL_BASE + "Muestra/ImprimirGenerados?lineal=" + lineal,
+                //    type: "POST",
+                //    dataType: "json",
+                //    contentType: "application/json; charset=utf-8",
+                //    success: function (data) {
+                //        response($.map(data, function (item) {
+                //            return { label: item.Nombre, value: item.IdEstablecimiento };
+                //        }))
+                //    }
+                //})
+                $('#frmImprimir').submit();
+            }
+        });
+    };
+</script>

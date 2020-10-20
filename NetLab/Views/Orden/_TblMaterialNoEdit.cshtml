@@ -1,0 +1,124 @@
+﻿@* Descripción: Vista para mostrar la informacion seleccionada, en la parte de los materiales,
+    esta ventana solo podrá visualiza la información ingresada.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMaterial>
+
+<table class="table" width="1200">
+    <tr>
+        <th width="350">Examen</th>
+        <th width="100">T. Muestra</th>
+        @*<th width="100">T. Material</th>*@
+        <th width="300">Lab. Destino</th>
+        @*<th width="170">Fecha - Hora Envío</th>
+        <th width="100">Material</th>
+        <th width="40">Cantidad</th>
+        <th width="100">Volumen Muestra Colectada</th>*@
+    </tr>
+
+    @if (Model != null)
+    {
+        int c = 0;
+
+        foreach (var item in Model)
+        {
+            c++;
+            var examen = item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre;
+            <tr  class="table table-primary">
+                @*<td title='@Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)'>
+                    <div class="enfermedad-examen">
+                        @Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)
+                    </div>
+                </td>*@
+                <td>@Html.Raw(examen)</td>
+                @*<td>@Html.Raw(item.Material.TipoMuestra.nombre)</td>*@
+                <td>@Html.Raw(item.tipoToString)</td>
+                <td>@Html.Raw(item.Laboratorio.Nombre)</td>
+                @*<td>@Html.Raw(item.fechaEnvioToString) @Html.Raw(item.horaEnvioToString)</td>
+    <td>@Html.Raw(item.Material.descripcion)</td>
+    <td>@Html.Raw(item.cantidad)</td>
+    @if (item.noPrecisaVolumen == 1)
+    {
+        <td>No Precisa</td>
+    }
+    else
+    {
+        <td>@Html.Raw(item.volumenMuestraColectada) ml</td>
+    }*@
+
+            </tr>
+            //Juan Muga - inicio - se agregó if porque en la session["orden"] se está cargando la lista de OrdenMuestraRecepcion
+            if (Session["TipoRegistro"] != null && (Enums.TipoRegistroOrden)Session["TipoRegistro"] == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+            {
+                if (item.ordenMuestraRecepcionList != null && item.ordenMuestraRecepcionList.Count() > 0)
+                {
+
+                    <tr class="trth">
+                        <td colspan="1">Número Muestra Recepcionada</td>
+                        <td colspan="2">Conformidad</td>
+                        <td colspan="6">Motivos de Rechazo</td>
+                    </tr>
+
+                    for (int i = 0; i < item.ordenMuestraRecepcionList.Count(); i++)
+                    {
+
+                        var nombreCheckConforme = "conforme" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                        var nombreDivCheckConforme = "divconforme" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                        var nombreMotivoRechazo = "motivosRechazo" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                        <tr>
+                            @{ var nroMaterial = i + 1;}
+                            <td colspan="1">@nroMaterial</td>
+                            <td colspan="2">
+                                @if (item.ordenMuestraRecepcionList[i].conforme == 1)
+                                {
+                                    @Html.Raw("Conforme")
+                                }
+                                else
+                                {
+                                    @Html.Raw("Rechazado")
+                                }
+                            </td>
+                            <td colspan="6">
+                                <div class="selMotivoRechazoDiv" id=@nombreDivCheckConforme>
+                                    @{
+                                        var motivosRechazo = "";
+                                        List<SelectListItem> listaCriterio = new List<SelectListItem>();
+                                        foreach (Model.CriterioRechazo criterioRechazo in item.ordenMuestraRecepcionList[i].criterioRechazoList)
+                                        {
+                                            listaCriterio.Add(new SelectListItem
+                                            {
+                                                Text = criterioRechazo.Glosa,
+                                                Value = criterioRechazo.IdCriterioRechazo.ToString(),
+                                                Selected = criterioRechazo.rechazado
+                                            });
+                                            if (criterioRechazo.rechazado)
+                                            {
+                                                motivosRechazo = motivosRechazo + criterioRechazo.Glosa + ", ";
+                                            }
+
+
+                                        }
+                                        if (motivosRechazo.Length > 0)
+                                        {
+                                            @Html.Raw(motivosRechazo.Substring(0, motivosRechazo.Length - 2))
+                                        }
+                                    }
+
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        }
+                    }
+                }
+            }
+            //Juan Muga - Fin
+        }
+
+
+</table>
+
+

@@ -1,0 +1,155 @@
+﻿@model NetLab.Models.PEED.EvaluacionPanelesViewModels
+@using NetLab.Helpers
+@{
+    ViewBag.Title = "Configuración Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2>Configuración Panel - Evaluación : "@Model.Evaluacion.Nombre"</h2>
+
+<p>
+    @Html.ActionLink(" Agregar Panel", "AgregarPanel", new { Model.Evaluacion.idConfigEvaluacion }, new { id = "openDialog", @class = "btn btn-primary fa fa-plus-square-o" })
+</p>
+@if (Model != null && Model.Paneles.Count > 0)
+{
+    <table class="table">
+        <tr>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().idConfiguracionPanel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().idConfigEvaluacion)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().idTipoEvaluacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().nroLote)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().idTipo)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().idSubTipo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().estado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().idusuarioregistro)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().UsuarioRegistro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().UsuarioEdicion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().fecharegistro)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Paneles.First().idusuarioedicion)
+                </th>>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Paneles.First().fechaedicion)
+            </th>
+            <th>Editar</th>
+            <th>Material</th>
+        </tr>
+
+        @foreach (var item in Model.Paneles)
+        {
+            <tr>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.idConfiguracionPanel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.idConfigEvaluacion)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescTipoEvaluacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nroLote)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescTipo)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.idSubTipo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.estado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.idusuarioregistro)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioRegistro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioEdicion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fecharegistro)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.idusuarioedicion)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaedicion)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "EditarPanel", new { idConfiguracionPanel = item.idConfiguracionPanel }, new { id = "editDialog", @class = "btn btn-default btn-block fa fa-pencil-square-o" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "AddMaterial", new
+               {
+                   idConfiguracionPanel = item.idConfiguracionPanel,
+                   idConfigEvaluacion = item.idConfigEvaluacion,
+                   idtipo = item.idTipo,
+                   idtipoevaluacion = item.idTipoEvaluacion
+               }, new { @class = "btn btn-default btn-block fa fa-cube" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    @Html.EmptyTable();
+}
+<br />
+<br />
+<div>
+    @*@Html.ActionLink("Retroceder", "Index")*@
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/PEED/ConfiguracionPanelEval.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}

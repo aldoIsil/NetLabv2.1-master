@@ -1,0 +1,59 @@
+﻿@*  Descripción: Vista, muestra la pantalla para editar una presentación.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Presentacion
+
+@using (Html.BeginForm("EditarPresentacion", "Presentacion", new { page = ViewBag.page, search = ViewBag.search }, FormMethod.Post, new { id = "frmEditarPresentacion" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+        <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+
+        <h4>Presentacion</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.glosa, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.glosa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.glosa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @if (Model.Estado == 1)
+                {
+                    @Html.CheckBox("chkActivoRol", true)
+                }
+                else
+                {
+                    @Html.CheckBox("chkActivoRol", false)
+                }
+            </div>
+        </div>
+        <input type="hidden" id="someDataFromPartialSomehow" value="@Model.glosa" />
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" id="btnGuardar" value="Guardar" class="btn btn-primary" onclick="return ValidaCampoRequeridoPresentacionEditar();" />
+                <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />
+              </div>
+        </div>
+    </div>
+}
+<div id="presentacionDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

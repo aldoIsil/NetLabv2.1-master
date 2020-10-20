@@ -1,0 +1,281 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el ingreso al sistema.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@{ ViewBag.Title = "Login";
+    Layout = null; 
+    }
+
+@Styles.Render("~/Content/Login")
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top super_bar" role="navigation">
+    <ul id="menuBar" class="topmenu">
+        <li class="topmenu"><img src="~/img/INS_Web_2.png" alt="" style="height: 60px;"></li>
+        <li class="toproot rigthMenuItem">
+            <img src="~/img/logo2.png" alt="" style="height: 60px;float:left">
+        </li>
+    </ul>
+</nav>
+<div class="container">
+    <div class="row ">
+        <div class="col-sm-12 col-md-4 panel panel-primary hidepanels">
+            <div class="panel-heading"><strong><i class="fa fa-folder" aria-hidden="true"></i> Noticias</strong></div>
+            <div class="panel-body">
+                <div class="form-group linksGroup">
+                    <div class="col-md-10">
+
+                        <p class="text-warning"> <span class="glyphicon glyphicon-warning-sign text-warning text-center"></span>  Nueva versión públicada, <strong> Por favor <em>borrar los archivos temporales del navegador</em> para poder visualizar los cambios.</strong> </p>
+                    </div>
+                    <br /><br /><br /><br />
+                    <div class="col-md-12">
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                                @*<li data-target="#myCarousel" data-slide-to="2"></li>*@
+                            </ol>
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <a href="">
+                                        <img src="~/img/Comunicado.PNG" alt="Portada">
+                                    </a>
+                                    <div class="carousel-caption">
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    @*<img src="~/img/Ima_1_BZika-04.jpg" alt="Portada">
+                                        <div class="carousel-caption">
+                                            <h3>Boletín INS</h3>
+                                            <p>Julio 2017</p>*@
+                                    <a href="https://app.powerbi.com/view?r=eyJrIjoiMjBjNTM3NmYtNTJmMy00ZmE3LWExOWItZTM0ZTliNTFmZDY2IiwidCI6ImI0NzYxY2VlLTlkYWQtNDc3MS05ZjQ3LTVmYjc4Y2MxYjRhYSIsImMiOjR9" target="_blank"><img src="~/img/Dashboard_Genoma.jpg" alt="Portada"></a>
+                                    <div class="carousel-caption">
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <a href="https://app.powerbi.com/view?r=eyJrIjoiOTg3Y2FmZGMtYzBhOC00ZmE2LTkyYmYtNjNmMjNmNjZiYWJjIiwidCI6ImI0NzYxY2VlLTlkYWQtNDc3MS05ZjQ3LTVmYjc4Y2MxYjRhYSIsImMiOjR9&pageName=ReportSection" target="_blank"><img src="~/img/Dashboard_COVID.jpg" alt="Información"></a>
+                                </div>
+
+                                @*<div class="item">
+                                        <img src="~/img/Ima_1_BZika-04.jpg" alt="Los Angeles">
+                                    </div>*@
+                            </div>
+
+                            <!-- Left and right controls -->
+                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="signup-form ">
+                <img src="~/img/logo_principal.png" alt="" class="responsive" />
+                <h2><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i> LOGIN</strong></h2>
+                <form id="frmLogin" method="post" action="@(Url.Action("Login", "Login",null, Request.Url.Scheme))">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="txtUser" type="text" class="form-control" name="txtUser" placeholder="Ingrese su Usuario">
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="txtClave" type="password" class="form-control" name="txtClave" placeholder="Ingrese su Contraseña">
+                    </div>
+                    <div class="form-group fg-btn">
+                        <button type="button" class="btn btn-primary" id="btnLogin" href="#"><span class="fa fa-sign-in" aria-hidden="true"></span> Iniciar Sesión</button>
+                    </div>
+                    @if (ViewBag.loginFault > 0)
+                    {
+                        string faultMsg = "";
+                        switch ((int)ViewBag.loginFault)
+                        {
+
+                            case 1: faultMsg = "Usuario no existe"; break;
+                            case 2: faultMsg = "Usuario nuevo"; break;
+                            case 3: faultMsg = "Usuario caducado"; break;
+                            case 4: faultMsg = "Usuario desactivado"; break;
+                            case 5: faultMsg = "Contraseña erronea."; break;
+                            case 7: faultMsg = "Ingresar un usuario y contraseña."; break;
+                            case 8: faultMsg = "Ingresar una contraseña para el usuario."; break;
+                        }
+        <br /> <br />
+                        <span class="alert alert-danger">@faultMsg</span> @*<span class="msj-error">@faultMsg</span>*@}
+                    <div class="btn-group">
+                        @Html.ActionLink("¿Olvidaste tu contraseña?", "OlvidoContrasena", "Login", new { @class = "btn btn-default" })
+
+                        @Html.ActionLink("Contactenos", "Contactar", "Login", new { @class = "btn btn-default" })
+                        <br />
+                        @*@Html.ActionLink("Solicitud", "Index", "CuentaUsuario")*@
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-md-offset-1 panel panel-primary hidepanels">
+            <div class="panel-heading"><strong><i class="fa fa-bluetooth" aria-hidden="true"></i> TODO SOBRE ACCESO A NETLABv2 </strong></div>
+            <div class="container">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse1" src="~/img/Mesa de trabajo 10-1.png" />
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <img src="~/img/Mesa de trabajo 11_2.png" class="responsive" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse2" src="~/img/Mesa de trabajo 10 copia -1.png" />
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @*<button type="button" class="btn btn-primary" href="~/Documentos/RD_ITT_535_CREACIÓN_CORREO_ELECTRÓNICO_PARA_ACCESO_NETLAB.pdf" >
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo para crear correo "netlab": ITT-CNSP-535 </button>*@
+                                <a href="~/Documentos/ITT_535_CREACIÓN_CORREO_ELECTRÓNICO_PARA_ACCESO_NETLAB.pdf" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo para crear correo "netlab": ITT-CNSP-535
+                                </a>
+                                <br /><br />
+                                @*<button type="button" class="btn btn-primary" href="~/Documentos/SOLICITUD_DE_ACCESO_25.10.19_FOR567.pdf">
+                                        <span class="fa fa-sign-in" aria-hidden="true"></span> Formulario para acceso a NetLabv2: ITT-CNSP-567
+                                    </button>*@
+                                <a href="~/Documentos/FORMULARIO_PARA_ACCESO_NETLABV2_FOR567.pdf" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Formulario para acceso a NetLabv2: FOR-CNSP-567
+                                </a>
+                                <br /><br />
+                                @*<button type="button" class="btn btn-primary" href="~/Documentos/RD_ITT_536_CORRECTO_LLENADO_FORMULARIO_ACCESO_NETLAB.pdf">
+                                        <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo para correcto llenado del formulario de acceso
+                                    </button>*@
+                                <a href="~/Documentos/ITT_536_CORRECTO_LLENADO_FORMULARIO_ACCESO_NETLAB.pdf" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo para correcto llenado del formulario de acceso: ITT-CNSP-536
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse3" src="~/img/Mesa de trabajo 10 copia 2-1.png" />
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse4" src="~/img/Mesa de trabajo 10 copia 3-1.png" />
+                        </div>
+                        <div id="collapse4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <img src="~/img/restricciones.png" class="responsive" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse5" src="~/img/Mesa de trabajo 10 copia 4-1.png" />
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @*<button type="button" class="btn btn-primary" href="~/Documentos/RD_ITT_537_REGISTRO_Y_ACTUALIZACIÓN_DE_USUARIOS_SISTEMA_NETLAB.pdf">
+                                        <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo Actualización de usuarios: ITT-CNSP-537
+                                    </button>*@
+                                <a href="~/Documentos/ITT_537_REGISTRO_Y_ACTUALIZACIÓN_DE_USUARIOS_SISTEMA_NETLAB.pdf" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Instructivo Actualización de usuarios: ITT-CNSP-537
+                                </a>
+                                <br /><br />
+                                @*<button type="button" class="btn btn-primary" href="~/Documentos/FORMULARIO_PARA_ACCESO_25.10.19_FOR568.pdf">
+                                        <span class="fa fa-sign-in" aria-hidden="true"></span> Formulario para actualización de usuarios a NetLabv2
+                                    </button>*@
+                                <a href="~/Documentos/FORMULARIO_PARA_ACTUALIZACION_USUARIOS_NETLABV2_FOR568.pdf" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Formulario para actualización de usuarios a NetLabv2
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div>
+                            <img data-toggle="collapse" data-parent="#accordion" href="#collapse6" src="~/img/Mesa de trabajo 10 copia 5 - 2.png" />
+                        </div>
+                        <div id="collapse6" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="~/Documentos/CARTERA DE SERVICIOS.xlsx" class="btn btn-primary" target="_blank">
+                                    <span class="fa fa-sign-in" aria-hidden="true"></span> Catálago de Servicios
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="width:1080px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="~/img/Comunicado.PNG" alt="Portada">
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/bootstrap/Login")
+
+
+<script type="text/javascript">
+    // Descripción: funciones de carga para la validacion de los botones y cajas de texto.
+    // Author: Terceros.
+    // Fecha Creacion: 01/01/2017
+    // Fecha Modificación: 02/02/2017.
+    // Modificación: Se agregaron comentarios.
+    window.onload = function () {
+        $('#btnLogin').click(function () {
+            $('#frmLogin').submit();
+        });
+
+        $('#txtUser').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $('#frmLogin').submit();
+            }
+        });
+
+        $('#txtClave').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $('#frmLogin').submit();
+            }
+        });
+
+        $(document).ready(function () {
+            $('#exampleModalCenter').modal('toggle')
+        });
+    };
+</script>

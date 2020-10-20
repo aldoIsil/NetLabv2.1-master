@@ -1,0 +1,90 @@
+﻿@model Model.ConfiguracionEvalControlCalidad
+
+@{
+    ViewBag.Title = "Nueva Evaluación.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Nueva Evaluación</h2>
+
+@using (Html.BeginForm("AgregarConfigEval", "ConfiguracionEvalControlCalidad", new { ViewBag.id }, FormMethod.Post, new { @id = "formAgregarEvaluacion" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                @Html.LabelFor(model => model.Enfermedad, htmlAttributes: new { @class = "control-label col-md-2" })
+                <input type="hidden" id="hdnEnfermedad" name="hdnEnfermedad" value="0" />
+                <div class="col-md-10">
+                    <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                        <option value=""></option>
+                    </select>
+                    @if (ViewBag.enfermedades != null)
+                    {
+                        <script type="text/javascript">
+                            $("#idEnfermedad").val(@ViewBag.enfermedades).trigger("liszt:updated");
+                        </script>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Establecimiento Evaluador", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBox("CodigoUnicoEvaluador", "", new { @class = "form-control" })
+                    @Html.Hidden("hddDatoEvaluador", (string)ViewBag.CodigoUnico)
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Establecimiento Evaluado", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBox("CodigoUnicoEvaluado", "", new { @class = "form-control" })
+                    @Html.Hidden("hddDatoEvaluado", (string)ViewBag.CodigoUnico)
+                </div>
+            </div>
+        </div>
+
+
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @*<input type="submit" value="Registrar" class="btn btn-default" />*@
+                <button id="btnGuardarConfigEval" class="btn btn-default">Grabar</button>
+            </div>
+
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Regresar", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/PEED/ConfiguracionEval.js?updated={0}", new Random().Next(0, 999))))
+}

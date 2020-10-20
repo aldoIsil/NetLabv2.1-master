@@ -1,0 +1,254 @@
+﻿@model IEnumerable<Model.ViewData.OrdenRecepcionVd>
+
+@using NetLab.Helpers;
+@{
+    ViewBag.Title = "Busqueda Muestras Ingresadas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@using (Html.BeginForm("BusquedaMuestrasIngresadas", "OrdenMuestra", FormMethod.Post))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Muestras Ingresadas</legend>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Código de Muestra:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("codigoMuestra", (string)ViewBag.codigoMuestra, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    @*<div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        </div>*@
+                    @Html.Label("Código Orden:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("N° Oficio/Código Documento:", new { @class = "-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                        <br />
+                        <button class="btn btn-primary" id="btnBuscarOrdenesIngresadas" value="Buscar" type="submit"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                    </div><br /><br />
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+@if (Model != null && Model.Count() > 0)
+{
+    <table id="dtOrdenIngresada" class="table">
+        <thead>
+            <tr>
+                <th>
+                    Estado Orden
+                </th>
+                <th>
+                    Código Orden
+                </th>
+                <th>
+                    Código Muestra
+                </th>
+                <th>
+                    Nro Oficio
+                </th>
+                <th>
+                    Paciente
+                </th>
+                <th>
+                    Sexo
+                </th>
+                <th>
+                    Fecha Nacimiento
+                </th>
+                <th>
+                    Edad
+                </th>
+                <th>
+                    Tipo Muestra
+                </th>
+                <th>
+                    Enfermedad
+                </th>
+                <th>
+                    Examen
+                </th>
+                <th>
+                    Resultado
+                </th>
+                <th>
+                    Criterio Rechazo Lab
+                </th>
+                <th>
+                    Observación
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.estadoOrdenResultado)
+                </td>
+                <td>
+                    <button type="button" class="btn-link" onclick="VerOrden('@item.idOrden','BusquedaMuestrasIngresadas','OrdenMuestra','@item.codigoOrden')" data-toggle="modal"
+                            data-target="#VerOrden2" data-idOrden="@item.idOrden" data-Origen="BusquedaMuestrasIngresadas" data-Controlador="OrdenMuestra" data-Codigo="@item.codigoOrden">
+                        @Html.DisplayFor(modelItem => item.codigoOrden)
+                    </button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.codigoMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nroOficio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.oPaciente.Nombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.oPaciente.sexo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.oPaciente.FechaNacimiento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.oPaciente.edadPaciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tipoMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.enfermedad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.examen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.resultado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.criterioRechazo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.observacionRechazoLab)
+                </td>
+                <td>
+                    @if (item.estadoOrdenResultado == "Rechazo Laboratorio")
+                    {
+                        <button type="button" class="btn btn-warning" onclick="LevantarObservacionClick('@item.idOrden','@item.tipoMuestra','@item.idOrdenMuestraRecepcion','@item.idOrdenMaterial')" data-toggle="modal"
+                                data-target="#LevantarObservacion" data-idOrden="@item.idOrden" data-tipoMuestra="@item.tipoMuestra" data-idOrdenMuestraRecepcion="@item.idOrdenMuestraRecepcion" data-idOrdenMaterial="@item.idOrdenMaterial">
+                            Levantar Observaciones
+                        </button>
+                    }
+                    <br />
+                    @Html.ActionLink("Agregar Examen", "ShowPopupNuevoEnfermedadExamen", "Orden", new { id = item.idOrden }, new { @class = "btn btn-default btn-sm btnShowPopupEnfermedadExamen", id = item.idOrden })
+                    <input type="hidden" id="idPage" value="RomINS" />
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<div class="modal Adapterscreen-modal fade" id="LevantarObservacion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataLevantarObservacion" class="modal-body">
+                <div class="container-fluid">
+
+                </div>
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal Adapterscreen-modal fade" id="VerOrden2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataVerOrden2" class="modal-body">
+                <div class="container-fluid">
+
+                </div>
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-open" style="display: none">
+</div>
+<div id="dialog-load" style="display: none"></div>
+
+@section Scripts {
+@Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+@Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/OrdenMuestra.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/PopupAgregarExamen.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtOrdenIngresada').DataTable({
+                "scrollY": "500px",
+                "scrollX": true
+            });
+            $('.dataTables_length').addClass('bs-select');
+
+            $("#CodigoMuestra").keyup(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnAddMuestra").click();
+                }
+            });
+        });
+    </script>
+}
+

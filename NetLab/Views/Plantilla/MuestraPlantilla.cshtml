@@ -1,0 +1,108 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el mantenimiento de las muestras por plantilla.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.Plantilla.PlantillaMuestraViewModels
+
+@{
+    ViewBag.Title = "Muestras por Examen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+<h2 class="text-primary">Muestras por Examen para la plantilla:</h2>
+<h2> "@Model.Plantilla.Nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Muestra", "AgregarMuestra", new { Model.Plantilla.IdPlantilla }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null && Model.Muestras.Count > 0)
+{
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Muestras.First().Enfermedad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Muestras.First().Examen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Muestras.First().Muestra)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Muestras.First().Material)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Muestras.First().Cantidad)
+            </th>
+            <th>Eliminar</th>
+        </tr>
+
+        @foreach (var item in Model.Muestras)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enfermedad.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Examen.nombre)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Muestra.nombre)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Material.descripcion)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Cantidad)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EliminarMuestra",
+                    new
+                    {
+                        Model.Plantilla.IdPlantilla,
+                        item.Enfermedad.idEnfermedad,
+                        item.Examen.idExamen,
+                        item.Muestra.idTipoMuestra,
+                        item.Material.idMaterial
+                    },
+                    new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", "Plantilla")*@
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Plantilla/MuestraPlantilla.js")
+}
+

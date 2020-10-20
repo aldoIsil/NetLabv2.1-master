@@ -1,0 +1,269 @@
+﻿@model List<Model.ViewData.OportunidadResultado>
+@using System.Globalization
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Indicador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Dataset = Model;
+}
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/font-awesome.css">
+<h3 class="text-primary"></h3>
+
+@using (Html.BeginForm("index", "Indicador", FormMethod.Post))
+{
+    <fieldset class="default">
+        <legend class="default">INDICADOR - @ViewBag.Examen</legend>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                @*<div class="row">
+                    @Html.Label("Tipo Indicador: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.DropDownList("tipoIndicador", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="Oportunidad Resultado", Value = "1", Selected = true },
+                            new SelectListItem{ Text="Oportunidad Envío de Muestras a Laboratorio", Value = "2" },
+                            new SelectListItem{ Text="Nro de Muestras Rechazadas en Laboratorio", Value = "3" },
+                            }, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                </div>*@
+                <br /><br />
+                <div class="row">
+                    @Html.Label("Fecha Desde: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { id = "datepickerDesde", @class = "form-control datepickerDesde datePickerWidth", autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Hasta: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { id = "datepickerHasta", @class = "form-control datepickerDesde datePickerWidth", autocomplete = "off" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                <br />
+                <button class="btn btn-primary" id="btnBuscar" value="Buscar" type="submit"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                <br />
+            </div>
+        </div>
+    </fieldset>
+}
+<br />
+<br />
+@if (Model != null)
+{
+    <input type="hidden" id="hddImg" name="hddImg" />
+    <a href="@(Url.Action("ExportarExcel", "Indicador", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>
+    <a href="@(Url.Action("ExportarReportePDF", "Indicador", null  , Request.Url.Scheme))" target="_blank" class="lnkForm"><img src="~/img/imgPdf.gif" /> Exportar PDF</a><br /><br />
+    <br />
+    <table class="table table-responsive table-bordered" id="dataTable">
+        <thead>
+            <tr>
+                <th>
+                    Mes
+                </th>
+                <th>
+                    Muestras Registradas con Resultado Verificado
+                </th>
+                <th>
+                    Tiempo Caltalogo
+                </th>
+                <th>
+                    Muestras dentro del Tiempo en Catalogo
+                </th>
+                <th>
+                    Porcentaje
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.mes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tiempoCatalogo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nroOportuno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.porcOportunidad)
+            </td>
+        </tr>
+        }
+    </table>
+    <br /><br /><br /><br />
+    <div class="block">
+        <div class="column2-leftIndicador" style="margin-top: 25px !important;">
+            <div class="row">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <br /><br /><br />
+        <div class="column2-rightIndicador" style="margin-top: 25px !important;">
+            <div class="row">
+                <span style="padding-left:10px;padding-right:10px; font-size:large;text-transform:uppercase;text-align:center">LEYENDA:</span>  
+                <table class="table table-responsive table-bordered">
+                    <tr>
+                        <th>
+                            Mes
+                        </th>
+                        <th>
+                            Oportunidad (%)
+                        </th>
+                        <th>
+                            Meta
+                        </th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.mes)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.porcOportunidad)
+                            </td>
+                            <td>95</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <br /><br /><br /><br />
+}
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/ResultadosAnalisis.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script type="text/javascript">
+        var database ;
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var Lista = @Html.Raw(Json.Encode(@ViewBag.Dataset));
+
+        var labels = Lista.map(function (e) {
+            return e.mes;
+        });
+
+        var values = Lista.map(function (e) {
+            return e.porcOportunidad;
+        });
+
+        var chartPluginLineaHorizontal = {
+            afterDraw: function(chartobj) {
+                if (chartobj.options.lines) {
+                    var ctx = chartobj.chart.ctx;
+                    for (var idx = 0; idx < chartobj.options.lines.length; idx++) {
+                        var line = chartobj.options.lines[idx];
+                        line.iniCoord = [0,0];
+                        line.endCoord = [0,0];
+                        line.color = line.color ? line.color : "red";
+                        line.label = line.label ? line.label : "";
+                        if (line.type == "horizontal" && line.y) {
+                            line.iniCoord[1] = line.endCoord[1] = chartobj.scales["y-axis-0"].getPixelForValue(line.y);
+                            line.endCoord[0] = chartobj.chart.width;
+                        } else if (line.type == "vertical" && line.x) {
+                            line.iniCoord[0] = line.endCoord[0] = chartobj.scales["x-axis-0"].getPixelForValue(line.x);
+                            line.endCoord[1] = chartobj.chart.height;
+                        }
+                        ctx.beginPath();
+                        ctx.moveTo(line.iniCoord[0], line.iniCoord[1]);
+                        ctx.lineTo(line.endCoord[0], line.endCoord[1]);
+                        ctx.strokeStyle = line.color;
+                        ctx.stroke();
+                        ctx.fillStyle = line.color;
+                        ctx.fillText(line.label, line.iniCoord[0] + 3, line.iniCoord[1] + 3);
+                    }
+                }
+            }
+        }
+        Chart.pluginService.register(chartPluginLineaHorizontal);
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Oportunidad de Resultado",
+                    data: values,
+                    borderColor: window.chartColors.orange,
+                    backgroundColor: window.chartColors.orange,
+                    borderWidth: 1}],fill: true,
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                            color: "black"
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            max: 100,
+                        min: 0,
+                        stepSize: 20,
+                        suggestedMin: 50,
+                        suggestedMax: 100
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Porcentaje Oportunidad de Resultado'
+                        }
+                    }]},
+                lines: [
+                  {
+                      type: "horizontal",
+                      y: 95,
+                      color: "red",
+                      label: "meta"
+                  }]
+            }
+        });
+    </script>
+
+}
+<style type="text/css" media="all">
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    .chart-container {
+        width: 80%;
+        height: 480px;
+        margin: 0 auto;
+    }
+
+    .column2-leftIndicador {
+        float: left;
+        width: 70%;
+    }
+
+    .column2-rightIndicador {
+        float: right;
+        width: 25%;
+    }
+</style>

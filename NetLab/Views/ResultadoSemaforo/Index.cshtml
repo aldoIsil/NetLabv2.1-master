@@ -1,0 +1,378 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda y configuracion de paramteros.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.ViewData.OrdenIngresarResultadoVd>
+
+@using Model;
+@using NetLab.Helpers;
+@using Model.ViewData;
+
+@{
+    ViewBag.Title = "Consulta de Semaforo de Resultados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+
+    ViewBag.IsSearch = true;
+
+    if (!ViewBag.IsSearch)
+    {
+        classDatePicker = classDatePicker + " inFechaRec1";
+    }
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css">
+
+@using (Html.BeginForm("SelectFilter", "ResultadoSemaforo", FormMethod.Post, new { id = "frmInstituciones" }))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Resultados Semáforo:</legend>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Inicio: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">                   
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Fin: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Código de Orden:", new { @class = "control-label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Código Muestra:</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("codigoMuestra", (string)ViewBag.codigoMuestra, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Doc. Referencia</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control" })
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Doc Identidad:", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control" })
+                    </div>
+
+                    @Html.Label("Enfermedad:", new { @class = "control-label col-md-1" })
+                    <input type="hidden" id="hdnEnfermedad" name="hdnEnfermedad" value="0" />
+                    <div class="col-md-2">
+                        <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                            <option value=""></option>
+                            @if (ViewBag.enfermedades != null)
+                            {
+                                <option value=@ViewBag.enfermedades>@ViewBag.enfermedades</option>
+                            }
+                        </select>
+                        @if (ViewBag.enfermedades != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idEnfermedad").val(@ViewBag.enfermedades).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+
+                    @Html.Label("Examen:", new { @class = "control-label col-md-1" })
+                    <input type="hidden" id="hdnExamen" name="hdnExamen" value="0" />
+                    <div class="col-md-2">
+                        <select id="idExamen" name="idExamen" class="sizeChosen form-control ">
+                            <option value=""></option>
+                            @if (ViewBag.examen != null)
+                            {
+                                <option value=@ViewBag.examen>@ViewBag.examen</option>
+                            }
+                        </select>
+                        @if (ViewBag.examen != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idExamen").val(@ViewBag.examen).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Nombres Paciente:", new { @class = "control-label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("nombrePaciente", (string)ViewBag.nombrePaciente, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Apellido Paterno</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("apellidoPaciente", (string)ViewBag.apellidoPaciente, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Apellido  Materno</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("apellidoPaciente2", (string)ViewBag.apellidoPaciente2, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-md-1">Tipo Ordenación:</label>
+                <div class="col-md-2">
+                    @Html.DropDownList("tipoOrdenacion", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Ascendente", Value = "1" , Selected = true},
+                            new SelectListItem{ Text="Descendente", Value = "2" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>
+                <label class="control-label col-md-1">Semaforo:</label>
+                <div class="col-md-2">
+                    @Html.DropDownList("Semaforo", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0",Selected = true },
+                            new SelectListItem{ Text="Rojo", Value = "1" },
+                            new SelectListItem{ Text="Amarillo", Value = "2" },
+                            new SelectListItem{ Text="Verde", Value = "3" }                          
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="checkbox" id="rbnTipoDato" name="esTipoDato" value="1">
+                        </span>
+                        <label type="text" for="rbnTipoDato" class="form-control radioButtonWidth">Pendientes de Resultado</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" id="btnBuscar" value="Buscar" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+        @*<a id="btnEstablecimiento"  href="#">Buscar</a>*@
+    </fieldset>
+    <br />
+}
+
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        <a href="@(Url.Action("ExportExcel", "ResultadoSemaforo", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Excel</a>
+        <br />
+        <table id="dtSemaforo">
+            <thead>
+                <tr>
+                    <th>Color</th>
+                    <th>EE.SS Origen</th>
+                    <th>Documento Referencia</th>
+                    <th>Documento Identidad</th>
+                    <th>Paciente</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Código Orden</th>
+                    <th>Codigo Muestra</th>
+                    <th>Codigo Cultivo</th>
+                    <th>Fecha Colección</th>
+                    <th>Fecha Recepción ROM</th>
+                    <th>Fecha Recepción LAB</th>
+                    <th>Fecha Verificación</th>
+                    <th>Enfermedad</th>
+                    <th>Examen</th>
+                    <th>Días</th>
+                    <th>Catálogo</th>
+                    
+                </tr>
+            </thead>
+            @foreach (OrdenIngresarResultadoVd item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.ConColor == "1")
+                        {
+                            <img src="~/img/Semaforo-Rojo.png" style="width:30px;height:30px;" />
+                        }
+                        else if (item.ConColor == "2")
+                        {
+                            <img src="~/img/Semaforo-Amarillo.png" style="width:30px;height:30px;" />
+                        }
+                        else
+                        {
+                            <img src="~/img/Semaforo-Verde.png" style="width:30px;height:30px;" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConEstablecimientoSolicitante)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConnroOficio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConDocIdentidad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConnombrePaciente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConfechaNacimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConcodigoOrden)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConID_Muestra)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConTipoMuestra)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConFechaHoraColeccion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConFechaHoraRecepcionROM)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConFechaHoraRecepcionLAB)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConFechaHoravalidado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConEnfermedad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConnombreExamen)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.dias)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.catalogo)
+                    </td>
+                    
+
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.EmptyTable()
+    }
+}
+
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-hidden" style="visibility: hidden">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Ubigeo.js")
+    @Scripts.Render("~/Scripts/App/ConsultaResultados.js")
+    @*@Scripts.Render("~/Scripts/App/tabladata.js")*@
+   
+    <script type="text/javascript">
+
+        $('#btnBuscar').click(function () {
+
+            debugger;
+            var selectedenf = $('#idEnfermedad').val();
+            $('#hdnEnfermedad').val(selectedenf);
+
+            var selectedexa = $('#idExamen').val();
+            $('#hdnExamen').val(selectedexa);
+
+        });
+
+
+        $('#dtSemaforo').DataTable({
+            "scrollY": "600px",
+            "scrollCollapse": true,
+            "searching": true
+        });
+        $('.dataTables_length').addClass('bs-select');
+    </script>
+}
+
+<style type="text/css" media="all">
+    a.classImgPdf {
+        background: url(../img/pdf-icon.jpg) no-repeat top left;
+        display: block;
+        width: 150px;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+
+    .cmbxBusqueda {
+        width: 100% !important;
+    }
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    .form-group {
+        margin-bottom: 6px;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .rowExamen {
+        background-color: #fce254;
+        font-size: 9px;
+        text-align: center;
+    }
+
+    h4.center {
+        text-align: center !important;
+    }
+
+    .headerRegRes {
+        width: 270px !important;
+        padding: 0px 10px;
+        text-align: center;
+    }
+
+    #tblResultados {
+        width: 100%;
+        font-size: 9px;
+        margin-top: 5px;
+    }
+
+        #tblResultados th, #tblResultados td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    .linksForm {
+        width: 100%;
+        text-align: center;
+    }
+
+    .lnkForm img {
+        height: 26px;
+    }
+
+    #dvBusquedaUsuario2 label {
+        width: 140px;
+    }
+</style>

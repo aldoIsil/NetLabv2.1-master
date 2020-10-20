@@ -1,0 +1,11 @@
+﻿@* Descripción: Vista, muestra la pantalla con el combo de las Redes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.RedesViewModels
+<option value="">-Seleccione-</option>
+@foreach(Model.Red red in @Model.Data)
+{
+    <option value="@red.IdRed" >@red.NombreRed</option>
+}

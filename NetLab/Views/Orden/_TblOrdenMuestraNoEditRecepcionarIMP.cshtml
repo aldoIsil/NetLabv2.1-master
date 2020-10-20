@@ -1,0 +1,26 @@
+﻿@* Descripción: Vista para mostrar el poup que permite mostrar los materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMuestra>
+<table class="table-responsive-md" width="1200">
+    <tr class="table table-primary">
+  
+        <th width="400">Tipo de Muestra</th>
+        <th width="220">Fecha - Hora Obtención</th>        
+    </tr>
+
+    @if (Model != null)
+    {
+        
+        foreach (var item in Model)
+        {
+            <tr>
+          
+                <td>@Html.Raw(item.TipoMuestra.nombre)</td>
+                <td>@Html.Raw(item.fechaColeccionToString) @Html.Raw(item.horaColeccionToString)</td>
+            </tr>
+        }
+    }
+</table>

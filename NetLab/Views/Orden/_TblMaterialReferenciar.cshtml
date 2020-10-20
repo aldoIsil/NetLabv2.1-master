@@ -1,0 +1,110 @@
+﻿@* Descripción: Vista para realiazar la referenciacion de las muestras a otro laboratorio.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMaterial>
+
+
+<table id="tblDatosReferencia" class="table" width="1200">
+    <tr>
+        <!--<th width="50">Item</th>-->
+        <th width="50"></th>
+        <th width="100">Examen</th>
+        <th width="100">T. Muestra</th>
+        <th width="100">T. Material</th>
+        <th width="150">Lab. Destino</th>
+        <th width="100">Fecha Envío</th>
+        <th width="80">Hora Envío</th>
+        <th width="100">Material</th>
+        <!--<th width="40">Cantidad</th>-->
+        <th width="100">Volumen Muestra Colectada</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        int c = 0;
+
+
+        string nombre;
+        string chkNombre;
+        string lblPresentacion;
+        string cmbLab;
+        string lnkAgregar;
+        string txtFecha;
+        string txtHora;
+        string trNombre;
+        string cantRow;
+
+
+        foreach (var item in Model)
+        {
+            foreach (var item1 in item.ordenMuestraRecepcionList)
+            {
+                if (item1.conforme == 0)
+                {
+                    continue;
+                }
+
+                c++;
+                <tr>
+                    <!--<td>@Html.Raw(c.ToString())</td>-->
+                    @{chkNombre = "chkNom_" + item1.idOrdenMuestraRecepcion;
+                        lblPresentacion = "lblPre_" + item1.idOrdenMuestraRecepcion;
+                        cmbLab = "cmbLab_" + item1.idOrdenMuestraRecepcion;
+                        lnkAgregar = "lnkAdd_" + item1.idOrdenMuestraRecepcion;
+                        txtFecha = "txtFec_" + item1.idOrdenMuestraRecepcion;
+                        txtHora = "txtHor_" + item1.idOrdenMuestraRecepcion;
+                        //trNombre = "trNom_" + item1.idOrdenMuestraRecepcion+"_0";
+                        cantRow = "canRow_" + item1.idOrdenMuestraRecepcion;
+                    }
+
+
+                    <td>
+                        <input type="hidden" id=@cantRow value="0" />
+                        <input type="checkbox" name=@chkNombre class="chkReferenciar" />
+                    </td>
+                    <td title='@Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)'>
+                        <div class="enfermedad">
+                            @Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)
+                        </div>
+                    </td>
+                    <td>@Html.Raw(item.Material.TipoMuestra.nombre)</td>
+                    <td>@Html.Raw(item.tipoToString)</td>
+                    <td>
+                        <select style="width: 200px" id=@cmbLab class="form-control idLaboratorioDestino" name=@cmbLab disabled="disabled">
+                            <option value="0"></option>
+                        </select>                       
+                    </td>
+
+                    <td>
+                        @Html.TextBox(txtFecha, "", new { @class = "inFechaRec datePickerWidth datepickerReferencia form-control input-sm", autocomplete = "off" })
+                    </td>
+                    <td>@Html.TextBox(txtHora, "", new { @class = "inHoraRec hourPickerWidth form-control input-sm", disabled = "disabled" })</td>
+
+                    <!--<td>@Html.Raw(item.fechaEnvioToString)</td>
+                    <td>@Html.Raw(item.horaEnvioToString)</td>
+                    -->
+                    <td>@Html.Raw(item.Material.descripcion)</td>
+                    <!--<td>@Html.Raw(item.cantidad)</td>-->
+                    @if (item.noPrecisaVolumen == 1)
+                    {
+                        <td>No Precisa</td>
+                    }
+                    else
+                    {
+                        <td>@Html.Raw(item.volumenMuestraColectada) ml</td>
+                    }
+
+                </tr>
+
+           
+                
+
+
+            }
+
+
+        }
+    }
+</table>

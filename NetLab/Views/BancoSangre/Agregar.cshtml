@@ -1,0 +1,314 @@
+﻿@*  Descripción: Vista, agrega un nuevo registro en memoria.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Model
+@model Model.Orden
+
+
+@{
+    string nroOficio = ViewBag.orden.nroOficio;
+    string observacion = ViewBag.orden.observacion;
+    string establecimiento = "";
+    List<Orden> ordenes = ViewBag.ordenes;
+
+}
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<div class="form-horizontal">
+    <h2>@ViewBag.Title</h2>
+    <form id="frmOrden" role="form" action="@(Url.Action("Guardar", "BancoSangre", null, Request.Url.Scheme))" method="post">
+        <input type="hidden" value="@ViewBag.paso" name="paso" id="paso"/>
+        <fieldset>
+            <legend class="default">Datos Orden</legend>
+            <div class="cont-line">
+                <div class="block-line">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.idProyecto)
+                        @Html.DropDownList("idProyecto", new SelectList(ViewBag.proyectos, "value", "Text", ViewBag.orden.idProyecto), new { @class = "form-control", placeholder = "Seleccione Proyecto" })
+                    </div>
+                    @if (ViewBag.paso == 1) { 
+                    <!--Establecimiento-->
+                    <div class="form-group">
+                        <div>
+                            @Html.LabelFor(model => model.establecimiento, new { @class = "control-label" })
+                            @Html.DropDownList("cmbEstablecimiento", new SelectList(ViewBag.establecimientos, "value", "Text"), new { @class = "form-control", placeholder = "Seleccione Proyecto" })
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="block-line">
+                    <div class="form-group">
+                        <div>
+                            @Html.LabelFor(model => model.nroOficio, new { @class = "control-label" })
+                            @Html.TextBox("nroOficio", nroOficio, new { @class = "form-control", placeholder = "Ingrese Número de oficio" })
+                        </div>
+                    </div>
+                    @if (ViewBag.paso == 1)
+                    {
+                    <div class="form-group">
+                        <label for="cmbEstablecimiento" class="control-label">Establecimientos Fecuentres:</label>
+                        <div>
+                            <select multiple="multiple" id="cmbEstablecimientoFrecuente" name="cmbEstablecimientoFrecuente">
+                                <option value="@ViewBag.establecimientoUsuarios.IdEstablecimiento">@ViewBag.establecimientoUsuarios.Nombre</option>
+                            </select>
+                        </div>
+                    </div>
+                    }
+                </div>
+                @if (ViewBag.paso == 2) {
+                    establecimiento = ViewBag.orden.establecimiento.Nombre;
+                <!--Establecimiento-->
+                <div class="block-line">
+                    <div class="form-group">
+                        <div>
+                            @Html.LabelFor(model => model.establecimiento, new { @class = "control-label" })
+                            @Html.TextBox("establecimiento", establecimiento, new { @class = "form-control", disabled="disabled", placeholder = "Ingrese Número de oficio" })
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend class="default">Examenes&nbsp;&nbsp; @Html.ActionLink("+ Agregar", "MostrarDatosExamenes", "BancoSangre", null, new { @id = "btnAgregarEnfermedad" }) </legend>
+            
+            <div id="dvTblExamen">
+                @{Html.RenderPartial("_AgregarTblExamen", (IEnumerable<Model.TipoMuestra>)ViewBag.tipoMuestraList);}
+
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend class="default">Muestras&nbsp;&nbsp; <a id="lnkAgregarMuestra" href="#">+ Agregar</a></legend>
+            
+            <div id="dvTblMuestra">
+                <table id="tblMuestras" class="table" width="80">
+                    <thead>
+                        <tr>
+                            @if (ViewBag.paso == 2)
+                            {
+                                <th>Nro. Orden</th>
+                            }
+                            <th>Código Origen</th>
+                            <th>Fecha de<br/>Obtención</th>
+                            <th>Hora de<br/>Obtención</th>
+                            <th>Presentación</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Orden orItem in ordenes)
+                        {
+                            <tr>
+                                @if (ViewBag.paso == 2)
+                                {
+                                    string codigoOrden = orItem.establecimiento.CodigoUnico + orItem.codigoOrden;
+                                    <td>@codigoOrden</td>
+                                }
+                                <td><input type="text" name="muestraCodigoExterno[]" class="muestraCodigoExterno form-control" value="@orItem.cepaBancoSangre.codificacion" /></td>
+                                <td><input name="muestraFecha[]" class="datepicker form-control muestraFecha" placeholder="dd/mm/yy" value="@orItem.cepaBancoSangre.fechaColeccion.ToString("dd'/'MM'/'yyyy")" /></td>
+                                <td><input type="text" name="muestraHora[]" placeholder="hh:mm" class="timepicker muestraHora form-control" value="@orItem.cepaBancoSangre.horaColeccion.ToString("HH':'mm")" /></td>
+                                <td>
+                                    <select name="muestraMaterial" class="form-control muestraMaterial">
+                                        @foreach (var item in ViewBag.materialList)
+                                        {
+                                            string selected = "";
+                                            if (item.idCmbMaterial == orItem.cepaBancoSangre.idMaterial) { selected = "selected"; }
+                                            <option @selected value="@item.idCmbMaterial">@item.textoCmbMaterial</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td><a class="lnkEliminarMuestra" href="#">Eliminar</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend class="default">Observación</legend>
+
+            <div class="form-group allWidth divObservacion
+                 dl-horizontal map     ">
+                @Html.TextArea("observacion", observacion, new { @class = "form-control", placeholder = "Ingrese observación" })
+            </div>
+        </fieldset>
+
+        <div class="allWidth centerAlign">
+            @if (ViewBag.paso == 1)
+            {
+            <input id="lnkGuardar" type="submit" value="Guardar" class="btn-link lnkGuardar" />
+            }
+            else
+            {
+                <input id="lnkGuardar" type="submit" value="Finalizar" class="btn-link lnkGuardar" />
+            }
+        </div>
+    </form>
+</div>
+<div style="display: none !important;">
+    <table id="hideTblTRMuestra">
+        <tbody id="hideTRMuestra">
+            <tr>
+                @if (ViewBag.paso == 2)
+                {
+                    <td></td>
+                }
+                <td><input type="text" name="muestraCodigoExterno[]" class="muestraCodigoExterno form-control" /></td>
+                <td><input name="muestraFecha[]" class="datepicker form-control muestraFecha" placeholder="dd/mm/yy" /></td>
+                <td><input type="text" name="muestraHora[]" placeholder="hh:mm" class="timepicker muestraHora form-control" /></td>
+                <td>
+                    <select name="muestraMaterial" class="form-control muestraMaterial">
+                        @foreach (var item in ViewBag.materialList)
+                        {
+                            <option value="@item.idCmbMaterial">@item.textoCmbMaterial</option>
+                        }
+                    </select>
+                </td>
+                <td><a class="lnkEliminarMuestra" href="#">Eliminar</a></td>
+            </tr>
+        </tbody>
+        
+    </table>
+</div>
+<div id="dialog-open" style="display: none">
+
+</div>
+
+   
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/BancoSangre.js")
+}
+
+
+<style type="text/css" media="all">
+
+    fieldset {
+        border: 1px groove #ddd !important;
+        box-shadow: 0 0 0 0 #000;
+        margin: 0 0 1em !important;
+        padding: 0 1.4em 0 !important;
+    }
+
+    .divObservacion{
+        padding-left: 25px;
+    }
+    
+    .divObservacion textarea {
+        max-width: 500px !important;
+        width: 500px !important;
+    }
+
+    .allWidth {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .centerAlign {
+        text-align: center;
+    }
+
+    .timeEntry-control{
+        display: none !important;
+    }
+
+    #cmbEstablecimientoFrecuente {
+        width: 300px;
+    }
+
+    .lnkEliminarMuestra {
+        margin-top: -10px;
+    }
+
+    legend a {
+        font-weight: normal !important;
+        font-size: 14px !important;
+    }
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+
+    .spnTitle {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .form-horizontal {
+        padding-left: 15px;
+    }
+
+    .form-horizontal h2 {
+        margin-left: -15px;
+        text-align: center !important;
+    }
+
+    .form-horizontal legend {
+        margin-left: -15px;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .lnkGuardar {
+        margin-left: -7px;
+    }
+
+    #nombrePaciente {
+        position: absolute;
+        padding-top: 30px;
+    }
+
+    #btnBuscarPaciente {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #btnNuevaEnfermedad {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #dvTblExamen table{
+        width: 700px !important;
+    }
+
+    #dvTblMuestra table {
+        width: 800px !important;
+    }
+
+    #dvTblExamen table input, #dvTblMuestra table input {
+        width: 100px;
+    }
+
+    .muestraHora {
+        width: 65px !important;
+    }
+
+    .muestraCodigoExterno {
+        width: 150px !important;
+    }
+</style>

@@ -1,0 +1,55 @@
+﻿@*  Descripción: Vista, muestra la pantalla para mostrar la busqueda y dar mantenimiento de las categorias.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model  NetLab.Models.DatoClinico.CategoriaEditViewModels
+@{
+    ViewBag.Title = "Mantenimiento de Categorias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Categorias</h2>
+<br />
+<p>
+    @Html.ActionLink("Ir al listado de Opciones de Datos", "ListaDatos", "Datos")
+
+
+
+
+</p>
+<br />
+@Html.HiddenFor(model => model.IsEdit)
+@Html.HiddenFor(model => model.CodigoEnfermedad)
+@Html.HiddenFor(model => model.NombreEnfermedad)
+<div class="form-group">
+    @Html.Label("Enfermedad:", new { @class = "control-label col-md-2" })
+    <div class="col-md-4">
+        <select id="idEnfermedad" name="idEnfermedad" class="form-control"
+                data-url="@Url.Action("GetEnfermedades", "Orden")"
+                data-categoria-url="@Url.Action("GetCategorias")"
+                data-loading-image="@Url.Content("~/Content/images/loading.gif")">
+            <option value=""></option>
+        </select>
+    </div>
+</div>
+<br />
+<div id="dvCategorias">
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Categoria.js")
+}
+
+

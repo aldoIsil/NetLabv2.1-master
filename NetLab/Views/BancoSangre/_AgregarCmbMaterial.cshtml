@@ -1,0 +1,10 @@
+﻿@*  Descripción: Vista, muestra y carga el combo de Materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.ViewData.MaterialVd>
+
+@Html.DropDownList("cmbMaterial",
+new MultiSelectList(Model, "idCmbMaterial", "textoCmbMaterial"),
+new { value = "99", multiple = "multiple" })

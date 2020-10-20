@@ -1,0 +1,94 @@
+﻿@*  Descripción: Vista, muestra la pantalla para mostrar y dar mantenimiento a los Datos Variables.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.DatoClinico.DatoListaViewModels
+@using NetLab.Helpers
+
+@{
+    ViewBag.Title = "Mantenimiento de Datos por Categoria";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+<h2 class="text-primary">Lista de datos de la Categoría:</h2>
+<h2> @Model.NombreCategoria</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Nuevo Dato", "NuevoDato", new { Model.IdCategoria, Model.IdEnfermedad, Model.NombreEnfermedad }, new { @id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model?.Datos != null && Model.Datos.Count > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Datos.First().Prefijo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datos.First().Sufijo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datos.First().Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datos.First().idProyecto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datos.First().Obligatorio)
+            </th>
+            <th>Editar/Eliminar</th>
+        </tr>
+
+        @foreach (var item in Model.Datos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prefijo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sufijo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipo.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Proyecto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Obligatorio)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "EditarDato", new { id = item.IdDato, idCategoria = Model.IdCategoria, idEnfermedad = Model.IdEnfermedad, nombreEnfermedad = Model.NombreEnfermedad }, new { @class = "editDialog  btn btn-default btn-block fa fa-pencil-square-o" })
+                    @Html.ActionLink(" ", "EliminarDato", new { id = item.IdDato, idCategoria = Model.IdCategoria, idEnfermedad = Model.IdEnfermedad, nombreEnfermedad = Model.NombreEnfermedad }, new { @class = "confirmDialog btn btn-default btn-block fa fa-trash" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+@Html.ActionLink("Regresar", "Edit", "Categoria", new { IsEdit = true, CodigoEnfermedad = Model?.IdEnfermedad, Model?.NombreEnfermedad }, null)
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Dato.js")
+}

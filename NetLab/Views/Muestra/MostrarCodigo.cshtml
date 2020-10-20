@@ -1,0 +1,456 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la busqueda e impresion de Codigos de Muestra.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using Model;
+@model List<Model.MuestraCodificacion>
+@{
+    ViewBag.Title = "Imprimir Código de Muestra";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+@if (ViewBag.isPost)
+{
+    if (ViewBag.notFound)
+    {
+        <h3 class="msg-error">No se encontraron los códigos.</h3>
+    }
+    else
+    {
+        string firstLine = @ViewBag.muestra.codificacion;
+        int count = 0;
+
+        <h4>Código:</h4>
+
+        while (count < ViewBag.cantidadQR)
+        {
+            <div class="qrDiv">
+                <img src="@ViewBag.qrUrl" /><div class="qrCode">@firstLine</div>
+            </div>
+            count = count + 1;
+        }
+        <form id="frmImprimir" method="post" action="@(Url.Action("ImprimirGenerados", "Muestra", null, Request.Url.Scheme))" target="_blank">
+            <input type="hidden" name="tipo" value="2" />
+        </form>
+        <a id="btnImprimirCodigos" href="#">Imprimir</a>
+    }
+}
+
+@if (!ViewBag.isPost || ViewBag.notFound)
+{
+    <h2>@ViewBag.Title.</h2>
+    <form action="/Muestra/ImprimirCodigosGenerados" id="newimprimirgeneradosfrm" method="post" style="display:inline;">
+        <div class="form-group">
+            <label for="selTipo" class="col-md-1 control-label">EESS/LAB</label>
+            @*<div class="col-md-4">
+                <select id="selEstablecimiento" name="selEstablecimiento" class="form-control">
+                    @foreach (Establecimiento item in ViewBag.establecimientosUsuario)
+                    {
+                        <option value="@item.IdEstablecimiento">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                    }
+                </select>
+            </div>*@
+
+
+            <div class="col-md-4">
+                @Html.TextBox("CodigoUnico", (string)ViewBag.textoLaboratorioPreSeleccionada, new { @class = "form-control" })
+                @Html.Hidden("idEstablecimiento", (string)ViewBag.valueLaboratorioPreSeleccionada)
+                @*<select class="form-control input-sm" id="idEstablecimiento" name="idEstablecimiento">
+                    <option value=""></option>
+                </select>*@
+            </div>
+
+
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="txtDesde" class="col-md-1 control-label">Desde</label>
+            <div class="col-md-2">
+                <input id="txtDesde" type="text" name="txtDesde" class="form-control" maxlength="12" />
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="txtHasta" class="col-md-1 control-label">Hasta</label>
+            <div class="col-md-2">
+                <input id="txtHasta" type="text" name="txtHasta" class="form-control" maxlength="12" />
+            </div>
+        </div>
+        <br />
+        @if (ViewBag.idExtablecimientoUsuario == 991 || ViewBag.idExtablecimientoUsuario == 995)
+        {
+            <div class="form-group">
+                <label for="txtNumSolicitud" class="col-md-1 control-label">Número de Solicitud</label>
+                <div class="col-md-2">
+                    <input id="txtNumSolicitud" type="text" name="txtNumSolicitud" class="form-control" />
+                </div>
+            </div>
+            <br />
+        }
+
+        <div class="form-group">
+            <label for="txtCantidad" class="col-md-1 control-label">N° de Copias</label>
+            <div class="col-md-2">
+                <input id="txtCantidad" type="number" name="txtCantidad" class="form-control" max="99" maxlength="2" onkeypress="return isNumberKey(event)" />
+            </div>
+        </div>
+        <br />
+
+        @if (ViewBag.idExtablecimientoUsuario == 991 || ViewBag.idExtablecimientoUsuario == 995)
+        {
+            <div class="control-text text-info">
+                <p style="display:inline;">¿Código Lineal?</p>
+
+                <input type="checkbox" id="chkCodigoLineal" name="chkCodigoLineal" />
+
+            </div>
+            <br />
+        }
+    </form>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-5">
+            <a id="btnImprimir" href="#" class="btn btn-primary"><span class="fa fa-print"></span> Imprimir</a>
+            <a id="btnValidar" Class="btn btn-primary"><span class="fa fa-print"></span> Validar </a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PrintCode">
+                <span class="fa fa-print"></span> Códigos Seleccionados</button>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <div id="dtEtiqueta">
+
+    </div>
+
+}
+
+<div class="modal Adapterscreen-modal fade" id="PrintCode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-dialog-centered" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <div id="ImpresionCodigo" class="modal-body">
+                <fieldset class="default">
+                    <legend class="default"></legend>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        @Html.Label("Muestra: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                        <input type="text" id="CodigoMuestra" name="CodigoMuestra" />
+                        <input type="button" id="btnAddMuestra" onclick="AddCode();" value="Agregar Muestra" class="btn btn-group-xs" />
+                        <p style="display:inline;">¿Lineal?</p><input type="checkbox" id="chklineal" value="1" />
+                    </div>
+                </fieldset>
+                <br />
+                <fieldset class="default">
+                    <legend class="default"></legend>
+                    <div id="DivPrintRecepcion">
+                        <table id="ForMx" class="table table-striped">
+                            @*class="table table-striped"*@
+                            <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="code"></tbody>
+                        </table>
+                        <br />
+                        <br />
+                        @*<h3 style="text-align:center" class="text-primary">Usuario Recepcion Lab.:      @ViewBag.UsuarioLogin</h3>*@
+                    </div>
+                </fieldset>
+                <div>
+                    <input type="button" id="btnPrintCode" onclick="ImprimirCodigoROM();" value="Imprimir" class="btn btn-group-xs" />
+                </div>
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}
+<style type="text/css">
+    .form-group {
+        padding-top: 15px;
+    }
+
+    #btnImprimir {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .qrCode {
+        font-family: monospace;
+        word-wrap: break-word;
+        display: inline-block;
+        font-size: 11px;
+        font-weight: bold;
+        padding-left: 3px;
+        width: 70px;
+    }
+
+    .qrDiv {
+        display: block;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #000000;
+        width: 110px;
+        margin: 3px;
+        padding: 3px;
+    }
+
+        .qrDiv img {
+            display: inline-block;
+            margin-bottom: 0px;
+        }
+
+    #txtDesde::-webkit-input-placeholder, #txtHasta::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color: #999999;
+        font-style: italic;
+    }
+
+    #txtDesde:-moz-placeholder, #txtHasta:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: #999999;
+        opacity: 1;
+        font-style: italic;
+    }
+
+    #txtDesde::-moz-placeholder, #txtHasta::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: #999999;
+        opacity: 1;
+        font-style: italic;
+    }
+
+    #txtDesde:-ms-input-placeholder, #txtHasta:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #999999;
+        font-style: italic;
+    }
+
+    #txtDesde:placeholder-shown, #txtHasta:placeholder-shown {
+        color: #999999;
+        font-style: italic;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function listarCodigos() {
+            var establecimiento = $("#idEstablecimiento").val();
+            var desde = $("#txtDesde").val();
+            var hasta = $("#txtHasta").val();
+
+            $.ajax({
+                url: URL_BASE + "Muestra/ConsultaCodigosMuestraEstado?inicio=" + desde + "&fin=" + hasta + "&idEstablecimiento=" + establecimiento,
+                type: "POST",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    debugger;
+                    console.log(data);
+                    //$('#dtEtiqueta').html(result);
+                    $.each(data, function (key, val) {
+                        var fila =
+                            "<tr>" +
+                            "<td>" + val.codificacion + "</td>" +
+                            "<td>" + val.codificacionLineal + "</td>" +
+                            "<td>" + val.estado + "</td>"
+                        "</tr>";
+                        $(fila).appendTo($("#filaMuestra"));
+                    });
+                }
+            })
+
+
+            //string fechaDesde, string fechaHasta, string idEstablecimiento, string idMuestra, string estado)
+            //$.getJSON("/Muestra/ConsultaCodigosMuestraEstado?inicio=" + desde + "&fin=" + hasta + "&idEstablecimiento=" + establecimiento,
+            //    null,
+            //    function (data) {
+            //        //Limpiamos el contenido del cuerpo de la tabla
+            //        debugger;
+            //        console.log(data);
+            //        $("#filaMuestra").empty();
+            //        //Recorremos el resultado de productos
+            //        $.each(data, function (key, val) {
+            //            var fila =
+            //                "<tr>" +
+            //                    "<td>" + val.codificacion + "</td>" +
+            //                    "<td>" + val.codificacionLineal + "</td>" +
+            //                    "<td>" + val.estado + "</td>"
+            //            "</tr>";
+            //            $(fila).appendTo($("#filaMuestra"));
+            //        });
+            //    });
+        }
+    })
+    $("#CodigoMuestra").keyup(function (event) {
+        if (event.keyCode == 13) {
+            $("#btnAddMuestra").click();
+        }
+    });
+
+    $(document).on('click', '.borrar', function (event) {
+        event.preventDefault();
+        $(this).closest('tr').remove();
+    });
+
+    function AddCode() {
+        var CodigoMuestra = $("#CodigoMuestra").val();
+        if (CodigoMuestra.length == 0) {
+            jAlert('Debe ingresar algún código de muestra o lineal.', 'Alerta');
+            return false;
+        }
+        var contenido = '<tr><td class="codes">' + CodigoMuestra + '</td><td><input type="button" class="borrar" value="Quitar" /></td></tr>';
+        $("#CodigoMuestra").val("");
+        $("#code").append(contenido);
+    }
+
+    function ImprimirCodigoROM() {
+        debugger;
+        var code = [];
+        var tipo = 'Q';
+        var valorch = $('input:checkbox[id=chklineal]:checked').val();
+
+        if (valorch == 1) {
+            tipo = 'B';
+        }
+
+        $(".codes").parent("tr").find(".codes").each(function () {
+            code += $(this).html() + ',';
+        });
+
+        if (code.length < 1) {
+            jAlert('Debe ingresar algún código de muestra o lineal', 'Alerta');
+            return false;
+        }
+        var code = code.slice(0, -1);
+        window.location = URL_BASE + "Muestra/PrintCodigoSeleccionado?codes=" + code + "&tipo=" + tipo;
+    }
+
+    window.onload = function () {
+        
+
+        //$("#selEstablecimiento").chosen({ placeholder_text_single: "Seleccione un EESS/LAB", no_results_text: "No existen coincidencias" });
+        //$("#idEstablecimiento").chosen({ placeholder_text_single: "Seleccione el Establecimiento", no_results_text: "No existen coincidencias" });
+        //    $("#idEstablecimiento").ajaxChosen({
+        //        dataType: "json",
+        //        type: "POST",
+        //        minTermLength: 5,
+        //        afterTypeDelay: 1000,
+        //        cache: false,
+        //        url: URL_BASE + "Muestra/GetEstablecimientos"
+        //    }, {
+        //        loadingImg: URL_BASE + "Content/images/loading.gif"
+        //    });
+
+
+        $("#CodigoUnico").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: URL_BASE + "Muestra/GetEstablecimientos?prefix=" + request.term,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Nombre, value: item.IdEstablecimiento };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                $("#idEstablecimiento").val(i.item.value);
+                $("#CodigoUnico").val(i.item.label);
+            },
+            minLength: 2
+        });
+
+        $("#CodigoUnico").click(function () {
+            $("#idEstablecimiento").val("");
+            $("#CodigoUnico").val("");
+        });
+        //$("#selEstablecimiento").chosen();
+
+        $('#btnImprimir').click(function (e) {
+            e.preventDefault();
+            var ok = true;
+            var establecimiento = $("#idEstablecimiento").val();
+            var desde = $("#txtDesde").val();
+            var hasta = $("#txtHasta").val();
+            var cantidad = $("#txtCantidad").val();
+            var solicitud = $("#txtNumSolicitud").val();
+
+            if (establecimiento == "0") {
+                jAlert("Seleccione EESS/LAB.", "Alerta!");
+                return false;
+            }
+
+            if (solicitud == undefined || solicitud == "") {
+
+                if (desde == undefined || desde == "") {
+                    Alert("Ingrese la serie de inicio.", "Alerta!");
+                    ok = false;
+                }
+
+                if (hasta == undefined || hasta == "") {
+                    jAlert("Ingrese la serie final.", "Alerta!");
+                    ok = false;
+                }
+            }
+            
+
+            if (ok && (cantidad == undefined || cantidad == "")) {
+                jAlert("Ingrese una cantidad.", "Alerta!");
+                ok = false;
+            }
+
+            if (cantidad < 0) {
+                jAlert("Cantidad no puede ser negativa.", "Alerta!");
+                ok = false;
+            }
+
+            if (ok) {
+                $("#newimprimirgeneradosfrm").submit();
+            }
+
+        });
+
+        $('#btnImprimirCodigos').click(function () {
+            $('#frmImprimir').submit();
+        });
+
+        $('#btnValidar').click(function () {
+            var establecimiento = $("#idEstablecimiento").val();
+            var desde = $("#txtDesde").val();
+            var hasta = $("#txtHasta").val();
+
+            $.ajax({
+                url: URL_BASE + "Muestra/ConsultaCodigosMuestraEstado?inicio=" + desde + "&fin=" + hasta + "&idEstablecimiento=" + establecimiento,
+                type: "POST",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    debugger;
+                    console.log(data);
+
+                    $('#dtEtiqueta').html(data);
+                }
+            })
+        });
+    };
+
+</script>

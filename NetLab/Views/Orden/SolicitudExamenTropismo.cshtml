@@ -1,0 +1,354 @@
+﻿@model NetLab.Models.SolicitudExamenTropismoViewModels
+
+@{
+    ViewBag.Title = "Solicitud de Examen Tropismo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+
+    ViewBag.IsSearch = true;
+
+    if (!ViewBag.IsSearch)
+    {
+        classDatePicker = classDatePicker + " inFechaRec1";
+    }
+
+    var fechaTropismo = DateTime.Now;
+    var fechaObtencion = DateTime.Now;
+}
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+
+
+<h3 style="text-align:center" class="text-primary">Solicitud de Exámen de Tropismo para VIH</h3>
+
+@using (Html.BeginForm("SolicitudExamenTropismo", "Orden", FormMethod.Get))
+{
+    <fieldset class="form">
+
+        <legend class="form">Datos del Paciente</legend>
+        <input type="hidden" value="@Model.paciente.IdPaciente" id="idPaciente" />
+        <div class="div-row">
+            @Html.Label("Nombre:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-4">
+                <span>@Html.Raw(Model.paciente.Nombres + " " + Model.paciente.ApellidoPaterno + " " + Model.paciente.ApellidoMaterno)</span>
+            </div>
+            @Html.LabelFor(model => model.paciente.NroDocumento, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.paciente.NroDocumento)</span>
+            </div>
+        </div>
+        <br /><br />
+
+        <div id="_ubigeoActualNoEditable">
+            <!--primera fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.paciente.UbigeoActual.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.paciente.UbigeoActual.Departamento)</span>
+                </div>
+                @Html.LabelFor(model => model.paciente.UbigeoActual.Provincia, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.paciente.UbigeoActual.Provincia)</span>
+                </div>
+                @Html.LabelFor(model => model.paciente.UbigeoActual.Distrito, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>
+                        @Html.Raw(Model.paciente.UbigeoActual.Distrito)
+                    </span>
+                </div>
+            </div>
+            <br /> <br />
+            <!--Segunda fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.paciente.DireccionActual, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.paciente.DireccionActual)</span>
+                </div>
+                @Html.LabelFor(model => model.paciente.TelefonoFijo, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.paciente.TelefonoFijo)</span>
+                </div>
+                @Html.LabelFor(model => model.paciente.Celular1, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.paciente.Celular1)</span>
+                </div>
+            </div>
+
+            <br /> <br />
+        </div>
+    </fieldset>
+    <fieldset class="form">
+        <legend class="form">Datos del Establecimiento donde se registra</legend>
+        <input type="hidden" value="@Model.establecimiento.IdEstablecimiento" id="idEstablecimiento" />
+        <div class="div-row">
+            @Html.LabelFor(model => model.establecimiento.Nombre, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <span>@Html.Raw((String)Model.establecimiento.Nombre)</span>
+            </div>
+        </div>
+    </fieldset>
+    <br /> <br />
+    <fieldset class="form">
+        <legend class="form">Datos del Médico</legend>
+        <input type="hidden" value="@Model.solicitante.idSolicitante" id="idSolicitante" />
+        <div class="div-row">
+            @Html.LabelFor(model => model.solicitante.Nombres, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <span>@Html.Raw((String)Model.solicitante.Nombres)</span>
+            </div>
+        </div>
+    </fieldset>
+    <br /> <br />
+    <fieldset class="form">
+        <legend class="form">Datos Clínicos</legend>
+        <div class="div-row">
+            @Html.Label("Criterios para uso de la prueba genotípica de Tropismo de VIH", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-9" })
+        </div>
+        <br />
+
+        <div class="form-group" style="padding-left:20px;">
+            <div class="row">
+                <div class="col-sm-6 divWidth">
+                    <span>
+                        @Html.RadioButton("rbCriterio", "1", true)
+                    </span>
+                    <span>Evidencia de efectos adversos de los antirretrovirales</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>
+                        @Html.RadioButton("rbCriterio", "2", false)
+                    </span>
+                    <span>Resistencia a varias clases de antirretrovirales (multiresistencia o panresistencia)</span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="div-row">
+            @Html.Label("MODALIDAD DE LA PRUEBA DE TROPISMO (hacer click en el recuadro según corresponda)", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-9" })
+        </div>
+        <br />
+
+        <div class="form-group" style="padding-left:20px;">
+            <div class="row">
+                <div class="col-sm-6 divWidth">
+                    <span>
+                        @Html.RadioButton("resultado", "arn", true)
+                    </span>
+                    <span>Carga Viral es MAYOR de 1000 copias/ml</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>
+                        @Html.RadioButton("resultado", "adn", false)
+                    </span>
+                    <span>Carga Viral es MENOR de 1000 copias/ml</span>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group" style="padding-left:20px;">
+            <div class="div-row">
+                @Html.Label("Código Orden:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-3 col-lg-2">
+                    @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                </div>
+                <div class="col-xs-9 col-sm-8 col-md-3 col-lg-1">
+                    <input id="btnValidar" type="button" value="Validar" class="btn-link" />   
+                </div>
+            </div>
+          
+            <div id="pvResulVih" class="div-row" > 
+                @Html.Partial("_ResultadoVIH", Model.resultado)
+            </div>
+        </div>
+
+        <br /><br />
+
+        <div class="form-group" style="padding-left:20px;">
+            <div class="div-row">
+                <span>La CV debe ser ≥1000 copias y la fecha de dicho resultado debe ser menor de 30 días para poder solicitar la prueba</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Fecha solicitud del exámen Tropismo: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-3" })
+                <div class="col-xs-12 col-sm-8 col-md-3 col-lg-2">
+                    @Html.TextBox("fechaTropismo", fechaTropismo, new { id = "datepickerfechaTropismo", @class = classDatePicker, autocomplete = "off" })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                @Html.Label("Fecha toma de muestra: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-3" })
+                <div class="col-xs-12 col-sm-8 col-md-3 col-lg-2">
+                    @Html.TextBox("fechaObtencion", fechaObtencion, new { @id = "datepickerfechaObtencion", @class = classDatePicker, autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form">
+        <button class="btn btn-primary" id="btnEnviar" type="submit" value="Enviar" onclick="return ValidaDatosSolicitud();">
+            <span>Enviar</span>
+        </button>
+    </fieldset>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+    <script language="javascript" type="text/javascript">
+        var myDate = new Date();
+        var dia = (myDate.getDate() >= 10) ? myDate.getDate() : "0" + myDate.getDate();
+        var mes = ((myDate.getMonth() + 1) >= 10) ? (myDate.getMonth() + 1) : "0" + (myDate.getMonth() + 1);
+        var anio = myDate.getFullYear();
+
+        $(document).ready(function () {
+            if ($("#datepickerfechaTropismo").val() == "") {
+                var modDateYesterday = new Date(myDate - 86400000);
+                var diaY = (modDateYesterday.getDate() >= 10) ? modDateYesterday.getDate() : "0" + modDateYesterday.getDate();
+                var mesY = ((modDateYesterday.getMonth() + 1) >= 10) ? (modDateYesterday.getMonth() + 1) : "0" + (modDateYesterday.getMonth() + 1);
+                var anioY = modDateYesterday.getFullYear();
+                $("#datepickerfechaTropismo").val(diaY + "/" + mesY + "/" + anioY);
+
+                $("#datepickerfechaObtencion").val(dia + "/" + mes + "/" + anio);
+            }
+
+            $("#datepickerfechaTropismo").kendoDatePicker({
+                culture: "es-PE"
+            });
+            $("#datepickerfechaObtencion").kendoDatePicker({
+                culture: "es-PE"
+            });
+
+
+        })
+
+        $("#btnValidar").on("click", function () {
+            debugger;
+            var codigoOrden = $("#codigoOrden").val();
+            var idPaciente = $("#idPaciente").val();
+            var idResultado = $('input[name="resultado"]:checked').val();
+            if (codigoOrden == "" || codigoOrden == undefined) {
+                jAlert("Debe validar el código de orden", "¡Alerta!");
+                return false;
+            }
+            if (codigoOrden.length != 11) {
+                jAalert("Código de Orden incorrecto", "¡Alerta!");
+                return false;
+            }
+            if (idPaciente == "" || idPaciente == undefined) {
+                jAlert("No existe código de Paciente", "¡Alerta!");
+                return false;
+            }
+            debugger;
+            var datos = "?codigoOrden=" + codigoOrden + "&" + "idPaciente=" + idPaciente + "&" + "idResultado=" + idResultado;
+            $.ajax(
+                {
+                    url: URL_BASE + "Orden/GetDatosOrden" + datos,
+                    cache: false,
+                    method: "GET"
+                }).done(function (data) {
+                    $("#pvResulVih").html(data);
+                });
+        });
+
+        restaFechas = function (f1, f2) {
+            var aFecha1 = f1.split('/');
+            var aFecha2 = f2.split('/');
+            var fFecha1 = Date.UTC(aFecha1[2], aFecha1[1] - 1, aFecha1[0]);
+            var fFecha2 = Date.UTC(aFecha2[2], aFecha2[1] - 1, aFecha2[0]);
+            var dif = fFecha2 - fFecha1;
+            var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+            return dias;
+        }
+        function ValidaDatosSolicitud() {
+            debugger;
+            var codigoOrden = $("#codigoOrden").val();
+            var idPaciente = $("#idPaciente").val();
+            var idEstablecimiento = $("#idEstablecimiento").val();
+            if (codigoOrden == "" || codigoOrden == undefined) {
+                jAlert("Debe validar el código de orden", "¡Alerta!");
+                return false;
+            }
+
+            if (codigoOrden.length != 11) {
+                jAlert("Código de Orden incorrecto", "¡Alerta!");
+                return false;
+            }
+            if (idPaciente == "" || idPaciente == undefined) {
+                jAlert("No existe código de Paciente", "¡Alerta!");
+                return false;
+            }
+
+            var fechaTropismo = $("#datepickerfechaTropismo").val();
+            if (fechaTropismo == "" || fechaTropismo == undefined) {
+                jAlert("Debe ingresar fecha de solicitud de Tropismo", "¡Alerta!");
+                return false;
+            }
+
+            var fechaObtencion = $("#datepickerfechaObtencion").val();
+            if (fechaObtencion == "" || fechaObtencion == undefined) {
+                jAlert("Debe ingresar fecha de obtención de Muestra", "¡Alerta!");
+                return false;
+            }
+
+            var fechacv = $("#fechacv").val();
+            if (fechacv == "" || fechacv == undefined) {
+                jAlert("Solicitud no presenta fecha de resultado", "¡Alerta!");
+                return false;
+            }
+
+            var idCriterio = $("#rbCriterio").val();
+            var resultado = $("#resultado").val();
+
+            var diascv = restaFechas(fechacv, fechaTropismo);
+            if (diascv < 30) {
+                jAlert("La fecha de solicitud de Tropismo debe ser mayor a 30 días con respecto a la fecha de la Carga Viral", "¡Alerta!");
+                return false;
+            } else if (diascv > 90) {
+                alert("El tiempo entre la última CV y la solicitud de Tropismo debe ser menor a 3 meses. Se debe solicitar nueva CV si el paciente tiene buena adherencia", "¡Alerta!");
+                return false;
+            }
+
+            //var diascd4 = restaFechas(fechaCD4, fechaTropismo);
+            //if (diascd4 < 30) {
+            //    alert("La fecha de solicitud de Tropismo debe ser mayor a 30 días.");
+            //    return false;
+            //}
+
+            //var datos = "?codigoOrden=" + codigoOrden + "&" +
+            //            "idEstablecimiento=" + idEstablecimiento + "&" +
+            //            "idCriterio=" + idCriterio + "&" +
+            //            "resultado=" + resultado + "&" +
+            //            "fechaTropismo=" + fechaTropismo + "&" +
+            //            "fechaObtencion=" + fechaObtencion;
+            //$.ajax(
+            //    {
+            //        url: URL_BASE + "Orden/InsertarDatosTropismo" + datos,
+            //        cache: false,
+            //        method: "GET"
+            //        }).success(function (response) {
+            //            if (response == 1) {
+            //                jAlert("Solicitud para el Exámen de Tropismo fue enviada al Laboratorio de Micobacterias del INS", "Alerta!");
+            //            }
+            //    });
+
+        }
+    </script>
+}
+
+<style type="text/css" media="all">
+    .datePickerWidth {
+        width: 100px !important;
+    }
+</style>

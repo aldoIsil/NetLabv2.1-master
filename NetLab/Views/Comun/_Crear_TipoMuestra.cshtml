@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Model.Entidades.TipoMuestra>
+
+@if (Model.Any())
+{
+    @Html.DropDownList("TipoMuestraId", new MultiSelectList(Model, "idTipoMuestra", "nombre"), new { value = "0", @class = "form-control sizeChosen" })
+}
+else
+{
+    @Html.DropDownList("TipoMuestraId", new MultiSelectList(new List<Model.Entidades.TipoMuestra>(), "idTipoMuestra", "nombre"), new { value = "0", @class = "form-control sizeChosen" })
+}

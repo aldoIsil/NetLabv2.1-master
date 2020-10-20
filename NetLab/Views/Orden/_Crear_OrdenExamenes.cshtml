@@ -1,0 +1,156 @@
+﻿@using Model.ViewModels
+@model List<CrearOrdenExamenTabla>
+@{
+    int indice = -1;
+}
+<input type="hidden" id="hdnTipoRegistro-tabla" name="hdnTipoRegistro-tabla" value="@ViewBag.TipoRegistro" />
+<input type="hidden" id="hdnTienePR" name="hdnTienePR" value="@ViewBag.TienePR" />
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-2">Código de Muestra</th>
+                <th class="col-md-1">Enfermedad</th>
+                <th class="col-md-2">Examen</th>
+                <th class="col-md-1">Tipo Muestra</th>
+                <th class="col-md-1">Fecha Obtención</th>
+                <th class="col-md-1">Hora Obtención</th>
+                <th class="col-md-1">Lab. Destino</th>
+                <th class="col-md-1">Conformidad</th>
+                <th class="col-md-2">Motivos de Rechazo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.GroupBy(x => x.IdTipoMuestra).Count(); i++)
+            {
+                var items = Model.GroupBy(x => x.IdTipoMuestra).ToList()[i];
+                int count = 0;
+                for (int j = 0; j < items.GroupBy(x => x.OrdenExamenId).Count(); j++)
+                {
+                    count++;
+                    indice++;
+                    var grouped = items.GroupBy(x => x.OrdenExamenId).ToList()[j];
+                    var item = items.GroupBy(x => x.OrdenExamenId).ToList()[j].First();
+                    <tr>
+                        <td>
+                            @if (count == 1)
+                            {
+                                <a class="btn fa fa-trash eliminarordenexamen" href="" title="Eliminar Examen" data-ordenexamenid="@grouped.Key" data-ordenid="@item.OrdenId"></a>
+                                @Html.TextBox(string.Format("OrdenExamenes[{0}].CodigoMuestra", indice), null, new { @class = "codmuestra" })
+                            }
+                            else
+                            {
+                                <a class="btn fa fa-trash eliminarordenexamen" href="" title="Eliminar Examen" data-ordenexamenid="@grouped.Key" data-ordenid="@item.OrdenId"></a>
+                                @*@Html.Hidden(string.Format("OrdenExamenes[{0}].CodigoMuestra", indice))*@
+                            }
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].OrdenId", indice), item.OrdenId)
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].OrdenMuestraId", indice), item.OrdenMuestraId)
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].OrdenExamenId", indice), item.OrdenExamenId)
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].FechaObtencionDB", indice), item.FechaObtencion)
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].HoraObtencionDB", indice), item.HoraObtencion)
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].IdTipoMuestra", indice), item.IdTipoMuestra)
+                            @Html.Hidden("fecobtdatetime", string.Format("{0} {1}", item.FechaObtencion, item.HoraObtencion))
+                            @Html.Hidden(string.Format("fechahoraobtencion[{0}]", indice), item.HoraObtencionDB, new { @class = "fechahoraobtencion" })
+                            @*<input type="text" id="codigoMuestra-@item.OrdenExamenId" name="codigoMuestra-@item.OrdenExamenId" />*@
+                        </td>
+                        <td>@item.Enfermedad</td>
+                        <td>@item.Examen</td>
+                        <td>@item.TipoMuestra</td>
+                        <td>@item.FechaObtencion</td>
+                        <td>@item.HoraObtencion</td>
+                        <td>
+                            <input style="position:relative;" class="form-control autocomplete tabla-eessdestino-au" data-id="@item.OrdenExamenId" id="tabla-eessdestino-au-@item.OrdenExamenId" name="tabla-eessdestino-au-@item.OrdenExamenId" data-eessnombre="@item.EstablecimientoDestinoNombre" />
+                            @Html.Hidden(string.Format("OrdenExamenes[{0}].EstablecimientoDestinoId", indice), item.EstablecimientoDestinoId)
+                        </td>
+                        <td>
+                            @*<input type="checkbox" class="chckconforme" data-id="@item.OrdenExamenId" id="@("Conforme"+item.OrdenExamenId)" name="@("Conforme"+item.OrdenExamenId)" checked="@item.Conforme" />*@
+                            @Html.CheckBox(string.Format("OrdenExamenes[{0}].Conforme", indice), true, new { @class = "chckconforme", data_id = item.OrdenExamenId, data_indx = i })
+                        </td>
+                        <td>
+                            @Html.DropDownList(string.Format("OrdenExamenes[{0}].MotivoRechazo", indice), grouped.Select(x => new SelectListItem { Value = x.IdCriterioRechazo.ToString(), Text = x.CriterioRechazoGlosa }), new { @disabled = "disabled", @class = "motivorechazoddl motivorechazoddl" + item.OrdenExamenId, @multiple = "multiple" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        for (var i = 0, len = $('[id^=tabla-eessdestino-au-]').length; i < len; i++) {
+            var item = $('[id^=tabla-eessdestino-au-]')[i];
+            var selectorid = "#tabla-eessdestino-au-" + $(item).data("id");
+            CargarEESSDestinoAutocomplete("#tabla-eessdestino-au-" + $(item).data("id"), "'OrdenExamenes[" + i + "].EstablecimientoDestinoId'");
+
+            CargarEESSDestinoSeleccionado(selectorid, $(item).data("eessnombre"));
+        }
+
+        $('.motivorechazoddl').each(function (i, elm) {
+            $(this).multipleSelect({
+                width: '100%',
+                multiple: true,
+                multipleWidth: 300
+            });
+        });
+
+        $('.chckconforme').change(function (e) {
+            e.preventDefault();
+            $(this).val(this.checked);
+            if (this.checked) {
+                //$("input[name='OrdenExamenes[" + $(this).data("indx")+"].MotivoRechazo']").prop('disabled', true);//.attr("disabled", "disabled");
+                //$("input[name='OrdenExamenes[" + $(this).data("indx")+"].MotivoRechazo']").val("");
+                var selector = ".motivorechazoddl" + $(this).data("id");
+                $(selector).attr("disabled", "disabled");
+                var selectorbtn = selector + " > button.ms-choice";
+                $(selectorbtn).addClass("disabled");
+                //$(selector).val("");
+            } else {
+                var selector = ".motivorechazoddl" + $(this).data("id");
+                $(selector).removeAttr("disabled");
+                var selectorbtn = selector + " > button.ms-choice";
+                $(selectorbtn).removeClass("disabled");
+            }
+        });
+
+        $(".codmuestra").keyup(function (e) {
+            e.preventDefault();
+            RevisarDatosObligatorios();
+        });
+
+        $(".eliminarordenexamen").click(function (e) {
+            e.preventDefault();
+            var ordenexamenid = $(this).data("ordenexamenid");
+            var ordenid = $(this).data("ordenid");
+            EliminarOrdenExamen(ordenexamenid, ordenid);
+        });
+    });
+
+    function CargarEESSDestinoAutocomplete(id, value) {
+        $(id).autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: URL_BASE + "Comun/ObtenerEstablecimientosPorNombre",
+                    type: 'GET',
+                    contentType: 'application/json',
+                    dataType: "json",
+                    //data: JSON.stringify({
+                    //    nombre: request.term
+                    //}),
+                    data: { nombre: request.term, ExamenVA: "", tipoRegistro: $("#hdnTipoRegistro-tabla").val() },
+                    success: function (respdatos) {
+                        response($.map(respdatos, function (item) {
+                            return { label: item.Nombre, value: item.IdEstablecimiento };
+                        }));
+                    }
+                });
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                $("input[name=" + value + "]").val(i.item.value);
+                $(id).val(i.item.label);
+            },
+            minLength: 3
+        });
+    }
+</script>

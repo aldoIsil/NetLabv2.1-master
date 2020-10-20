@@ -1,0 +1,166 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la busqueda de analitos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.ValoresAnalitoViewModels
+
+@{
+    ViewBag.Title = "Registro de Valores Normales por Analito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string anchoTabla = "800px";
+    if (Model.Analito.Tipo == 3)
+    {
+        anchoTabla = "300px";
+    }
+}
+
+
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<h2 class="text-primary">Valores Normales para el Componente:</h2>
+<h2> "@Model.Analito.Nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Valores", "NuevoValor", new { Model.Analito.IdAnalito }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+<br />
+@if (Model != null && Model.Valores.Count > 0)
+{
+    <table class="table" style="width: @anchoTabla">
+        <tr>
+            <th>
+                Orden
+            </th>
+            <th width="150px;">
+                Glosa
+            </th>
+            @if (Model.Analito.Tipo == 1)
+            {
+                <th>
+                    Género
+                </th>
+                <th>
+                    Edad Inferior
+                </th>
+                <th>
+                    Edad Superior
+                </th>
+                <th>
+                    Valor Inferior
+                </th>
+                <th>
+                    Valor Superior
+                </th>
+                <th>
+                    Valor Alarma Inferior
+                </th>
+                <th>
+                    Valor Alarma Superior
+                </th>
+            }
+            <th width="60px;">
+                Estado
+            </th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+
+        @for (var index = 0; index < Model.Valores.Count; index++)
+        {
+            var item = Model.Valores[index];
+            string estado = "Activo";
+            if (item.Estado == 0) { estado = "Inactivo"; }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.orden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.glosa)
+                </td>
+                @if (Model.Analito.Tipo == 1)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genero.Glosa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.edadInferior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.edadSuperior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.valorInferior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.valorSuperior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.valorAlarmaInferior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.valorAlarmaSuperior)
+                    </td>
+                }
+                <td>
+                    @estado
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarValor", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoValor = item.idAnalitoValorNormal }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EliminarValor", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoValor = item.idAnalitoValorNormal }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                </td>
+
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+
+<a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+@Html.ActionLink("Salir", "Index")
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AnalitoValor.js")
+}
+
+<style type="text/css">
+    .form-group {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    .range-group .col-md-2, .range-group .col-md-3, .range-group .col-md-6 {
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+
+    #Valor_grupoGenero {
+        text-transform: uppercase;
+    }
+</style>

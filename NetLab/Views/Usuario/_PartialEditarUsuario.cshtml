@@ -1,0 +1,437 @@
+﻿@*  Descripción: Vista, muestra informacion para editar y guardar un usuario.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.UsuarioViewModels
+
+@using (Html.BeginForm("EditarUsuario", "Usuario", new { ViewBag.page, ViewBag.search, ViewBag.dni }, FormMethod.Post, new { @id = "formEditarUsuario", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="form-group">
+        <h4>Usuario</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" id="idUsuario" name="idUsuario" value="@Model.Usuario.idUsuario" />
+        <div class="form-group">
+            <div class="div-row">
+                @Html.Label("DNI:", new { @class = "label-width" })
+                @if (Model.Usuario != null)
+                {
+                    <span>@Model.Usuario.documentoIdentidad</span>
+                    @Html.Hidden("txtDni", Model.Usuario.documentoIdentidad, new { @id = "txtDniEditar", htmlAttributes = new { @class = "form-control" } })
+                }
+                else
+                {
+                    <div class="control-width" style="display:flex">
+                        @Html.TextBox("txtDni", Model.Usuario.documentoIdentidad, new { @id = "txtDniEditar", @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Usuario == null)
+                {
+                    <div class="control-width2" style="display: flex">
+                        @Html.ActionLink("Buscar", "ValidarPersona", new {ViewBag.page, ViewBag.dni}, new {@class = "btn-link label-width2", @id = "btnBuscarValidarEdit", @type = "submit"})
+                    </div>
+                }
+
+                @Html.Label("Activo:", new { @class = "control-label label-width3" })
+                <div class="control-width3" style="display:flex">
+                    @(Model.Usuario.Estado == 1 ? Html.CheckBox("chkActivo", true) : Html.CheckBox("chkActivo", false))
+                </div>
+
+                @Html.Label("Renovación:", new { @class = "control-label label-width12" })
+                <div class="control-width3" style="display:flex">
+                    @*@(Model.Usuario.Estado == 1 ? Html.CheckBox("chkActivoR", true) : Html.CheckBox("chkActivoR", false))*@
+                    @Html.CheckBox("chkActivoR", false)
+                </div>
+                @Html.Label("Fecha Caducidad:", new { @class = "control-label label-width12" })
+                <div class="control-width3" style="display:flex">
+                   <span>@Model.Usuario.fechaCaducidad.ToShortDateString()</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="dvTblDatosEdit">
+            @Html.Partial("_PartialDatosUsuario", Model.Usuario)
+        </div>
+
+        <div class="form-group">
+            <div class="div-row">
+                @Html.Label("Login:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @Html.Editor("login", new { htmlAttributes = new { @id = "txtLoginEditar", @class = "form-control  lettersOnly ValidateLength", @Value = Model.Usuario.login } })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Usuario.login, "", new { @class = "text-danger" })                  
+                </div>
+
+                @Html.Label("Colegiatura:", new { @class = "label-width2" })
+                <div class="control-width2" style="display:flex">
+                    @Html.Editor("codigoColegio", new { htmlAttributes = new { @class = "form-control  ValidateLength simpleNumbersOnly", @Value = Model.Usuario.codigoColegio } })
+                    @Html.ValidationMessageFor(model => model.Usuario.codigoColegio, "", new { @class = "text-danger" })
+                </div>
+                @Html.Label("Profesión:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @*@Html.DropDownList("profesion", Model.Profesion.SelectList, new { @class = "form-control cmbTipo", id = "cmbProfesion" })*@       
+                    @Html.DropDownListFor(model => model.Usuario.profesion, Model.Profesion.SelectList, new { @class = "form-control cmbTipo", id="profesion" }) 
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="div-row">
+                @Html.Label("Tiempo Caducidad(meses):", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @Html.Editor("tiempoCaducidad", new { htmlAttributes = new { @id = "txtTiempoCaducidadEditar", @class = "form-control ValidateLength simpleNumbersOnly", @Value = Model.Usuario.tiempoCaducidad, onkeypress = "return isNumberKey(event)" } })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Usuario.tiempoCaducidad, "", new { @class = "text-danger" })
+                </div>
+                
+                @Html.Label("Correo:", new { @class = "label-width2" })
+                <div class="control-width2" style="display:flex">
+                    @Html.Editor("correo", new { htmlAttributes = new { @class = "form-control ValidateLength", @Value = Model.Usuario.correo } })
+                    @Html.ValidationMessageFor(model => model.Usuario.correo, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.Label("Cargo:", new { @class = "label-width3" })
+                <div class="control-width3" style="display:flex">
+                    @Html.Editor("cargo", new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", @Value = Model.Usuario.cargo } })
+                    @Html.ValidationMessageFor(model => model.Usuario.cargo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="div-row">
+                @Html.Label("RNE:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @Html.Editor("rne", new { htmlAttributes = new { @class = "form-control  ValidateLength simpleNumbersOnly", @Value = Model.Usuario.RNE } })
+                    @Html.ValidationMessageFor(model => model.Usuario.RNE, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.Label("Telefono:", new { @class = "label-width2" })
+                <div class="control-width2" style="display:flex">
+                    @Html.Editor("telefono", new { htmlAttributes = new { @class = "form-control ValidateLength simpleNumbersOnly", @Value = Model.Usuario.telefono } })
+                    @Html.ValidationMessageFor(model => model.Usuario.telefono, "", new { @class = "text-danger" })
+                </div>
+                @Html.Label("Tipo:", new { @class = "label-width3"})
+                <div class="control-width3" style="display:flex">
+                    @*@(Model.tipoUsuarioLogeado == 3 ? 
+                        Html.DropDownList("tipo", Model.TiposUsuario.SelectList, new { @class = "form-control cmbTipo", id = "cmbtipoUsuario", disabled = "disabled"}) : 
+                        Html.DropDownList("tipo", Model.TiposUsuario.SelectList, new { @class = "form-control cmbTipo", id = "cmbtipoUsuario"}))*@
+                    @Html.DropDownListFor(model => model.Usuario.tipo, Model.TiposUsuario.SelectList, new { @class = "form-control cmbTipo", id = "tipo" })                   
+                </div>
+            </div>
+
+        </div>
+
+        @*<div class="form-group">
+            <div class="div-rowFirma">
+                @Html.Label("Profesión:", new { @class = "label-width"})
+                <div class="control-width" style="display:flex">
+                    @Html.DropDownList("profesion", Model.Profesion.SelectList, new { @class = "form-control cmbTipo", id = "cmbProfesion" })
+                </div>
+
+                @Html.Label("Firma:", new { @class = "label-width2Firma" })
+                <div class="control-width2 divFileLogo" style="display:flex">
+                    <input name="firmaEdit" type="file" />
+                    @Html.ValidationMessageFor(model => model.Firma, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.Label("Firma actual", new { @class = "label-width3Firma" })
+                <div class="control-width3Firma" style="display:flex">
+                    @if (Model.Usuario.firmaDigital == null)
+                {
+                        @Html.Label("No hay firma registrada")
+                    }
+                    else
+                    {
+                        <img src='@Url.Action( "ShowFirmaDigital", "Usuario", new { id = Model.Usuario.idUsuario })' alt="" width="100" height="100" />
+                    }
+                </div>
+            </div>
+        </div>*@
+        <div class="form-group">
+            <div class="div-row">
+                @Html.Label("Componente Usuario:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @*@Html.DropDownList("componente", Model.Componente.SelectList, new { @class = "form-control cmbTipo"})*@
+                    @Html.DropDownListFor(m => m.Usuario.componente, Model.Componente.SelectList, new { @class = "form-control cmbTipo", id= "componente" })
+                </div>
+                @Html.Label("Tipo Acceso:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @*@Html.DropDownList("acceso", Model.Acceso.SelectList, new { @class = "form-control cmbTipo", id = "cmbAcceso", name = "cmbAcceso" })*@
+                    @Html.DropDownListFor(model => model.Usuario.idTipoUsuario, Model.Acceso.SelectList, new { @class = "form-control cmbTipo", id= "idTipoUsuario" })
+                </div>
+                @Html.Label("Nivel Aprobación:", new { @class = "label-width" })
+                <div class="control-width" style="display:flex">
+                    @*@Html.DropDownList("nAprobacion", Model.NivelAprobacion.SelectList, new { @class = "form-control cmbTipo", id = "cmbnAprobacion", name = "cmbnAprobacion" })*@
+                    @Html.DropDownListFor(model => model.Usuario.nAprobacion, Model.NivelAprobacion.SelectList, new { @class = "form-control cmbTipo", id= "nAprobacion" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="div-rowBTN">
+                <div class="col-md-4">
+                    <input type="submit" id="btnEditarUsuario" value="Actualizar" class="btn btn-primary" />  <input id="btnVolverUsuarioEditar" type="submit" value="Volver a la Lista" class="btn-link" />
+                </div>
+                <div class="col-md-8">
+                </div>                
+            </div>
+        </div>
+ 
+       </div>
+}
+<br />
+
+
+<style type="text/css" media="all">
+    .cmbDatos {
+        width: 200px !important;
+    }
+
+    .txtDatos {
+        width: 200px !important;
+    }
+
+    .cmbTipo {
+        width: 200px !important;
+    }
+
+    .div-rowFirma {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 810px;
+    }
+
+    .div-row {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 780px;
+    }
+
+    .div-rowBTN {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 750px;
+    }
+
+    .label-width {
+        text-align: left;
+        width: 140px;
+    }
+
+    .label-width2 {
+        padding-left: 13px;
+        text-align: left;
+        width: 120px;
+    }
+
+    .label-width2Firma {
+        padding-left: 13px;
+        text-align: left;
+        width: 50px;
+    }
+
+    .label-width3 {
+        padding-left: 30px;
+        text-align: left;
+        width: 80px;
+    }
+
+    .label-width3Firma {
+        padding-left: 60px;
+        text-align: left;
+        width: 150px;
+    }
+
+    .control-widthEL
+    {
+        width: 100px;
+    }
+
+    .control-width {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width2 {
+        width: 170px;
+        display: flex;
+    }
+
+    .control-width3 {
+        width: 140px;
+        display: flex;
+    }
+
+    .control-width3Firma {
+        width: 140px;
+        display: flex;
+    }
+
+    .widthBtn1
+    {
+        width: 90px;
+    }
+
+    .widthBtn2
+    {
+        width: 210px;
+    }
+
+    #tabsEdicion {
+        width: 780px;
+        height: 265px !important;
+    }
+
+
+    .obligatorio {
+        float: left;
+    }
+
+    .obligatorio span {
+        color: red;
+        margin-left: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $(".lettersOnly").bind('keypress', function (e) {
+            if (e.charCode === 32)
+                return true;
+
+            return OnlyLettersEvaluation(e.key);
+        });
+        $(".lettersOnly").bind('paste', function (event) {
+            if (event.charCode === 32)
+                return true;
+
+            var newAdditionalValue = GetDataFromClipBoard(event);
+            if (!OnlyLettersEvaluation(newAdditionalValue)) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        });
+    });
+
+    $(function () {
+        $(".ValidateLength").bind('keypress', function (e) {
+            return ValidateTextboxLength(e, '');
+        });
+        $(".ValidateLength").bind('paste', function (event) {
+            var newAdditionalValue = GetDataFromClipBoard(event);
+
+            if (!ValidateTextboxLength(event, newAdditionalValue)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    function ValidateTextboxLength(event, newvalue) {
+            if (EsCombinacionEspecial(event))
+                return true;
+
+            var controlId = event.target.id;
+            var textbox = $.trim($('#' + controlId).val());
+            var newTextValue = textbox + newvalue;
+
+            var lengthToCompare;
+
+            switch (controlId) {
+            case "apellidoPaterno":
+            case "apellidoMaterno":
+                lengthToCompare = 20;
+                break;
+            case "cargo":
+            case "nombres":
+                lengthToCompare = 30;
+                break;
+            case "txtLoginAgregar":
+            case "txtLoginEditar":
+                lengthToCompare = 15;
+                break;
+            case "iniciales":
+                lengthToCompare = 4;
+                break;
+            case "codigoColegio":
+                lengthToCompare = 12;
+                break;
+            case "txtTiempoCaducidadAgregar":
+            case "txtTiempoCaducidadEditar":
+                lengthToCompare = 3;
+                break;
+            case "correo":
+                lengthToCompare = 50;
+                break;
+            case "rne":
+                lengthToCompare = 10;
+                break;
+            case "telefono":
+                lengthToCompare = 9;
+                break;
+            default:
+                lengthToCompare = 100;
+            }
+
+            if (textbox.length === lengthToCompare || newTextValue.length > lengthToCompare)
+                return false;
+
+            return true;
+        }
+
+        function EsCombinacionEspecial(event) {
+            return event.charCode === 0 ||  //Esto es para firefox: delete,supr,arrow keys.
+            (event.ctrlKey && event.key === "x") ||
+            (event.ctrlKey && event.key === "c") ||
+            (event.ctrlKey && event.key === "v");
+        }
+
+        $(function () {
+            $(".simpleNumbersOnly").bind('keypress', function (e) {
+                return ValidateNumbers(e.key);
+            });
+            $(".simpleNumbersOnly").bind('paste', function (event) {
+                var newAdditionalValue = GetDataFromClipBoard(event);
+                if (!ValidateNumbers(newAdditionalValue)) {
+                    event.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+        });
+
+        function ValidateNumbers(value) {
+            if (value.match(/^[0-9]+$/) == null)
+                return false;
+
+            return true;
+        }
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+   
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}

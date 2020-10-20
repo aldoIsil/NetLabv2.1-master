@@ -1,0 +1,4 @@
+15:07:49  Login - user login: togis - Request.ServerVariables[REMOTE_ADDR]: ::1 - Request.UserHostAddress : ::1 - Request.ServerVariables[HTTP_X_FORWARDED_FOR] - 
+15:11:08  Login - user login: asalazar - Request.ServerVariables[REMOTE_ADDR]: ::1 - Request.UserHostAddress : ::1 - Request.ServerVariables[HTTP_X_FORWARDED_FOR] - 
+15:11:56  Login - user login: togis - Request.ServerVariables[REMOTE_ADDR]: ::1 - Request.UserHostAddress : ::1 - Request.ServerVariables[HTTP_X_FORWARDED_FOR] - 
+15:12:45  Login - user login: asalazar - Request.ServerVariables[REMOTE_ADDR]: ::1 - Request.UserHostAddress : ::1 - Request.ServerVariables[HTTP_X_FORWARDED_FOR] - 

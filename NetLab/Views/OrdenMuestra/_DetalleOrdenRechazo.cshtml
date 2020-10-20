@@ -1,0 +1,31 @@
+﻿@model List <Model.OrdenMuestrasRechazo>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Examen</th>
+            <th>Codificación</th>
+            <th>Tipo Muestra</th>
+            <th>Criterio Rechazo</th>
+            <th>Paciente</th>
+            <th>Establecimiento</th>
+            <th>Fecha - Rechazo</th>
+            <th>Usuario Rechazo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.nombreExamen</td>
+                <td>@item.Codificacion</td>
+                <td>@item.nombreTipoMuestra</td>
+                <td>@item.CriterioRechazo</td>
+                <td>@item.nombrePaciente</td>
+                <td>@item.nombreEstablecimiento</td>
+                <td>@item.fechaRechazo</td>
+                <td>@item.nombreUsuario</td>                
+            </tr>
+        }
+    </tbody>
+</table>

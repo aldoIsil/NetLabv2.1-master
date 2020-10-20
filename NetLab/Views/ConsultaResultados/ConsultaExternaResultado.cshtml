@@ -1,0 +1,686 @@
+﻿@model IEnumerable<Model.ViewData.OrdenIngresarResultadoVd>
+
+@using Model;
+@using NetLab.Helpers;
+@using Model.ViewData;
+@{ 
+    var instituciones = ViewBag.instituciones as List<Institucion>;
+    var disas = ViewBag.disas as List<DISA>;
+    var redes = ViewBag.redes as List<Red>;
+    var microredes = ViewBag.microredes as List<MicroRed>;
+    var establecimientos = ViewBag.establecimientos as List<Establecimiento>;
+    var localModel = ViewBag.Locales as Local;
+
+    string checkedReg = "checked";
+    string checkedCol = "";
+    string checkedRes = "";
+    //string checkedReRom = "";
+
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+
+    //string checkedUbPac = "";
+    string checkedUbOrigen = "checked";
+    string checkedUbDestino = "";
+}
+@using (Html.BeginForm("SelectMain2", "ConsultaResultados", FormMethod.Post, new { id = "frmInstituciones" }))
+{
+    <fieldset class="default">
+        <legend class="default">Consulta Externa de Resultados:</legend>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-2 divWidth">
+                    <div class="input-group radioButtonWidthReg">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnFechaRegistro" name="esFechaRegistro" value="1" @checkedReg>
+                        </span>
+                        <label type="text" for="rbnFechaRegistro" class="form-control radioButtonWidth">Fecha Solicitud</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnFechaColeccion" name="esFechaRegistro" value="2" @checkedCol>
+                        </span>
+                        <label type="text" for="rbnFechaColeccion" class="form-control radioButtonWidth">Fecha Obtención</label>
+                    </div>
+                </div>
+                <div class="col-sm-2" style="margin-left: 10px;">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnFechaResultado" name="esFechaRegistro" value="3" @checkedRes>
+                        </span>
+                        <label type="text" for="rbnFechaResultado" class="form-control radioButtonWidth">Fecha Resultado</label>
+                    </div>
+                </div>
+
+                @*<div class="col-sm-3" style="margin-left: 10px;">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnFechaResultadoROM" name="esFechaRegistro" value="4" @checkedReRom>
+                        </span>
+                        <label type="text" for="rbnFechaResultadoROM" class="form-control radioButtonWidth">Fecha Recepción ROM</label>
+                    </div>
+                </div>*@
+                @*<div class="col-sm-1">
+                </div>*@
+            </div>
+        </div>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Inicio: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @*Juan Muga - permitir ingreso manual de fecha*@
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Fin: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @*Juan Muga - permitir ingreso manual de fecha*@
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @*@Html.Label("Tipo Paciente: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.DropDownList("tipoPaciente", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Humano", Value = "1" ,Selected = true},
+                            new SelectListItem{ Text="Animal", Value = "2" },
+                            new SelectListItem{ Text="Banco Sangre/Cepas", Value = "3" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                    </div>*@
+                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Código de Orden:", new { @class = "control-label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Código Muestra:</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("codigoMuestra", (string)ViewBag.codigoMuestra, new { @class = "form-control" })
+                    </div>
+                    @*<label class="control-label col-md-1">Doc. Referencia</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control" })
+                    </div>*@
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @*@Html.Label("Doc Identidad:", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control" })
+                    </div>*@
+
+                    @Html.Label("Enfermedad:", new { @class = "control-label col-md-1" })
+                    <input type="hidden" id="hdnEnfermedad" name="hdnEnfermedad" value="0" />
+                    @*<div class="col-md-2">
+                            @Html.TextBox("enfermedades", (string)ViewBag.enfermedades, new { @class = "form-control" })
+                        </div>*@
+                    <div class="col-md-2">
+                        <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                            <option value=""></option>
+                            @if (ViewBag.enfermedades != null)
+                            {
+                                <option value=@ViewBag.enfermedades>@ViewBag.enfermedades</option>
+                            }
+                        </select>
+                        @if (ViewBag.enfermedades != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idEnfermedad").val(@ViewBag.enfermedades).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+
+                    @Html.Label("Examen:", new { @class = "control-label col-md-1" })
+                    <input type="hidden" id="hdnExamen" name="hdnExamen" value="0" />
+                    @*<div class="col-md-2">
+                            @Html.TextBox("examen", (string)ViewBag.enfermedades, new { @class = "form-control" })
+                        </div>*@
+                    <div class="col-md-4">
+                        <select id="idExamen" name="idExamen" class="sizeChosen form-control ">
+                            <option value=""></option>
+                            @if (ViewBag.examen != null)
+                            {
+                                <option value=@ViewBag.examen>@ViewBag.examen</option>
+                            }
+                        </select>
+                        @if (ViewBag.examen != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idExamen").val(@ViewBag.examen).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+                <div class="row">
+                    @Html.Label("Nombres Paciente:", new { @class = "control-label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("nombrePaciente", (string)ViewBag.nombrePaciente, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Apellido Paterno</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("apellidoPaciente", (string)ViewBag.apellidoPaciente, new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1">Apellido  Materno</label>
+                    <div class="col-md-2">
+                        @Html.TextBox("apellidoPaciente2", (string)ViewBag.apellidoPaciente2, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>*@
+        </div>
+
+        <br />
+        <div class="form-group">
+            <div class="row">
+                @*<div class="col-sm-2 divWidth">
+                    <div class="input-group radioButtonWidthReg">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnUbigeoPaciente" name="esTipoUbigueo" value="1" @checkedUbPac>
+                        </span>
+                        <label type="text" for="rbnUbigeoPaciente" class="form-control radioButtonWidth">Ubigeo Paciente</label>
+                    </div>
+                </div>*@
+                <div class="col-sm-3">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnUbigueoEESSOrigen" name="esTipoUbigueo" value="1" @checkedUbOrigen>
+                        </span>
+                        <label type="text" for="rbnUbigueoEESSOrigen" class="form-control radioButtonWidth">Ubigueo EE.SS Origen</label>
+                    </div>
+                </div>
+                <div class="col-sm-3" style="margin-left: 10px;">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            <input type="radio" id="rbnUbigueoEESSDestino" name="esTipoUbigueo" value="2" @checkedUbDestino>
+                        </span>
+                        <label type="text" for="rbnUbigueoEESSDestino" class="form-control radioButtonWidth">Ubigueo EE.SS Destino</label>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Departamento:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    <div class="control-departamento-width" style="display:flex">
+                        @Html.Action("GetDepartamentos", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         provinciaDivId = "dvProvincias",
+                         distritoDivId = "dvDistritos",
+                         selectedValue = ViewBag.iddepartamento
+                     })
+
+                    </div>
+                </div>
+                @Html.Label("Provincia:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    <div id="dvProvincias" class="control-provincia-width" style="display:flex">
+                        @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         distritoDivId = "dvDistritos",
+                         codigoDepartamento = ViewBag.iddepartamento,
+                         selectedValue = ViewBag.idprovincia
+                     })
+
+                    </div>
+                </div>
+                @Html.Label("Distrito:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    <div id="dvDistritos" class="control-distrito-width" style="display:flex">
+                        @Html.Action("GetDistritosPorProvincia", "Ubigeo", new
+                   {
+                       distritoSelectId = "ActualDistrito",
+                       codigoDepartamento = ViewBag.iddepartamento,
+                       codigoProvincia = ViewBag.idprovincia,
+                       selectedValue = ViewBag.iddistrito
+                   })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3 divWidth">
+                    <div class="input-group radioButtonWidthReg">
+                        <span class="input-group-addon">
+                            @Html.RadioButton("esTipoEstablecimiento", 1, new { @id = "rbnOrigenJerarquia", @checked = "checked" })
+                            @*<input type="radio" id="rbnOrigenJerarquia" name="esTipoEstablecimiento" value="1" @checkedOrJera>*@
+                        </span>
+                        <label type="text" for="rbnOrigenJerarquia" class="form-control radioButtonWidth">EE.SS Origen-Jerarquía</label>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            @Html.RadioButton("esTipoEstablecimiento", 3, new { @id = "rbnDestinoJerarquia" })
+                            @*<input type="radio" id="rbnDestinoJerarquía" name="esTipoEstablecimiento" value="3" @checkedDestJera>*@
+                        </span>
+                        <label type="text" for="rbnDestinoJerarquía" class="form-control radioButtonWidth">EE.SS/LAB Destino-Jerarquía</label>
+                    </div>
+                </div>
+                @*<br /><br />*@
+                <div class="col-sm-3">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            @Html.RadioButton("esTipoEstablecimiento", 2, new { @id = "rbnOrigenNombre" })
+                            @*<input type="radio" id="rbnOrigenNombre" name="esTipoEstablecimiento" value="2" @checkedOrjNom>*@
+                        </span>
+                        <label type="text" for="rbnOrigenNombre" class="form-control radioButtonWidth">EE.SS Origen-Nombre</label>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group radioButtonWidthColec">
+                        <span class="input-group-addon">
+                            @Html.RadioButton("esTipoEstablecimiento", 4, new { @id = "rbnDestinoNombre" })
+
+                            @*<input type="radio" id="rbnDestinoNombre" name="esTipoEstablecimiento" value="4" @checkedDestNom>*@
+                        </span>
+                        <label type="text" for="rbnDestinoNombre" class="form-control radioButtonWidth">EE.SS/LAB Destino-Nombre</label>
+                    </div>
+                </div>
+
+                @*<div class="col-sm-1">
+                </div>*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <input type="hidden" id="idPagina" name="idPagina" value="0" />
+                <input type="hidden" id="hdnTipo" name="hdnTipo" value="0" />
+                <input type="hidden" id="hdnInstitucion" name="hdnInstitucion" value="0" />
+                @Html.Label("Institución:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @if (instituciones != null && instituciones.Count > 0)
+                {
+                        <select id="selInstituciones" name="selInstituciones" class="form-control">
+                            @foreach (Institucion item in instituciones)
+                            {
+                                if (item.IdInstitucion == localModel.IdInstitucion.ToString())
+                                {
+                                    <option value="@item.IdInstitucion" selected="selected"> @item.nombreInstitucion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdInstitucion"> @item.nombreInstitucion</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="selInstituciones" name="selInstituciones" class="form-control"></select>
+                    }
+
+                </div>
+
+                <input type="hidden" id="hdnDisa" name="hdnDisa" value="0" />
+                <label class="control-label col-md-1">DISA/DIR/GER:</label>
+                <div class="col-md-2">
+
+                    @if (disas != null && disas.Count > 0)
+                {
+                        <select id="seldisa" name="seldisa" class="form-control">
+                            @foreach (var item in disas)
+                            {
+                                if (item.IdDISA == localModel.IdDisa)
+                                {
+                                    <option value="@item.IdDISA" selected="selected"> @item.NombreDISA</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdDISA"> @item.NombreDISA</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="seldisa" name="seldisa" class="form-control"></select>
+                    }
+                </div>
+
+                <input type="hidden" id="hdnRed" name="hdnRed" value="0" />
+                <label class="control-label col-md-1">RED:</label>
+                <div class="col-md-2">
+                    @if (redes != null && redes.Count > 0)
+                {
+                        <select id="selRed" name="selRed" class="form-control">
+                            @foreach (var item in redes)
+                            {
+                                if ((item.IdRed + item.IdDISA) == localModel.IdRed)
+                                {
+                                    <option value="@(item.IdRed+item.IdDISA)" selected="selected"> @item.NombreRed</option>
+                                }
+                                else
+                                {
+                                    <option value="@(item.IdRed+item.IdDISA)"> @item.NombreRed</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="selRed" name="selRed" class="form-control"></select>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <input type="hidden" id="hdnMicroRed" name="hdnMicroRed" value="0" />
+                @Html.Label("Micro RED:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @if (microredes != null && microredes.Any())
+                {
+                        <select id="selmicrored" name="selmicrored" class="form-control">
+                            @foreach (var item in microredes)
+                            {
+                                if ((item.IdMicroRed + item.IdRed + item.IdDISA) == localModel.IdMicroRed)
+                                {
+                                    <option value="@(item.IdMicroRed+item.IdRed+item.IdDISA)" selected="selected"> @item.NombreMicroRed</option>
+                                }
+                                else
+                                {
+                                    <option value="@(item.IdMicroRed+item.IdRed+item.IdDISA)"> @item.NombreMicroRed</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="selmicrored" name="selmicrored" class="form-control"></select>
+                    }
+                </div>
+
+                @*<input type="hidden" id="hdnEstablecimiento" name="hdnEstablecimiento" value="0" />
+                @Html.Label(" EESS/LAB:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @if (establecimientos != null && establecimientos.Any())
+                {
+                        <select id="selEstablecimiento" name="selEstablecimiento" class="form-control">
+                            @foreach (var item in establecimientos)
+                            {
+                                if (item.IdEstablecimiento == localModel.IdEstablecimiento)
+                                {
+                                    <option value="@item.IdEstablecimiento" selected="selected">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdEstablecimiento">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="selEstablecimiento" name="selEstablecimiento" class="form-control"></select>
+                    }
+                </div>*@
+                @Html.Label("RENIPRESS/ Nombre: ", new { @class = "control -label col-md-1" })
+                <div class="col-md-6">
+                    @*@Html.TextBox("EstablecimientoCadena", (string)ViewBag.establecimientocadena, new { @id = "txtEstablecimiento", @class = "form-control", disabled = "true" })*@
+                    @Html.TextBox("CodigoUnico", (string)ViewBag.textoLaboratorioPreSeleccionada, new { @id = "CodigoUnico", @class = "form-control", disabled = "true" })
+                    @Html.Hidden("idEstablecimiento", (string)ViewBag.valueLaboratorioPreSeleccionada)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @*@Html.Label("Estado Resultado:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownList("estadoResultado", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="Resultado pendiente", Value = "7" },
+                            new SelectListItem{ Text="Resultado en edición", Value = "8" },
+                            new SelectListItem{ Text="Resultado no conforme", Value = "9" },
+                            new SelectListItem{ Text="Resultado por verificar", Value = "10" },
+                            new SelectListItem{ Text="Resultado informado", Value = "11" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>*@
+                <label class="control-label col-md-1">Ordenar Por:</label>
+                <div class="col-md-2">
+                    @Html.DropDownList("ordenarPor", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="fecha de obtención", Value = "1",Selected = true },
+                            new SelectListItem{ Text="fecha de recepción LAB", Value = "2" },
+                            new SelectListItem{ Text="enfermedad", Value = "3" },
+                            new SelectListItem{ Text="documento identidad", Value = "4" },
+                            new SelectListItem{ Text="documento referencia", Value = "5" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>
+                <label class="control-label col-md-1">Tipo Ordenación:</label>
+                <div class="col-md-2">
+                    @Html.DropDownList("tipoOrdenacion", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Ascendente", Value = "1" , Selected = true},
+                            new SelectListItem{ Text="Descendente", Value = "2" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>
+
+            </div>
+        </div>
+        <a id="btnEstablecimiento" href="#">Buscar</a>
+
+    </fieldset>
+    <br />
+                    }
+
+@using (Html.BeginForm("ImprimirResultado", "ReporteResultados", FormMethod.Post, new { id = "frmImprimirResultado", target = "_blank" }))
+{
+
+    if (ViewBag.IsSearch)
+    {
+        if (Model == null)
+        {
+
+        }
+        else
+        {
+            if (Model.Count() > 0)
+            {
+
+                <a href="@(Url.Action("ExportExcel", "ConsultaResultados", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Excel</a>
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered" id="mydata">
+                        <thead>
+                            <tr>
+                                <th>Fecha Solicitud</th>
+                                <th>
+                                    Código Orden
+                                </th>
+                                <th>
+                                    EE.SS Origen
+                                </th>
+                                <th>
+                                    EESS / LAB Destino
+                                </th>
+                                <th>
+                                    Documento Identidad
+                                </th>
+                                <th>
+                                    Codigo Muestra
+                                </th>
+                                <th>
+                                    Tipo Muestra
+                                </th>
+                                <th>
+                                    Enfermedad
+                                </th>
+                                <th>
+                                    Examen
+                                </th>
+                                <th>
+                                    Resultado
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+
+                        @foreach (OrdenIngresarResultadoVd item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConFechaSolicitud)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConcodigoOrden)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConEstablecimientoSolicitante)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConEESS_LAB_Destino)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConDocIdentidad)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConID_Muestra)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConTipoMuestra)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConEnfermedad)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConnombreExamen)
+                                </td>
+                                <td>
+                                        @Html.DisplayFor(modelItem => item.ConnResultado)
+                                    </td>
+                                <td>
+                                    <input type="hidden" id="idorden" value="@item.ConcodigoOrden" />
+                                    <input type="hidden" id="idlaboratorio" value="@item.ConID_Muestra" />
+                                    <input type="hidden" id="idexamen" value="@item.ConnombreExamen" />
+                                    <input type="hidden" id="tipoDocumento" value="@item.tipoDocumento" />
+
+                                    <a href="@(Url.Action( "ImprimirResultadosBusqueda", "ReporteResultados", new { idOrden = item.idOrden, idLaboratorio = item.idEstablecimiento,idExamen=item.idExamen }))" onclick="return validaPaciente();" target="_blank" class="lnkForm">
+
+                                        <img src="~/img/imgPdf.gif" />
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else
+            {
+                @Html.EmptyTable()
+            }
+        }
+
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Ubigeo.js")
+    @Scripts.Render("~/Scripts/App/ConsultaResultados.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+}
+
+<style type="text/css" media="all">
+    a.classImgPdf {
+        background: url(../img/pdf-icon.jpg) no-repeat top left;
+        display: block;
+        width: 150px;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+
+    .cmbxBusqueda {
+        width: 100% !important;
+    }
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    .form-group {
+        margin-bottom: 6px;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .rowExamen {
+        background-color: #fce254;
+        font-size: 9px;
+        text-align: center;
+    }
+
+    h4.center {
+        text-align: center !important;
+    }
+
+    .headerRegRes {
+        width: 270px !important;
+        padding: 0px 10px;
+        text-align: center;
+    }
+
+    #tblResultados {
+        width: 100%;
+        font-size: 9px;
+        margin-top: 5px;
+    }
+
+        #tblResultados th, #tblResultados td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    .linksForm {
+        width: 100%;
+        text-align: center;
+    }
+
+    .lnkForm img {
+        height: 26px;
+    }
+
+    #dvBusquedaUsuario2 label {
+        width: 140px;
+    }
+</style>

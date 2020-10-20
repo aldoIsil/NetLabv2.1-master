@@ -1,0 +1,183 @@
+﻿@*  Descripción: Vista, permite levantar el popup que contiene la información de la 
+    orden y las muestras para ser recepcionadas y/o referenciadas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+@Html.AntiForgeryToken()
+
+<h4 align="center">Orden de Análisis N° @ViewBag.codigoOrden</h4>
+
+
+<h3 style="font-weight:bold" aria-expanded="false" aria-selected="false">Examenes</h3>
+<div>
+    <table name="tblDatosRecepcion" class="table">
+        <thead>
+            <tr>
+                <th>Enfermedad</th>
+                <th>Tipo Muestra</th>
+                <th>Examen</th>
+            </tr>
+        </thead>
+        </>
+        @if (Model != null)
+        {
+            <tbody>
+                @foreach (var item in Model.ordenInfoList)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.nombreEnfermedad)</td>
+                        <td>@Html.DisplayFor(modelItem => item.nombreTipoMuestra)</td>
+                        <td>@Html.DisplayFor(modelItem => item.nombreExamen)</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+
+<h3 style="font-weight:bold">Materiales</h3>
+<div>
+    <table name="tblDatosRecepcion" class="table">
+        <thead>
+            <tr>
+                <th>Tipo Muestra</th>
+                @*<th>Presentacion</th>*@
+                <th class="center">Cantidad</th>
+                @*<th>Reactivo</th>*@
+            </tr>
+        </thead>
+        @if (Model?.ordenMaterialVdList != null)
+        {
+            <tbody>
+                @foreach (var item in Model.ordenMaterialVdList)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.presentacionNombre)</td>*@
+                        <td class="center">@Html.DisplayFor(modelItem => item.cantidad)</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.reactivoNombre)</td>*@
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+
+<h3 style="font-weight:bold">Muestras</h3>
+<div aria-expanded="true" aria-selected="true">
+
+    @if (Model != null)
+    {
+        foreach (var material in Model.ordenMaterialList)
+        {
+            if (!material.ordenMuestraRecepcionList.Any())
+            {
+                continue;
+            }
+
+            <h4>@Html.DisplayFor(modelItem => material.tipoMuestraNombre)</h4>
+            <hr />
+            <table id="tblDatosRecepcion" name="tblDatosRecepcion" class="table">
+                <thead>
+                    <tr>
+                        <th width="100px" class="center">Item</th>
+                        <th hidden="hidden">Id</th>
+                        <th>Código de Muestra</th>
+                        <th>Fecha - Hora Obtención</th>
+                        <th>Examen</th>
+                        @*<th>Tipo</th>*@
+                        <th>Fecha - Hora Recepción ROM</th>
+                        <th>Motivos de Rechazo</th>
+                        <th>Laboratorio Envío</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var muestra in material.ordenMuestraRecepcionList)
+                    {
+                        <tr>    
+                            <th>@Html.Label(muestra.presentacionNombreNro)</th>
+                            <td class="left" hidden="hidden">@Html.Hidden("idOrdenRecepcion", muestra.idOrdenMuestraRecepcion)</td>
+                            <td>
+                                @Html.Label(muestra.codigoMuestra)
+                            </td>
+                            <td>
+                                @Html.Raw(muestra.fechaHoraColeccionStr)
+                            </td>
+                            <td>
+                                @Html.Label(muestra.examenNombre)
+                            </td>
+                            @*@*<td>
+                                @(muestra.Tipo == 1 ? Html.Label("Muestra Primaria") : Html.Label("Alícuota"))
+                            </td>*@
+                            <td>
+                                @if (muestra.fechaRecepcion != null)
+                                {
+                                    @Html.Label(muestra.fechaRecepcion.Value.ToShortDateString() + " - ")
+                                } @Html.Raw(muestra.horaRecepcionStr)
+                            </td>
+                            <td>
+                                @Html.Label(muestra.rechazos)
+                            </td>
+                            <td>
+                                @Html.Raw(muestra.nombreLaboratorioEnvio)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+
+</div>
+
+
+    <tr style="height:10px"></tr>
+@*<input id="btnCancelar" class="btn-link" value="Volver a la Lista" type="submit" />*@
+
+<button id="btnCancelar" class="btn btn-default" value="Volver a la Lista" type="submit"><span class="fa fa-undo" type="submit"></span> Volver a la Lista</button>
+
+
+
+<style type="text/css" media="all">
+    /*.left {
+        text-align: left !important;
+    }
+
+    .tblDatosRecepcion {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .tblDatosRecepcion, .tblDatosRecepcion td, .tblDatosRecepcion th {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    .labelHeaderWidth {
+        width: 130px;
+        font-size: medium !important;
+    }
+
+    .datePickerWidth {
+        text-align: center;
+        width: 90px !important;
+    }*/
+
+    .hourPickerWidth {
+        text-align: center;
+        width: 70px !important;
+    }
+
+    /*#multiPais {
+        width: 250px;
+    }*/
+</style>
+
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/RecepcionMuestra.js")
+}

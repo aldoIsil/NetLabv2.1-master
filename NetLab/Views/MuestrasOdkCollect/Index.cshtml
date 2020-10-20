@@ -1,0 +1,272 @@
+﻿@model IEnumerable<Model.MuestrasODKCoronavirus>
+
+@{
+    ViewBag.Title = "Consulta Datos ODK-Collect Coronavirus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Consulta Datos ODK-Collect Coronavirus</h2>
+
+<p>
+    @Html.ActionLink("Procesaro Datos ODK-Collect Coronavirus", "ProcesarDatosODK")
+</p>
+
+
+<table class="table" id="dtDatos">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ident)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fec_notificacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cod_renipres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tipo_doc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nro_documento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ape_nom_paciente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fec_nac_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.celular_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sexo_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.email_pc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.direccion_o_residencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.direccion_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cod_dept_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cod_prov_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cod_dist_pac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fec_ini_sintomas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.esta_hipostilizado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tiene_sintomas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sintomas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.dolor_sintomas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.otros_sintomas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.temperatura)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.signos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.otros_signos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.comorbilidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ha_viajado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_1_pais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_1_ciudad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_2_pais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_2_ciudad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_3_pais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.viaje_3_ciudad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tuvo_contacto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fec_muestra)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tiene_dni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.dni_inv)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ubicacion_latitud)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ubicacion_longitud)
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ident)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fec_notificacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cod_renipres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tipo_doc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nro_documento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ape_nom_paciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fec_nac_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.celular_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sexo_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.email_pc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.direccion_o_residencia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.direccion_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cod_dept_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cod_prov_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cod_dist_pac)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fec_ini_sintomas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.esta_hipostilizado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tiene_sintomas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sintomas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dolor_sintomas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.otros_sintomas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.temperatura)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.signos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.otros_signos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.comorbilidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ha_viajado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_1_pais)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_1_ciudad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_2_pais)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_2_ciudad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_3_pais)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.viaje_3_ciudad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tuvo_contacto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fec_muestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tiene_dni)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dni_inv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ubicacion_latitud)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ubicacion_longitud)
+                </td>
+            </tr>
+        </tbody>
+    }
+
+</table>
+
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtDatos').DataTable({
+                "scrollX": true
+            });
+
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+}

@@ -1,0 +1,33 @@
+﻿@*  Descripción: Vista, muestra y carga el datos de los examenes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.TipoMuestra>
+
+
+<table class="table" width="1200" >
+    <tr>
+        <th width="50">Item</th>
+        <th width="300">Enfermedad</th>
+        <th width="400">Examen</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        int pos = 0;
+        foreach (var item in Model)
+        {
+            pos++;
+            <tr idEnfermedad="@item.enfermedad.idEnfermedad" idExamen="@item.examen.idExamen">
+                <td>@pos.ToString()</td>
+                <td>@Html.DisplayFor(modelItem => item.enfermedad.nombre )</td>
+                <td>@Html.DisplayFor(modelItem => item.examen.nombre)</td>
+                <td>
+                    <a class="lnkEliminarExamen" href="#">Eliminar</a>
+                </td>
+            </tr>
+        }
+    }
+
+</table>

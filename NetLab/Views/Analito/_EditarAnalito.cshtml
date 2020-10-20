@@ -1,0 +1,81 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la edicion de un analito
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.AnalitoViewModels
+
+@using (Html.BeginForm("EditarAnalito", "Analito", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmEditarAnalito" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Analito.IdListaUnidad, new { @class = "control-label col-md-3" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Analito.IdListaUnidad, Model.Unidades.SelectList, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Analito.Nombre, new { @class = "control-label col-md-3" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Analito.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Analito.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Analito.Descripcion, new { @class = "control-label col-md-3" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Analito.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Analito.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Analito.Tipo, new { @class = "control-label col-md-3" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Analito.Tipo, Model.TiposRespuesta.SelectList, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Estado:</label>
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Analito.Estado, (List<SelectListItem>)ViewBag.estados, new { @class = "form-control" })
+            </div>
+        </div>
+        <input type="hidden" id="someDataFromPartialSomehow" value="@Model.Analito.Nombre" />
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-5">
+                @*<input type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary" />*@
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+                <button type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Guardar</button>
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Volver a la lista", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarAnalito");
+</script>

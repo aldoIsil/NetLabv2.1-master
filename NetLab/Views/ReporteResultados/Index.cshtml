@@ -1,0 +1,808 @@
+﻿@*  Descripción: Vista que permite la exportacion del reporte a PDF.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.Reportes.ReporteResultadoViewModels
+@{
+    Layout = null;
+    var Texto = "";
+    string mensajeobservacion = string.Empty;
+    if (ViewBag.MensajeObservacion != null && !string.IsNullOrWhiteSpace(ViewBag.MensajeObservacion))
+    {
+        mensajeobservacion = ViewBag.MensajeObservacion;
+    }
+
+    int inacal = 0;
+    if (Model.Orden.Inacal == 1 && Model.Examenes[0].Inacal == 1)
+    {
+        inacal = 1;
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reporte de Resultados</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/resultados.css" />
+</head>
+<body>
+
+    <div id="reporte" style="text-align: center">
+
+        @if (inacal == 1)
+        {
+            <div id="header" class="block">
+                <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;width:100%;">
+                    <div class="column-inacal" style="padding-left:30px;padding-top:20px;float:left;">
+                        <h2><b>LABORATORIO ACREDITADO POR EL ORGANISMO DE ACREDITACIÓN</b></h2>
+                        <h2><b>INACAL - DA CON REGISTRO N° LClin - 003</b></h2>
+                    </div>
+                    <div class="column-right" style="padding-top:15px;float:right;">
+                        <img src="~/img/LogoInacal.jpg"/>
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="header" class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;width:100%;">
+                <div class="column-left" style="width:30%">
+                    @if (Model.Laboratorio.LogoRegional != null)
+                    {
+                        <img src="@ViewBag.ImageLogReg" class="LogoRegional" />
+                    }
+                    else
+                    {
+                        @*<span>&nbsp;</span>*@
+                        <img src="~/img/logo regional.png" alt="" width="75" height="75" />
+                    }
+                </div>
+                <div class="column-center" style="margin-top: 15px !important;width:38%">
+                    <div>
+                        @if (Model.Laboratorio.UbigeoLaboratorio != null && Model.Laboratorio.CodigoInstitucion == 12)
+                        {
+                            <span style="font-size:medium;text-transform:uppercase">GOBIERNO REGIONAL DE @Model.Laboratorio.UbigeoLaboratorio.Departamento</span>
+                        }
+                        else if (Model.Laboratorio.CodigoInstitucion == 20)
+                        {
+                            <span style="font-size:medium;text-transform:uppercase">@Model.Laboratorio.nombreInstitucion</span>
+                            <br />
+                            <span style="font-size:small;text-transform:uppercase">ORGANISMO PÚBLICO EJECUTOR DEL SECTOR SALUD</span>
+                            <br />
+                            <span style="font-size:small;font-style:italic">"Investigar para proteger la salud"</span>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </div>
+                    <div>
+                        @*@if (Model.Laboratorio.IdDisa != "0 ")
+        {
+        <span style="font-size:medium;text-transform:uppercase">DIRESA @Model.Laboratorio.nombreDisa</span>
+        }*@
+                        @if (Model.Laboratorio.CodigoInstitucion == 12)
+                        {
+                            if (Model.Laboratorio.CodigoUnico == "00011875")
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">GERENCIA REGIONAL DE SALUD @Model.Laboratorio.nombreDisa</span>
+                            }
+                            else if (Model.Laboratorio.IdDisa != "6 ")
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">DIRECCION REGIONAL DE SALUD @Model.Laboratorio.nombreDisa</span>
+                            }
+                            else
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">DIRESA CALLAO</span>
+                            }
+
+                            @*if (Model.Laboratorio.IdDisa != "6 ")
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">DIRECCION REGIONAL DE SALUD @Model.Laboratorio.nombreDisa</span>
+                            }
+                            else if (Model.Laboratorio.CodigoUnico == "00011875")
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">GERENCIA REGIONAL DE SALUD @Model.Laboratorio.nombreDisa</span>
+                            }
+                            else
+                            {
+                                <span style="font-size:medium;text-transform:uppercase">DIRESA CALLAO</span>
+                            }*@
+                        }
+                        else if (Model.Laboratorio.CodigoInstitucion == 17)
+                        {
+                            <span style="font-size:medium;text-transform:uppercase">LABORATORIO PRIVADO</span>
+                        }
+
+                        else if (Model.Laboratorio.IdDisa != "0 ")
+                        {
+                            <span style="font-size:medium;text-transform:uppercase">@Model.Laboratorio.nombreDisa</span>
+                        }
+
+                    </div>
+                    <div>
+                        @if (Model.Laboratorio.CodigoInstitucion == 20)
+                        {
+                            <span style="font-size:small">CENTRO NACIONAL DE SALUD PUBLICA</span>
+                        }
+                        else if (Model.Laboratorio.IdRed == "0 ")
+                        {
+                            <span>&nbsp;</span>
+                        }
+                        else
+                        {
+                            <span style="font-size:medium">RED DE SALUD @Model.Laboratorio.nombreRed </span>
+                        }
+                    </div>
+                    <div>
+                        <span style="font-size:small">@Model.Laboratorio.Nombre</span>
+                        @if (Model.Laboratorio.CodigoUnico == "00018522")
+                        {
+                            <br /><span style="font-size:small">RAZON SOCIAL: UNILABS PATHOLOGY DIAGNOSTICS SERVICES S.A.C.</span>
+                        }
+                    </div>
+                </div>
+                <div class="column-right" style="width:30%">
+                    @if (Model.Laboratorio.Logo != null)
+                    {
+                        <img src="@ViewBag.ImageData" class="LogoInstitucional" />
+                    }
+                    else
+                    {
+                        <img src="~/img/logo institucional.png" alt="" width="75" height="75" />
+                    }
+                </div>
+            </div>
+            <div>
+                <span style="font-size:small">INFORME DE RESULTADO N° @Model.Orden.NumeroInforme</span>
+            </div>
+            <br />
+        </div>
+        <div class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;">
+                <div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>IDENTIFICACIÓN DEL PACIENTE: </b></span><label>@Model.Orden.nombrePaciente</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>TIPO DOCUMENTO: </b></span><label>@Model.Orden.TipoDocumento</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>NRO DOCUMENTO: </b></span><label>@Model.Orden.DocIdentidad</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>EDAD: </b></span><label>@Model.Orden.Edad</label>
+                            </div>
+                        </div>
+                        <div class="column2-right">
+                            <div class="row">
+                                <span><b>SEXO: </b></span><span>@Model.Orden.Sexo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column2-right">
+                            <div class="row">
+                                @if (!string.IsNullOrWhiteSpace(Model.Orden.Telefono))
+                                {
+                                    <span><b>TELEFONO: </b></span><span>@Model.Orden.Telefono</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="column2-right">
+                            <div class="row">
+                                <span><b>CÓDIGO DE ORDEN: </b></span><span>@Model.Orden.codigoOrden</span>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>DIRECCIÓN/UBICACIÓN: </b></span><label>@Model.Orden.Direccion</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block" style="border: 1px solid #000000; border-radius: 10px 10px 10px 10px;">
+                <div>
+                    <div class="row">
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>SOLICITANTE: </b></span><label>@Model.Orden.Solicitante</label>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.Orden.DocIdentidadSol))
+                        {
+                            <div class="column2-right">
+                                <div class="row">
+                                    <span><b>DNI: </b></span><label>@Model.Orden.DocIdentidadSol</label>
+                                </div>
+                            </div>
+                        }
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>IPRESS: </b></span><label>@Model.Orden.EstablecimientoSolicitante</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>UBICACIÓN: </b></span><label>@Model.Orden.Ubicacion</label>
+                            </div>
+                        </div>
+                        <div class="column2-right">
+                            <div class="row">
+                                <span><b>DOCUMENTO DE REFERENCIA: </b></span><label>@Model.Orden.NroOficio</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="block" style="border: 1px solid #000000; border-radius: 10px 10px 10px 10px;">
+                <div>
+                    @if (Model.Orden.FechaIngresoInsRom != null && Model.Laboratorio.CodigoInstitucion != 17)
+                    {
+                        <div class="row">
+                            <div class="column2">
+                                <div class="row">
+                                    <span><b>FECHA INGRESO MUESTRA INS ROM: </b></span><label>@Model.Orden.FechaIngresoInsRom</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="column2">
+                                <div class="row">
+                                    <span><b>FECHA INGRESO MUESTRA EN RECEPCIÓN: </b></span><label>@Model.Orden.FechaIngresoInsRom</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>LUGAR TOMA DE MUESTRA: </b></span><label>@Model.Orden.Establecimiento</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>UBICACIÓN: </b></span><label>@Model.Orden.DireccionActual</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <br />
+        <br />
+
+        @foreach (var muestras in Model.Muestras)
+        {
+            var examenes = Model.Examenes;
+            int contador = 0;
+            int interpretacion = 0;
+            int ocultaMetodo = 0;
+            int ocultaComponente = 0;
+            if (Model.Laboratorio.IdLaboratorio == 995)
+            {
+                ocultaComponente = 1;
+            }
+            if (examenes.Any())
+            {
+                for (int i = 0; i < examenes.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(examenes[i].interpretacion))
+                    {
+                        interpretacion++; 
+                    }
+                    if (!string.IsNullOrEmpty(examenes[i].ValorReferencia))
+                    {
+                        contador++;
+                    }
+                    if (!string.IsNullOrEmpty(examenes[i].metodo))
+                    {
+                        ocultaMetodo++;
+                    }
+                }
+
+                var rows = examenes.Where(e => string.Equals(e.TipodeMuestra, muestras.tipodeMuestra, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+                int nrosecuencia = 0;
+                if (rows.Any())
+                {
+                    <div class="block">
+                        <table style="width: 900px">
+                            <tr style="background-color: lightgray">
+                                <th style="border-right-style: hidden">
+                                    TIPO DE MUESTRA PRIMARIA:
+                                    <label>
+                                        @Html.DisplayFor(modelItem => muestras.tipodeMuestra)
+                                    </label>
+                                </th>
+                                <th style="border-right-style: hidden">
+                                    FECHA DE OBTENCIÓN:
+                                    <label>
+                                        @Html.DisplayFor(modelItem => muestras.FechaHoraColeccion)
+                                    </label>
+                                </th>
+                                <th>
+                                    CÓDIGO DE MUESTRA:
+                                    <label>
+                                        @Html.DisplayFor(modelItem => muestras.codigomuestra)
+                                    </label>
+                                </th>
+                            </tr>
+                        </table>
+                        <table style="width: 900px">
+                            <tr style="background-color: lightgray">
+                                <th width="85px">FECHA DE RESULTADO </th>
+                                <th width="100px">ANÁLISIS</th>
+                                @{
+                                    if (ocultaComponente != 1)
+                                    {
+                                        <th width="100px">COMPONENTE</th>
+                                    }
+                                    if (ocultaMetodo > 0)
+                                    {
+                                        <th width="100px">METODO</th>
+                                    }
+
+                                    <th width="300px">RESULTADOS</th>
+
+                                    if (contador > 0)
+                                    {
+                                        <th>VALORES DE REFERENCIA</th>
+                                    }
+                                    if (interpretacion > 0)
+                                    {
+                                        <th>INTERPRETACIÓN</th>
+                                    }
+                                }
+                            </tr>
+                            @foreach (var row in rows.Distinct())
+                            {
+                                nrosecuencia = rows.OrderByDescending(x => x.NroSecuencia).FirstOrDefault().NroSecuencia;
+                                foreach (var item in rows.Distinct())
+                                {
+                                    if (item.NroSecuencia != nrosecuencia)
+                                    {
+                                        if (item.nroInforme != 0)
+                                        {
+                                            Texto = "Este informe reemplaza al Informe Nro: " + item.nroInforme;
+                                        }
+                                    }
+                                }
+
+                                if (row.NroSecuencia == nrosecuencia)
+                                {
+                                    <tr>
+                                        <td>
+                                            @row.FechaHoraEmision
+                                        </td>
+                                        <td>
+                                            @row.nombreExamen
+                                        </td>
+
+                                        @{
+                                            if (ocultaComponente != 1)
+                                            {
+                                                <td> @row.Componente</td>
+                                            }
+
+                                        }
+
+                                        @{
+                                            if (ocultaMetodo > 0)
+                                            {
+                                                <td> @row.metodo</td>
+                                            }
+                                        }
+                                        <td align="left">
+                                            @{
+                                                string GlosaPadre = "";
+                                                var CodigoParent = "";
+                                                var printPadre = 0;
+                                                foreach (var opcion in row.ListJsResultados.OrderBy(a => a.IdAnalitoOpcionParent).ToList())
+                                                {
+                                                    if (opcion.Tipo == 2 || opcion.Tipo == 5)
+                                                    {
+                                                        if (CodigoParent != opcion.IdAnalitoOpcionParent && (!string.IsNullOrWhiteSpace(opcion.IdAnalitoOpcionParent) && opcion.IdAnalitoOpcionParent.ToString() == opcion.IdAnalitoOpcionParent.ToString().ToUpper()))
+                                                        {
+                                                            GlosaPadre = opcion.GlosaParent;
+                                                            CodigoParent = opcion.IdAnalitoOpcionParent;
+                                                            if (printPadre == 0)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(opcion.GlosaParent))
+                                                                {
+                                                                    <div>
+
+                                                                        <u>
+                                                                            @Html.DisplayFor(modelItem => opcion.GlosaParent)
+                                                                        </u>
+
+                                                                    </div>
+                                                                }
+                                                                printPadre++;
+                                                            }
+
+                                                            string IdAnalitoOpcionParent = opcion.IdAnalitoOpcionParent;
+                                                            <br />
+                                                            foreach (var ValOpcion in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent == opcion.IdAnalitoOpcionParent).ToList())
+                                                            {
+                                                                foreach (var ValOpcion2 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                {
+                                                                    <div style="display:inline-block; width:auto;">
+
+                                                                        @Html.DisplayFor(modelItem => ValOpcion2.Glosa):
+
+                                                                    </div>
+                                                                    foreach (var ValOpcion3 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion2.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                    {
+                                                                        if (!String.IsNullOrEmpty(ValOpcion3.Glosa))
+                                                                        {
+                                                                            <div style="display:inline-block; width:auto;">
+                                                                                <p>
+                                                                                    : @Html.DisplayFor(modelItem => ValOpcion3.Glosa)
+                                                                                </p>
+                                                                            </div>
+                                                                            <br />
+                                                                        }
+                                                                        foreach (var ValOpcion4 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion3.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                        {
+                                                                            if (!String.IsNullOrEmpty(ValOpcion4.Glosa))
+                                                                            {
+                                                                                <div style="display:inline-block; width:auto;">
+                                                                                    <p>
+                                                                                        - @Html.DisplayFor(modelItem => ValOpcion4.Glosa)
+                                                                                    </p>
+                                                                                </div>
+                                                                                <br />
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        GlosaPadre = opcion.GlosaParent;
+
+                                                        if (CodigoParent != opcion.IdAnalitoOpcionParent && (!string.IsNullOrWhiteSpace(opcion.IdAnalitoOpcionParent) && opcion.IdAnalito != Guid.Empty && opcion.IdAnalito != null && opcion.IdAnalitoOpcionParent.ToString().ToUpper() == opcion.IdAnalito.ToString().ToUpper()))
+                                                        //if(GlosaPadre.Length == 0)
+                                                        {
+
+                                                            CodigoParent = opcion.IdAnalitoOpcionParent;
+                                                            if (printPadre == 0)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(opcion.GlosaParent.ToString().TrimEnd()))
+                                                                {
+                                                                    <div>
+
+                                                                        <u>
+                                                                            @Html.DisplayFor(modelItem => opcion.GlosaParent)
+                                                                        </u>
+
+                                                                    </div>
+                                                                }
+                                                                printPadre++;
+                                                            }
+
+                                                            string IdAnalitoOpcionParent = opcion.IdAnalitoOpcionParent;
+                                                            if (!string.IsNullOrEmpty(opcion.GlosaParent.ToString().TrimEnd()))
+                                                            {
+                                                                <br />
+                                                            }
+
+                                                            foreach (var ValOpcion in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent == opcion.IdAnalitoOpcionParent).ToList())
+                                                            {
+                                                                foreach (var ValOpcion2 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                {
+                                                                    if (ValOpcion2.GlosaParent == opcion.GlosaParent)
+                                                                    {
+                                                                        <div style="display:inline-block; width:auto;">
+                                                                            @Html.DisplayFor(modelItem => ValOpcion2.Glosa)
+
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div style="display:inline-block; width:auto;">
+
+                                                                            @Html.DisplayFor(modelItem => ValOpcion2.GlosaParent): @Html.DisplayFor(modelItem => ValOpcion2.Glosa)
+
+                                                                        </div>
+                                                                    }
+                                                                    @*<br />*@
+                                                                    foreach (var ValOpcion3 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion2.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                    {
+                                                                        if (!String.IsNullOrEmpty(ValOpcion3.Glosa))
+                                                                        {
+                                                                            <div style="display:inline-block; width:auto;">
+                                                                                <p>
+                                                                                    : @Html.DisplayFor(modelItem => ValOpcion3.Glosa)
+                                                                                </p>
+                                                                            </div>
+                                                                            @*<br />*@
+                                                                        }
+
+                                                                        foreach (var ValOpcion4 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion3.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                        {
+                                                                            if (!String.IsNullOrEmpty(ValOpcion4.Glosa))
+                                                                            {
+                                                                                <div style="display:inline-block; width:auto;">
+                                                                                    <p>
+                                                                                        - @Html.DisplayFor(modelItem => ValOpcion4.Glosa)
+                                                                                    </p>
+                                                                                </div>
+                                                                                @*<br />*@
+                                                                            }
+                                                                            foreach (var ValOpcion5 in row.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion4.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                                            {
+                                                                                if (!String.IsNullOrEmpty(ValOpcion5.Glosa))
+                                                                                {
+                                                                                    <div style="display:inline-block; width:auto;">
+                                                                                        <p>
+                                                                                            - @Html.DisplayFor(modelItem => ValOpcion5.Glosa)
+                                                                                        </p>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        <br />
+                                                                    }
+                                                                    <br />
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        @{
+                                            if (contador > 0)
+                                            {
+                                                <td>
+                                                    @row.ValorReferencia
+                                                </td>
+                                            }
+                                            if (interpretacion > 0)
+                                            {
+                                                <td>
+                                                    @row.interpretacion
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    <br />
+                    <br />
+                }
+            }
+        }
+        <br />
+        @{
+            if (!String.IsNullOrEmpty(Texto))
+            {
+                <div class="block" style="border: 1px solid #000000;height:60px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                    <div style="text-align:left; padding-left:10px;padding-right:10px;">@Texto</div>
+                </div>
+                <br /><br /><br />
+            }
+            //if (Model.Examenes.Count == 1)
+            //{
+            <div class="block" style="border: 1px solid #000000;height:40px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                Valores de decisión clínica:
+                <br />No aplica
+                @*<div style="text-align:left; padding-left:10px;padding-right:10px;">@Model.Orden.Observaciones</div>*@
+            </div><br /><br /><br />
+            <div class="block" style="border: 1px solid #000000;height:40px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                Rango de Referencia:
+                <br />No aplica
+                @*<div style="text-align:left; padding-left:10px;padding-right:10px;">@Model.Orden.Observaciones</div>*@
+            </div><br /><br /><br />
+            <div class="block" style="border: 1px solid #000000;height:60px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                Observaciones:
+                <br />
+                @if (String.IsNullOrEmpty(Model.Orden.Observaciones))
+                {
+                    <div style="text-align:left; padding-left:10px;padding-right:10px;">-</div>
+                }
+                else
+                {
+                    <div style="text-align:left; padding-left:10px;padding-right:10px;">@Model.Orden.Observaciones</div>
+                }
+
+
+                @*<div style="text-align:left; padding-left:10px;padding-right:10px;">
+                        INFORME ACTUALIZADO CON ANÁLISIS DE PRUEBA RÁPIDA  PARA LA DETECCIÓN DE ANTICUERPOS IgM e IgG DE COVID-19
+                        <br />
+                        FECHA DE PRUEBA RÁPIDA: 30/03/2020
+                        <br />
+                        RESULTADO: IgG REACTIVO
+                    </div>*@
+            </div><br /><br /><br />
+            if (!string.IsNullOrWhiteSpace(mensajeobservacion))
+            {
+                <div class="block" style="border: 1px solid #000000;height:40px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                    <p style="font-weight:bold;">@mensajeobservacion</p>
+                </div><br />
+            }
+        }
+
+        @*<br />
+            <br />*@
+        @*<div class="block">
+            <div class="column2-right">
+            <div class="column2-right">
+            <div>
+            <span style="font-size:small">Lab. Verificador: </span>@Model.Orden.EstablecimientoDestino
+            </div>
+            </div>
+            </div>
+            </div>*@
+        <div style="height: 70px"></div>
+        <div class="block">
+            <div class="column2-left" style="margin-top: 25px !important;">
+                <div class="row">
+                    @if (Model.CargoUsuarioEstablecimiento != null)
+                    {
+                        <span><b>@Model.CargoUsuarioEstablecimiento.cargo </b></span><label>@Model.CargoUsuarioEstablecimiento.nombresUsuario</label>
+                    }
+
+                    @*@if (Model.Laboratorio.CodigoUnico == "INSMICOB")
+                    {
+                        <span><b>Responsable de Laboratorio: </b></span><label>Dra. ZULLY PUYÉN GUERRA  - CBP 6669</label>
+                    }
+                    @if (Model.Laboratorio.CodigoUnico == "INSVIRES")
+                    {
+                        <span><b>Responsable de Laboratorio: </b></span><label>Blgo(a). NANCY ROJAS SERRANO - CBP 6663</label>
+                    }
+                    @if (Model.Laboratorio.CodigoUnico == "INSITVIH")
+                    {
+                        <span><b>Responsable de Laboratorio: </b></span><label>Blgo(a). FANY CARDENAS BUSTAMANTE - CBP 3400</label>
+                    }*@
+                    <br /><br />
+
+                    @if (Model.Examenes.FirstOrDefault().iPruebaRapida == 1)
+                    {
+                        <span><b>Prueba realizada por: </b></span><label>@Model.Examenes.FirstOrDefault().EjecutorPr</label>
+                    }
+                    else
+                    {
+                        <span><b>Verificador por: </b></span><label>@Model.Examenes.FirstOrDefault().Verificador</label>
+                        <br /><br />
+                        <span><b>Análisis Realizado por: </b></span><label>@Model.Examenes.FirstOrDefault().Analista</label>
+                    }
+
+                </div>
+            </div>
+
+            <div class="column2-right" style="margin-top: 25px !important;">
+                <div class="row">
+                    <div style="display: inline-block">
+                        @if (@ViewBag.ImageSello != null)
+                        {
+                            <img src="@ViewBag.ImageSello" alt="" width="100" height="100" />
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="column2-left" style="margin-top: 25px !important;"></div>
+            @*<div class="block" style="border-radius: 10px 10px 10px 10px;">
+                    <div class="row">
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>VERIFICADO POR: </b></span><label>@Model.Orden.Validador.Nombre</label>
+                                <br />
+                                <span><b>AUTORIZADO POR: </b></span><label>@Model.Orden.Validador.Nombre</label>
+                            </div>
+                            <div style="display: inline-block">
+                                @if (@ViewBag.ImageSello != null)
+                                {
+                                    <img src="@ViewBag.ImageSello" alt="" width="100" height="100" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+        </div>
+        <div style="height: 40px"></div>
+        @* <div class="block">
+            <div id="fechaReporte" class="column2-left" style="text-align: left">
+            <span>Fecha de consulta del reporte: </span><span>@DateTime.Now.ToShortDateString()</span> - <span>@DateTime.Now.ToString("HH:mm:ss")</span>
+            </div>
+            <div class="column2-right">
+            </div>
+            </div>*@
+    </div>
+    @*<div class="footer" style="height:100px;">
+        Página <span id="page"></span> de <span id="topage"></span>
+        </div>*@
+</body>
+</html>
+
+<style type="text/css">
+    .LogoRegional {
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+    }
+
+    .column-left {
+        height: 100px;
+        line-height: 100px;
+        margin-left: 0px;
+    }
+
+    .column-right {
+        height: 100px;
+        line-height: 100px;
+    }
+
+    .column-inacal {
+        margin-left: 0px;
+/*        display: flex;*/
+        align-items: center;
+/*        width:70%;*/
+    }
+
+    .LogoInstitucional {
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+    }
+
+    #fechaReporte {
+        position: fixed;
+        top: 330mm;
+        height: auto;
+        width: auto;
+        text-align: right;
+    }
+
+    #reporte {
+        width: 100%;
+        height: 325mm;
+        /*border: 1px solid #000000;*/
+        margin: auto auto auto auto;
+    }
+
+    #header {
+        position: relative;
+        top: 0px;
+        left: 0px;
+    }
+
+    .page-breaker {
+        display: block;
+        clear: both;
+        page-break-after: always;
+    }
+</style>

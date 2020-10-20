@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el ingreso de redes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.RedMant
+
+
+@using (Html.BeginForm("NuevoRedMant", "Red", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "formAgregarRedMant" }))
+{
+    <div class="form-horizontal">
+
+        <hr />
+        <div class="form-group">
+            @Html.Label("DISA/DIRESA/GERESA", new { @class = "control-label col-md-4", @style = "padding-top:0px !important;" })
+            <div class="col-md-7">
+                <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                    <option value=""></option>
+                    @if (ViewBag.valueEnfermedadPreSeleccionada != null)
+                {
+                        <option value=@ViewBag.valueEnfermedadPreSeleccionada>@ViewBag.textoEnfermedadPreSeleccionada</option>
+                    }
+                </select>
+                @if (ViewBag.valueEnfermedadPreSeleccionada != null)
+                {
+                    <script type="text/javascript">
+                        $("#idEnfermedad").val(@ViewBag.valueEnfermedadPreSeleccionada).trigger("liszt:updated");
+                    </script>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("CODIGO", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.idred, new { htmlAttributes = new { @class = "form-control", @type = "number", @style = "width:50px !important;" } })
+                @Html.ValidationMessageFor(model => model.idred, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("NOMBRE", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.nombrered, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.nombrered, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Crear" id="btnCrear" class="btn btn-primary"*@ @*onclick="return ValidaCampoRequerido();"*@
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+
+                <button type="submit" value="Crear" class="btn btn-primary" id="btnCrear"><span class="fa fa-check-square"></span> Crear</button>
+
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/RedMant.js")
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}

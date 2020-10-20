@@ -1,0 +1,20 @@
+﻿@*  Descripción: Vista, muestra el combo de enfermedades en el mantenimiento de plantillas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Examen>
+
+@Html.DropDownList(
+    "IdExamen",
+    new SelectList(Model, "idExamen", "nombre"),
+    new
+    {
+        @id = "idExamen",
+        data_val = "true",
+        data_val_required = "Debe seleccionar el examen",
+        @class = "form-control input-sm",
+        @data_url = @Url.Action("GetTiposMuestra"),
+        @data_loading_image = @Url.Content("~/Content/images/loading.gif")
+    })
+@Html.ValidationMessage("IdExamen", new { @class = "msj-error" })

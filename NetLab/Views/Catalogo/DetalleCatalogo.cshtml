@@ -1,0 +1,147 @@
+﻿@* Descripción: Vista, muestra la pantalla con el detalle de una enfermedad.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.DetalleCatalogo>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+@*@{
+        ViewBag.Title = "";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+<h4 class="center">Detalle del Catalogo</h4>
+<br />
+@using (Ajax.BeginForm("ListarDetalle", new { ViewBag.idCatalogo }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Pruebas</legend>
+        <div id="dvBusqueda">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-1 control-label">Prueba:</label>
+                    <div class="col-md-8">
+                        @Html.TextBox("Texto", (string)ViewBag.Texto, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-1 control-label">Laboratorio:</label>
+                    <div class="col-md-8">
+                        @*<input type="text" id="CodigoUnico" name="CustomerName" />
+                            <input type="hidden" id="hddDato" name="CustomerId" />*@
+                        @Html.TextBox("CodigoUnico", "", new { @class = "form-control" })
+                        @Html.Hidden("hddDato", (string)ViewBag.CodigoUnico)
+                    </div>
+                    <div class="col-sm-2">
+                        @*<input id="btnBuscarPruebas" type="submit" value="Buscar" class="btn-link" />*@
+
+                        <button class="btn btn-primary" id="btnBuscarPruebas" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+<br />
+@using (Html.BeginForm("ListarDetalle", "DetalleCatalogo", new { ViewBag.idCatalogo, ViewBag.CodigoUnico, ViewBag.Texto }, FormMethod.Post, new { @id = "formCatalogo" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+        <table id="tblCatalogo" class="table">
+            <thead>
+                <tr>
+                    <th class="rowExamen">PRUEBA</th>
+                    <th class="rowExamen">PATOGENO</th>
+                    <th class="rowExamen">MUESTRA</th>
+                    <th class="rowExamen">CARACTERISTICAS</th>
+                    <th class="rowExamen">TRANSPORTE DE MUESTRA</th>
+                    <th class="rowExamen">LABORATORIO</th>
+                    <th class="rowExamen">DIAS HABILES PARA EMITIR RESULTADOS DEL LAB</th>
+                    <th class="rowExamen">DIAS HABILES DE ENTREGA DE RESULTADOS AL CLIENTE</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                    {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Prueba)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Patogeno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Muestra)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Caracteristica)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Transporte)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Laboratorio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiasEmision)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiasEntrega)
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <br />
+}
+@Html.PagedListPager(Model, page => Url.Action("ListarDetalle", new { page, ViewBag.search, ViewBag.idCatalogo, ViewBag.CodigoUnico, ViewBag.Texto }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+<div class="linksForm">
+    <button id="CerrarPopUp" class="btn btn-default"><span class="fa fa-times"></span> Cerrar</button>
+</div>
+
+
+<script type="text/javascript">
+    $("#CodigoUnico").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "/Catalogo/GetEESS",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'prefix': '" + request.term + "'}",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        //
+                        return { label: item.Nombre, value: item.CodigoUnico };
+                    }))
+                }
+            })
+        },
+        select: function (e, i) {
+            e.preventDefault();
+            $("#hddDato").val(i.item.value);
+            $("#CodigoUnico").val(i.item.label);
+        },
+        minLength: 1
+    });
+</script>
+@section Scripts {
+
+    @*@Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Catalogo.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.11.4.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.11.4.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.10.2.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.10.2.min.js")*@
+}

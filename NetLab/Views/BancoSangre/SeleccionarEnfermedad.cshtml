@@ -1,0 +1,54 @@
+﻿@*  Descripción: Vista, muestra y carga el combo de Tipo de Muestra.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model Model.Paciente
+
+<!-- Code to wire up your DatePicker -->
+
+
+
+@*  Descripción: Vista, carga los combos de plantillas  y componente.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Agregar Paciente</h2>
+<!--using(Html.Form)-->
+<form action="/Orden/Guardar" method="post">
+
+    <h2>Agregar Paciente</h2>
+    <h2>Datos de la Prueba</h2>
+    <table>
+        <tr>
+            <td>Plantilla:</td>
+            <td>@Html.DropDownList("plantillaItems")></td>
+        </tr>
+     <!--   <tr>
+            <td>Enfermedad:</td>
+            <td>@Html.DropDownList("enfermedadItems")></td>
+        </tr>
+        <tr>
+            <td>Tipo de Muestra:</td>
+            <td>@Html.DropDownList("tipoMuestraItems")></td>
+        </tr>
+        <tr>
+            <td>Analito:</td>
+            <td>@Html.DropDownList("analitoItems")></td>
+        </tr>-->
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Guardar" /></td>
+        </tr>
+    </table>
+
+</form>

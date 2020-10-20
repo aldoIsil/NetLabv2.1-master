@@ -1,0 +1,282 @@
+﻿@*  Descripción: Vista, muestra la informacion registrada para editar o finalizar.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Orden> ordenes = ViewBag.ordenes;
+}
+@using Model
+
+@model Model.Orden
+
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+
+
+<div class="form-horizontal">
+    <h2>@ViewBag.Title</h2>
+    <form id="frmOrden" role="form" action="@(Url.Action("Guardar", "BancoSangre", null, Request.Url.Scheme))" method="post">
+        <fieldset>
+            <legend class="default">Datos Orden</legend>
+            <div class="cont-line">
+                <div class="block-line">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.idProyecto)
+                        @foreach (SelectListItem item in ViewBag.proyectos)
+                        {
+                            if (item.Value == ViewBag.orden.idProyecto.ToString())
+                            {
+                                <span>@item.Text</span>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="block-line">
+                    <div class="form-group">
+                        <div>
+                            @Html.LabelFor(model => model.nroOficio)
+                            <span>@ViewBag.orden.nroOficio</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Establecimiento-->
+                <div class="block-line">
+                    <div class="form-group">
+                        <div>
+                            @Html.LabelFor(model => model.establecimiento)
+                            <span>@ViewBag.orden.establecimiento.nombre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend class="default">Examenes </legend>
+            
+            <div id="dvTblExamen">
+                <table class="table" width="1200">
+                    <tr>
+                        <th width="50">Item</th>
+                        <th width="300">Enfermedad</th>
+                        <th width="400">Examen</th>
+                    </tr>
+
+                    @if (Model != null)
+                    {
+                        int pos = 0;
+                        foreach (var item in ViewBag.tipoMuestraList)
+                        {
+                            pos++;
+                            <tr idEnfermedad="@item.enfermedad.idEnfermedad" idExamen="@item.examen.idExamen">
+                                <td>@pos.ToString()</td>
+                                <td>@item.enfermedad.nombre</td>
+                                <td>@item.examen.nombre</td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend class="default">Muestras</legend>
+            
+            <div id="dvTblMuestra">
+                <table id="tblMuestras" class="table">
+                    <tr>
+                        <th>Código Orden</th>
+                        <th>Código</th>
+                        <th>Código Origen</th>
+                        <th>Fecha<br />Colección</th>
+                        <th>Hora<br />Colección</th>
+                        <th>Presentación</th>
+                    </tr>
+                    @foreach (Orden orItem in ordenes)
+                    {
+                        string codigoOrden = orItem.establecimiento.CodigoUnico + orItem.codigoOrden;
+                    <tr>
+                        <td>@codigoOrden</td>
+                        <td>@orItem.cepaBancoSangre.muestra.codificacion</td>
+                        <td>@orItem.cepaBancoSangre.codificacion</td>
+                        <td>@orItem.cepaBancoSangre.fechaColeccion.ToString("dd'/'MM'/'yyyy")</td>
+                        <td>@orItem.cepaBancoSangre.horaColeccion.ToString("HH':'mm")</td>
+                        <td>
+                                @foreach (var item in ViewBag.materialList)
+                                {
+                                    if (item.idCmbMaterial == orItem.cepaBancoSangre.idMaterial) {
+                                        @item.textoCmbMaterial
+                                    }
+                                }
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend class="default">Observación</legend>
+
+            <div class="form-group allWidth divObservacion
+                 dl-horizontal map     ">
+                <p>@ViewBag.orden.observacion</p>
+            </div>
+        </fieldset>
+
+        <div class="allWidth centerAlign">
+            <div class="block-line">
+                <label>Registrado por: </label>
+                <span>@ViewBag.nombreUsuarioRegistro</span>
+            </div>
+
+            <div class="block-line">
+                <label>Fecha: </label>
+                <span>@ViewBag.fechaRegistro</span>
+            </div>
+            <!--Establecimiento-->
+            <div class="block-line">
+                <label>Hora: </label>
+                <span>@ViewBag.horaRegistro</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="dialog-open" style="display: none">
+
+</div>
+
+   
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}
+
+
+<style type="text/css" media="all">
+    fieldset {
+        border: 1px groove #ddd !important;
+        box-shadow: 0 0 0 0 #000;
+        margin: 0 0 1em !important;
+        padding: 0 1.4em 0 !important;
+    }
+
+    .divObservacion p {
+        padding: 0px 15px;
+    }
+
+    .divObservacion{
+        padding-left: 25px;
+    }
+    
+    .allWidth {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .centerAlign {
+        text-align: center;
+    }
+
+    .timeEntry-control{
+        display: none !important;
+    }
+
+    #cmbEstablecimientoFrecuente {
+        width: 300px;
+    }
+
+    .lnkEliminarMuestra {
+        margin-top: -10px;
+    }
+
+    legend a {
+        font-weight: normal !important;
+        font-size: 14px !important;
+    }
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+    #cmbEstablecimiento, #cmbExamen, #cmbTipoMuestra, #cmbMaterial {
+        width: 900px;
+    }
+
+    .spnTitle {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .form-horizontal {
+        padding-left: 15px;
+    }
+
+    .form-horizontal h2 {
+        margin-left: -15px;
+        text-align: center !important;
+    }
+
+    .form-horizontal legend {
+        margin-left: -15px;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .lnkGuardar {
+        margin-left: -7px;
+    }
+
+    #nombrePaciente {
+        position: absolute;
+        padding-top: 30px;
+    }
+
+    #btnBuscarPaciente {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #btnNuevaEnfermedad {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #dvTblExamen table{
+        width: 700px !important;
+    }
+
+    #dvTblMuestra table {
+        width: 800px !important;
+    }
+
+    #dvTblExamen table input, #dvTblMuestra table input {
+        width: 100px;
+    }
+
+    .muestraHora {
+        width: 65px !important;
+    }
+
+    .muestraCodigoExterno {
+        width: 200px !important;
+    }
+</style>

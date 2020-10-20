@@ -1,0 +1,53 @@
+﻿@model IEnumerable<NetLab.Models.PEED.SuceptibilidadGenotype>
+
+<table class="table">
+    <tr>
+        <th>
+            Nro Pregunta
+        </th>
+        <th>
+            Identificación molecular
+        </th>
+        <th>
+            RIFAMPICINA
+        </th>
+        <th>
+            ISONIACIDA
+        </th>
+        <th>
+            KAT G
+        </th>
+        <th>
+            ISONIACIDA A
+        </th>
+        <th>
+            KAT G - ISONIACIDA A
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr style="align-items: center">
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.NroPregunta)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.IdentificacionMolecular)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.Rifampicina)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.Isoniacida)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.KatG)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.InhA)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.KatGInhA)
+            </td>
+        </tr>
+    }
+</table>

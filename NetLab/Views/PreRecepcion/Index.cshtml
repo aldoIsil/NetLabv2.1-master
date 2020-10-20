@@ -1,0 +1,148 @@
+﻿@model Model.MuestraPreRecepcion
+
+@{
+    ViewBag.Title = "Pre Recepción de Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pre Recepción de Muestras</h2>
+
+
+@using (Html.BeginForm("Save", "PreRecepcion", FormMethod.Post, new { id = "frmOrdenPreRecepcion" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.tipoDocumento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @*@Html.EditorFor(model => model.tipoDocumento, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+                @Html.ValidationMessageFor(model => model.tipoDocumento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nroDocumento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.nroDocumento, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.ValidationMessageFor(model => model.nroDocumento, "", new { @class = "text-danger" })
+                <button type="button" class="btn btn-default" style="display:none" id="btnBuscar">
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.apePaterno, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.apePaterno, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.ValidationMessageFor(model => model.apePaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.apeMaterno, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.apeMaterno, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.ValidationMessageFor(model => model.apeMaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombres, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.nombres, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.ValidationMessageFor(model => model.nombres, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.tipoValidacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @*@Html.EditorFor(model => model.tipoValidacion, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.tipoValidacion, "", new { @class = "text-danger" })
+                @Html.DropDownList("tipoValidacion", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="--------CONFORME----------", Value = "0", Selected = true },
+                            new SelectListItem{ Text="Datos paciente NO CONFORME", Value = "1" },
+                            new SelectListItem{ Text="Muestra NO CONFORME", Value = "2" }
+                            }, new { @class = "form-control cmbxBusqueda" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="button" class="btn btn-default" id="btnGrabar">
+                    <span class="glyphicon .glyphicon-plus-sign">Grabar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script  type="text/javascript">
+    $("#btnBuscar").click(function () {
+        var dni = $('#nroDocumento').val();
+        var tipoDocumento = $('#tipoDocumento').val();
+        if (tipoDocumento == 1) {
+            $.ajax({
+                url: URL_BASE + "PreRecepcion/ValidarPersona",
+                cache: false,
+                method: "POST",
+                data: { nroDocumento: dni },
+                success: function (response) {
+                    var splitData = response.split('/');
+                    var Nombre = splitData[0];
+                    var Paterno = splitData[1];
+                    var Materno = splitData[2];
+
+                    $('#nombres').val(Nombre);
+                    $('#apePaterno').val(Paterno);
+                    $('#apeMaterno').val(Materno);
+                },
+            });
+        }        
+    });
+ 
+    $("#btnGrabar").click(function () {
+        var dni = $('#nroDocumento').val();
+        var tipoDocumento = $('#tipoDocumento').val();
+        var nombre = $('#nombres').val();
+        var apePate = $('#apePaterno').val();
+        var apeMater = $('#apeMaterno').val();
+        var ok = 0;
+        if (dni == "") {
+            alert("Nro de documento inválido");
+            ok = 1;
+        }
+        if (nombre == "") {
+            alert("Nombres inválido");
+            ok = 1;
+        }
+        if (apePate == "") {
+            alert("Apellido Paterno inválido");
+            ok = 1;
+        }
+        if (apeMater == "") {
+            alert("Apellido Materno inválido");
+            ok = 1;
+        }
+
+        if (ok == 0) {
+            $.ajax({
+                url: URL_BASE + "PreRecepcion/save",
+                cache: false,
+                method: "POST",
+                data: { nroDocumento: dni, tipoValidacion: $('#tipoValidacion').val(), nombre: nombre, apePaterno: apePate, apeMaterno: apeMater, tipoDocumento: tipoDocumento },
+                success: function (response) {
+                    alert(response);
+                },
+            });
+        }
+    });
+</script>
+}

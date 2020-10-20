@@ -1,0 +1,262 @@
+﻿@model Model.Orden
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orden Nro @Html.Raw(Model.codigoOrden)</title>
+
+    <link rel="stylesheet" href="~/Content/chosen.css">
+    @*<link rel="stylesheet" href="~/Content/ordenNew.css">*@   @*Alexander Buchelli - inicio - fecha 23/08/17 - comentar estilos propios para usar las clases de bootstrap*@
+    <link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssHeader")
+    @Styles.Render("~/Content/telerik/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery-ui")
+</head>
+<body>
+    <h2 style="text-align:center">Orden Nro @Html.Raw(Model.codigoOrden)</h2>
+    <fieldset class="default">
+        <legend class="default">Datos del Paciente</legend>
+
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-12 col-sm-3 col-md-6 col-lg-6">
+                @Html.LabelFor(model => model.Paciente.NroDocumento, new { @class = " " })
+
+                <span>@Html.Raw(Model.Paciente.NroDocumento)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-3 col-md-6 col-lg-6">
+                @Html.Label("Nombre:", new { @class = " " })
+
+                <span>@Html.Raw(Model.Paciente.Nombres + " " + Model.Paciente.ApellidoPaterno + " " + Model.Paciente.ApellidoMaterno)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-3 col-md-6 col-lg-6">
+
+                @Html.LabelFor(model => model.Paciente.DireccionActual, new { @class = " " })
+                <span>@Html.Raw(Model.Paciente.DireccionActual)</span>
+
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Departamento, new { @class = " " })
+                <span>@Html.Raw(Model.Paciente.UbigeoActual.Departamento)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Provincia, new { @class = " " })
+                <span>@Html.Raw(Model.Paciente.UbigeoActual.Provincia)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Distrito, new { @class = " " })
+                <span>
+                    @Html.Raw(Model.Paciente.UbigeoActual.Distrito)
+                </span>
+            </div>
+        </div>
+
+
+
+        <!--Segunda fila-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                @Html.LabelFor(model => model.Paciente.TelefonoFijo, new { @class = " " })
+                <span>@Html.Raw((String)Model.Paciente.TelefonoFijo)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.LabelFor(model => model.Paciente.Celular1, new { @class = " " })
+                <span>@Html.Raw((String)Model.Paciente.Celular1)</span>
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.LabelFor(model => model.Paciente.Celular2, new { @class = " " })
+                <span> @Html.Raw((String)Model.Paciente.Celular2)</span>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.LabelFor(model => model.Paciente.correoElectronico, new { @class = " " })
+                <span>@Html.Raw((String)Model.Paciente.correoElectronico)</span>
+            </div>
+        </div>
+
+        <!--tercera linea-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+
+            <div class="div-row">
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                    @Html.LabelFor(model => model.Paciente.ocupacion, new { @class = " " })
+                    <span>@Html.Raw((String)Model.Paciente.ocupacion)</span>
+                </div>
+
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                    @Html.LabelFor(model => model.Paciente.tipoSeguroSalud, new { @class = " " })
+                    <span>@Html.Raw((String)Model.Paciente.tipoSeguro)</span>
+             
+                    <span>@Html.Raw((String)Model.Paciente.otroSeguroSalud)</span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="default">
+        <legend class="default">EESS/LAB</legend>
+
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+                @Html.LabelFor(model => model.idProyecto, new { @class = " " })
+                <span>@Html.Raw((String)Model.Proyecto.Nombre)</span>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+                @Html.LabelFor(model => model.nroOficio, new { @class = " " })
+                @if (Model.nroOficio == null || Model.nroOficio.Equals(""))
+            { <span>No Precisa</span>                    }
+            else
+            { <span>@Html.Raw((String)Model.nroOficio)</span> }
+            </div>
+
+        </div>
+
+
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                @Html.LabelFor(model => model.idEstablecimiento, new { @class = " " })
+                <span>@Html.Raw(Model.establecimiento.Nombre)</span>
+                &nbsp;&nbsp;
+                <br />
+                @if (Model.establecimientoEnvio != null)
+            {
+                    @Html.LabelFor(model => model.idEstablecimientoEnvio, new { @class = "row" })
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>@Html.Raw(Model.establecimientoEnvio.Nombre)</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="default">
+        <legend class="default">Examenes</legend>
+
+        <div id="dvTblExamen" class="table-responsive div-row-width">
+            @Html.Partial("_TblExamenNoEditIMP", (List<Model.OrdenExamen>)Model.ordenExamenList)
+        </div>
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">Muestras</legend>
+        <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+            @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+            {
+                @Html.Partial("_TblOrdenMuestraNoEditRecepcionarIMP", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+            }
+            else
+            {
+                @Html.Partial("_TblOrdenMuestraNoEditIMP", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+            }
+
+        </div>
+    </fieldset>
+
+    <fieldset class="default">
+        <legend class="default">Materiales</legend>
+        <div id="dvTblMaterial" class="table-responsive div-row-width">
+            @if (ViewBag.referenciar != null && ViewBag.referenciar == 1)
+            {
+                @Html.Partial("_TblMaterialReferenciar", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+            }
+            else
+            {
+                @Html.Partial("_TblMaterialNoEdit", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+            }
+        </div>
+    </fieldset>
+
+
+
+    <fieldset class="default">
+        <legend class="default">Datos Clínicos</legend>
+        <div id="dvTblDatoClinico">
+            @Html.Partial("_TabDatoClinicoNoEditIMP", (List<Model.Enfermedad>)Model.enfermedadList)
+        </div>
+    </fieldset>
+
+    @if (Model.ejecutorPr != "")
+    {
+    <fieldset class="default">
+        <legend class="form">Datos del personal que realiza la prueba rápida</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            @Html.Label("Ejecutor de Prueba Rápida", new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+            <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
+                <span>@Html.Raw(Model.dniEjecutor) - @Html.Raw(Model.ejecutorPr)</span>
+            </div>
+        </div>
+    </fieldset>
+    }
+
+
+    <fieldset class="default">
+        <legend class="form">Observaciones</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
+
+                @Html.LabelFor(model => model.solicitante, new { @class = " " })
+                <span>@Html.Raw(Model.solicitante)</span>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+
+                @Html.LabelFor(model => model.fechaSolicitud, new { @class = " " })
+                <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.fechaSolicitud))</span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+
+                @Html.LabelFor(model => model.observacion, new { @class = " " })
+                <span>@Html.Raw(Model.observacion)</span>
+            </div>
+
+        </div>
+    </fieldset>
+    <div class="piePagina">
+        <span>Registrado el día @Model.fechaRegistroShow por @ViewBag.nombreUsuario</span>
+    </div>
+
+</body>
+</html>
+
+
+
+<style type="text/css">
+    .piePagina {
+        margin-top: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .piePagina span {
+            font-size: 13px;
+        }
+</style>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/Orden/OrdenExamenPruebaRapida.js")
+    @Scripts.Render("~/Scripts/App/Orden.js")
+}

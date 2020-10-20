@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Model.OrdenMuestra>
+
+
+<table class="table" width="1200">
+    <tr>
+        <th width="50">Item</th>
+        <th width="100">Código de Muestra</th>
+        <th width="200">Tipo de Muestra</th>
+        <th width="300">Laboratorio de Envío</th>
+        <th width="200">Fecha Colección</th>
+        <th></th>
+    </tr>
+
+    @if (Model != null)
+    {
+        int c = 0;
+
+        foreach (var item in Model)
+        {
+            c++;
+            <tr>
+                <td>@Html.Raw(c.ToString())</td>
+                <td>@Html.Raw(item.MuestraCodificacion.codificacion)</td>
+                <td>@Html.Raw(item.TipoMuestra.nombre)</td>
+                <td>@Html.Raw(item.Laboratorio.Nombre)</td>
+                <td>@Html.Raw(item.fechaColeccionToString)</td>
+            </tr>
+        }
+    }
+</table>

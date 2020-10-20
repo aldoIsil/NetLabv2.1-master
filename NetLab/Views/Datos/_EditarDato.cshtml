@@ -1,0 +1,140 @@
+﻿@*  Descripción: Vista, muestra la pantalla para editar los datos variables de una categoria.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.DatoClinico.DatoViewModels
+
+@using (Html.BeginForm("EditarDato", "Datos", null, FormMethod.Post, new { id = "frmEditarDato" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdCategoria)
+    @Html.HiddenFor(model => model.IdEnfermedad)
+    @Html.HiddenFor(model => model.NombreEnfermedad)
+    @Html.HiddenFor(model => model.Dato.IdDato)
+    @Html.HiddenFor(model => model.Dato.Estado)
+    @Html.Hidden("mostrarexamenlista", Model.TipoSeleccionExamen)
+
+<div class="form-horizontal">
+
+    <hr />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.Prefijo, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Dato.Prefijo, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Dato.Prefijo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.Sufijo, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Dato.Sufijo, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Dato.Sufijo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.Obligatorio, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Dato.Obligatorio)
+            @Html.ValidationMessageFor(model => model.Dato.Obligatorio, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.idProyecto, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.Dato.idProyecto, new SelectList(ViewBag.proyectoList, "idProyecto", "nombre"), "Mixto", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.Visible, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Dato.Visible)
+            @Html.ValidationMessageFor(model => model.Dato.Visible, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dato.Tipo, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.Tipo.IdTipoDato, Model.Tipo.Tipos, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div id="dvLista" class="form-group" style="display: none">
+        @Html.LabelFor(model => model.Lista, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.Lista.IdListaDato, Model.Lista.Listas, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Clase, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.Clase.IdClase, Model.Clase.SelectList, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tipo de relación con examen", new { @class = "control-label col-md-4" })
+        <label>
+            @Html.RadioButtonFor(model => model.TipoSeleccionExamen, true, new { @id = "rbtnasiganrexamen" })
+            Todos(Por defecto)
+        </label><br />
+        <label>
+            @Html.RadioButtonFor(model => model.TipoSeleccionExamen, false, new { @id = "rbtnasiganrexamen" })
+            Personalizado
+        </label>
+    </div>
+
+    <div class="form-group" id="divselectexamen">
+        @Html.LabelFor(model => model.IdsExamen, "Examen", new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.IdsExamen, (List<SelectListItem>)ViewBag.ExamenList, new { @id = "IdsExamen", @multiple = "multiple", @class = "form-control ddlexamenlist" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-4 col-md-8">
+            <input type="submit" value="Guardar" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @Html.ActionLink("<<Retroceder", "Index", null, new { id = "closeDialog", @class = "btn btn-default" })
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarDato");
+    $(document).ready(function (e) {
+        $('.ddlexamenlist').change(function (e) {
+            
+        }).multipleSelect({
+            width: '100%',
+            multiple: true,
+            multipleWidth: 300,
+            selectAll: false
+        });
+
+        var mostrarexamenlist = $("#mostrarexamenlista").val();//$("#dialog-edit #rbtnasiganrexamen").val();
+        console.log("mostrarexamenlist.toString().toLowerCase(): ", mostrarexamenlist.toString().toLowerCase());
+        if (mostrarexamenlist.toString().toLowerCase() == "true") {
+            $("#dialog-edit #divselectexamen").hide();
+        }
+
+        $("#dialog-edit #rbtnasiganrexamen").change(function (e) {
+            //debugger;
+            if (this.value == "True") {
+                $("#dialog-edit #divselectexamen").hide();
+            } else {
+                $("#dialog-edit #divselectexamen").show();
+            }
+        });
+    });
+</script>

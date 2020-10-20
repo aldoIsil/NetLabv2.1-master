@@ -1,0 +1,220 @@
+﻿@model Model.SolicitudExamen
+
+@{
+    //ViewBag.Title = "RegistroSolicitudGenotipificacion";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
+    string criterio = "";
+    if (Model.Criterio == 1)
+    {
+        criterio = "No se logra suprimir los niveles plasmáticos de CV a menos de 1000 copias/ml a los 6 meses de iniciado el TARGA (resistencia transmitida)";
+    }
+    else if (Model.Criterio == 2)
+    {
+        criterio = "Los niveles plasmáticos de CV, que han estado previamente indetectables, presentan valores mayores de 1000 copias / ml.en dos mediciones efectuadas con un intervalo de 4 semanas(resistencia adquirida)";
+    }
+    else
+    {
+        criterio = "Si la carga viral se mantiene por encima de niveles indetectables y por debajo de 1000 copias";
+    }
+    string nombreCompletoPaciente = Model.Paciente.Nombres + " " + Model.Paciente.ApellidoPaterno + " " + Model.Paciente.ApellidoMaterno;
+    string ubicacion = Model.Paciente.UbigeoActual.Departamento + " - " + Model.Paciente.UbigeoActual.Provincia + " - " + Model.Paciente.UbigeoActual.Distrito;
+    string fechaNacimiento = Convert.ToString(Model.Paciente.FechaNacimiento);
+}
+@*<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solicitud de Examen de Genotipificación</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/resultados.css" />
+</head>
+<body>
+
+    <div id="reporte">
+        @*<input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />*@
+        <h3 style="text-align:right">@Model.pResultado</h3>
+
+        <h3 style="text-align:center" class="text-primary">SOLICITUD DE LA PRUEBA DE RESISTENCIA A DROGAS ARV DEL VIH POR GENOTIPIFICACION</h3>
+        <h4 style="text-align:center">Solicitud Nro @Html.Raw(Model.numeroSolicitud)</h4>
+        <br />
+
+        <label><b>I. DATOS DEL PACIENTE</b></label>
+        <div class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;">
+                <div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>IDENTIFICACIÓN DEL PACIENTE: </b></span><label>@nombreCompletoPaciente</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>NRO DOCUMENTO: </b></span><label>@Model.Paciente.NroDocumento</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>FECHA NACIMIENTO: </b></span><label>@fechaNacimiento.Substring(0,10)</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>EDAD: </b></span><label>@Model.Paciente.edadAnios</label>
+                            </div>
+                        </div>
+                        <div class="column2-right">
+                            <div class="row">
+                                <span><b>SEXO: </b></span><span>@Model.Paciente.generoNombre</span>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>UBICACIÓN: </b></span><label>@ubicacion</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <label><b>II. DATOS DEL  ESTABLECIMIENTO DE  ORIGEN</b></label>
+        <div class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;">
+                <div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>ESTABLECIMIENTO: </b></span><label>@Model.Establecimiento.Nombre</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <label><b>III. DATOS DEL  MÉDICO</b></label>
+        <div class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;">
+                <div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>MEDICO REMITENTE: </b></span><label>@Model.Solicitante.Nombres</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>CORREO: </b></span><label>@Model.Solicitante.correo</label>
+                            </div>
+                        </div>
+                        <div class="column2-left">
+                            <div class="row">
+                                <span><b>TELEFONO: </b></span><label>@Model.Solicitante.telefonoContacto</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <label><b>IV. DATOS CLINICOS</b></label>
+        <div class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;">
+                <div>
+                    <div class="row">
+                        <div class="column2">
+                            <div class="row">
+                                <span><b>Criterios para uso de la prueba de Genotipificación de VIH: </b></span><label>@criterio</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column2-left">
+                            @if (Model.Criterio == 2)
+                            {
+                                <div class="div-row">
+                                    <span><b>CODIGO DE ORDEN: </b></span><span>@Model.CodigoOrden</span>
+                                </div>
+                                <div class="div-row">
+                                    <span><b>RESULTADO: </b></span><span>@Model.Resultado.Resultado</span>
+                                </div>
+                                <div class="div-row">
+                                    <span><b>FECHA: </b></span><span>@Model.Resultado.FechaHoraEmision</span>
+                                </div>
+                            }
+                            else if (Model.Criterio == 3)
+                            {
+                                <div class="div-row">
+                                    <span><b>CODIGO DE ORDEN: </b></span><span>@Model.CodigoCD4</span>
+                                </div>
+                                <div class="div-row">
+                                    <span><b>RESULTADO: </b></span><span>@Model.ResultadoCD4</span>
+                                </div>
+                                <div class="div-row">
+                                    <span><b>FECHA: </b></span><span>@Model.FechaResultadoCD4</span>
+                                </div>
+                            }
+                            <br />
+                        </div>
+                        <br /><br /><br /><br />
+                        <div class="column2-left">
+                            @{
+                                for (int i = 0; i < Model.ListaDrogas.Count; i++)
+                                {
+                                    <div class="row">
+                                        <span>@Model.ListaDrogas[i].nombreDroga: </span>&nbsp;<span><b>@Model.ListaDrogas[i].valor</b></span>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <br /><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="row">
+                <div class="column2-left">
+                    <span><b>FECHA DE SOLICITUD:</b> @Model.fechaSolicitud </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<style type="text/css">
+    .piePagina {
+        margin-top: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .piePagina span {
+            font-size: 13px;
+        }
+    
+    #reporte {
+        width: 100%;
+        height: 325mm;
+        /*border: 1px solid #000000;*/
+        margin: auto auto auto auto;
+        font-size:medium;
+    }
+   
+</style>
+

@@ -1,0 +1,10 @@
+﻿@* Descripción: Ventana para mostrar el combobox de examenes
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Examen>
+
+@Html.DropDownList("idExamen",
+new SelectList(Model, "idExamen", "nombre"),
+new { value = "0", @class = "form-control" })

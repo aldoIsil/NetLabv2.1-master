@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, muestra la pantalla listar y dar mantenimiento a las listas de datos
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.ListaDato>
+
+@{
+    ViewBag.Title = "Mantenimiento de Listas de Datos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Lista de Datos</h2>
+<br />
+<p>
+    @Html.ActionLink("+ Nueva Lista", "NuevaLista", new { page = Model.PageNumber }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{    //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Descripcion)
+                </th>
+                <th>Editar/Eliminar</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td class="text-center" style="white-space: nowrap">
+                    @Html.ActionLink(" ", "EditarLista", new { id = item.IdListaDato, page = Model.PageNumber }, new { @class = "editDialog btn btn-default fa fa-pencil-square-o" }) |
+                    @Html.ActionLink(" ", "EliminarLista", new { id = item.IdListaDato, page = Model.PageNumber }, new { @class = "confirmDialog btn btn-default fa fa-trash" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "AgregarOpciones", new { id = item.IdListaDato }, new { @class = "btn btn-default btn-block fa fa-cog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{ //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+    @*@Html.PagedListPager(Model, page => Url.Action("ListaDatos", new { page }))*@
+}
+<br />
+<br />
+<div>
+    @Html.ActionLink("Retroceder", "Index", "Categoria")
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Plantilla/ListaDato.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

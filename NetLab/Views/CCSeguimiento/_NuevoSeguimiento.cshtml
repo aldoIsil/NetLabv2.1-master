@@ -1,0 +1,162 @@
+﻿@model Model.CCSeguimientoCab
+
+@using (Html.BeginForm("NuevoSeguimiento", "CCSeguimiento", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "frmNuevoSeguimiento" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Seguimiento</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("Establecimiento:", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("NCodigoUnico", "", new { @class = "form-control" })
+                @Html.Hidden("NhddDato", (string)ViewBag.CodigoUnico)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Enfermedad:", new { @class = "control-label col-md-2" })
+            <input type="hidden" id="hdnEnfermedadN" name="hdnEnfermedadN" value="0" />
+            <div class="col-md-10">
+                <select id="NidEnfermedad" name="NidEnfermedad" class="sizeChosen form-control ">
+                    <option value=""></option>
+                </select>
+                @if (ViewBag.enfermedadesN != null)
+                {
+                    <script type="text/javascript">
+                        $("#NidEnfermedad").val(@ViewBag.enfermedadesN).trigger("liszt:updated");
+                    </script>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Examen:", new { @class = "control-label col-md-2" })
+            <input type="hidden" id="hdnExamenN" name="hdnExamenN" value="0" />
+            <div class="col-md-10">
+                <select id="NidExamen" name="NidExamen" class="sizeChosen form-control">
+                    <option value=""></option>
+                    @if (ViewBag.examenN != null)
+                    {
+                    <option value=@ViewBag.examenN>@ViewBag.examenN</option>
+                    }
+                </select>
+                @if (ViewBag.examen != null)
+                {
+                    <script type="text/javascript">
+                        $("#NidExamen").val(@ViewBag.examenN).trigger("liszt:updated");
+                    </script>
+                }
+            </div>
+
+        </div>
+        <div class="form-group">
+            @Html.Label("Verificación de Controles:", new { @class = "control-label col-md-2" })
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="chkejecutadx">
+                    <label class="form-check-label" for="chkejecutadx">
+                        Ejecuta Diagnóstico?
+                    </label>
+                    &nbsp&nbsp
+                    <input class="form-check-input" type="checkbox" id="chkejecutacc">
+                    <label class="form-check-label" for="chkejecutacc">
+                        Ejecuta Control de Calidad?
+                    </label>
+                    &nbsp&nbsp
+                    <input class="form-check-input" type="checkbox" id="chkcumplecc">
+                    <label class="form-check-label" for="chkcumplecc">
+                        Cumplió con Control de Calidad?
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h4>Condiciones Básicas</h4>
+        <hr />
+        <div class="form-group">
+            @Html.Label("Infraestructura:", new { @class = "control-label col-md-2" })
+            <div class="col-sm-3">
+                <select id="selInfraestructura" name="selInfraestructura" class="-label- col-xs-5 col-sm-6 col-md-6 col-lg-6">
+                    <option value="1">Bueno</option>
+                    <option value="2">Regular</option>
+                    <option value="3">Deficiente</option>
+                </select>
+            </div>
+            @Html.Label("Equipo:", new { @class = "control-label col-md-2" })
+            <div class="col-sm-5">
+                <select id="selEquipo" name="selEquipo" class="-label- col-xs-2 col-sm-5 col-md-5 col-lg-5">
+                    <option value="1">Bueno</option>
+                    <option value="2">Regular</option>
+                    <option value="3">Malogrado</option>
+                    <option value="4">Obsoleto</option>
+                    <option value="5">Sin Microscopio</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            
+            <div class="control-label col-md-2"></div>
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="chkcuentamaterial">
+                    <label class="form-check-label" for="chkcuentamaterial">
+                        Cuenta con Material?
+                    </label>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <input class="form-check-input" type="checkbox" id="chkpersonalcapacitado">
+                    <label class="form-check-label" for="chkpersonalcapacitado">
+                        Cuenta con Personal Capacitado?
+                    </label>
+                </div>
+            </div>
+        </div>
+        @*<div class="form-group">
+            @Html.Label("Profesionales:", new { @class = "control-label col-md-2" })
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="chkcuentamaterial">
+                    <label class="form-check-label" for="chkprofesional">
+                        Biólogo(a)
+                    </label>
+                    <input class="form-check-input" type="checkbox" id="chkpersonalcapacitado">
+                    <label class="form-check-label" for="chkpersonalcapacitado">
+                        Enfermero(a)
+                    </label>
+                </div>
+            </div>
+        </div>*@
+            <div class="form-group">
+                @Html.Label("Otros:", new { @class = "control-label col-md-2" })
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="txtOtros"></textarea>
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+
+}
+
+<div>
+    @Html.ActionLink("Regresar", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Seguimiento.js?updated={0}", new Random().Next(0, 999))))
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}

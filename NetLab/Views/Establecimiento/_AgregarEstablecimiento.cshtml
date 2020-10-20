@@ -1,0 +1,53 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda para la seleccion del establecimiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Establecimiento>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarEstablecimiento", "Establecimiento", new { ViewBag.idPlantilla }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search)
+    <input type="submit" value="Buscar" class="btn btn-primary" />
+}
+<br />
+@using (Html.BeginForm("GuardarEstablecimiento", "Establecimiento", new { ViewBag.idPlantilla }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table">
+        <tr>
+            <th>
+                <input type='checkbox' name="chkAll" id="chkAll" />
+            </th>
+            <th>Establecimientos</th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" name="establecimientos" value="@item.IdEstablecimiento" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+            </tr>
+        }
+    </table>
+    <input type="Submit" value="Guardar" class="btn btn-primary" />
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarEstablecimiento", new { page, ViewBag.search, ViewBag.idPlantilla }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>

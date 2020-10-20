@@ -1,0 +1,100 @@
+﻿@*  Descripción: Vista, muestra la pantalla de tipo de muestra / Criterio Rechazo.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017.
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+
+@model NetLab.Models.MuestraCriterioRechazoViewModels
+
+@{
+    ViewBag.Title = "Registro de Criterios de Rechazo por Tipo de Muestra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Criterios de Rechazo para el tipo de Muestra:</h2>
+<h2> "@Model.TipoMuestra.nombre"</h2>
+<br /><br />
+
+<p>
+    @*@Html.ActionLink("Agregar Criterios de Rechazo", "AgregarCriterio", new { Model.TipoMuestra.idTipoMuestra }, new { id = "openDialog" })*@
+    @Html.ActionLink("+ Agregar Criterios de Rechazo", "AgregarCriterio", new { Model.TipoMuestra.idTipoMuestra }, new { id = "openDialog", @class = "btn btn-primary" })
+
+
+</p>
+<br />
+@if (Model != null && Model.Criterios.Count > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Criterios.First().Glosa)
+                </th>
+                <th>Eliminar  </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.Criterios)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @*@Html.ActionLink("Eliminar", "EliminarCriterio", new { item.IdCriterioRechazo, Model.TipoMuestra.idTipoMuestra }, new { @class = "confirmDialog" })*@
+                    @Html.ActionLink(" ", "EliminarCriterio", new { item.IdCriterioRechazo, Model.TipoMuestra.idTipoMuestra }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+
+
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*Alexander Buchelli - inicio - fecha 7/12/18 - Se comentaron los actionlink y se coloco un boton de retroceso que regresa en a la pantalla de la ultima busqueda sin mostrar nuevamente toda la tabla de datos*@
+
+    @*@Html.ActionLink("Retroceder", "Index")*@
+    @*@Html.ActionLink("Retroceder", "Index", new { @class = "btn btn-default" })*@
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+
+
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/TipoMuestraCriterioRechazo.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*@*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

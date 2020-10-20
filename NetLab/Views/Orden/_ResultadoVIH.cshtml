@@ -1,0 +1,17 @@
+﻿@model Model.ExamenResultadoDetalle
+@{ 
+    if (Model.Resultado != null)
+    {
+        @Html.Label("Fecha de última CV:", new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+            <span>@Html.Raw(Model.FechaHoraEmision)</span>
+        </div>
+
+        @Html.Label("Resultado:", new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-3">
+            <span>@Html.Raw(Model.Resultado)</span>
+        </div>
+        <input type="hidden" value="@Model.FechaHoraEmision" id="fechacv" />
+    }
+}
+

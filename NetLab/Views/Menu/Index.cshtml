@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Model.Menu>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Agregrar", "Create")
+</p>
+<table class="table-responsive">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.URL)
+        </th>
+         <th width="40">Editar</th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    string estado = "Activo";
+    if (item.Estado == 0)
+    {
+        estado = "Inactivo";
+    }
+    <tr>
+        <td>
+            @estado
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.URL)
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "GetMenu", new { id = item.idMenu }, new { id = "editDialog", @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" }) @*|*@
+        </td>
+
+    </tr>
+
+}
+
+</table>

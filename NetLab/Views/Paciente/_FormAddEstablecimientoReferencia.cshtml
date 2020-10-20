@@ -1,0 +1,55 @@
+﻿@model Model.Paciente
+@{
+//ViewBag.nrodocumento = Model.NroDocumento;
+}
+<div>
+    <fieldset class="default">
+        <legend class="default">Referencia y Contrareferencia</legend>
+        <div class="div-row">
+            @Html.Label("EESS: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="ui-autocomplete1 col-md-10">
+                @Html.TextBox("CodigoUnicoOrigen", (string)ViewBag.nombreEstablecimiento, new { @class = "form-control" })
+                @Html.Hidden("hddDatoEESSOrigen", (string)ViewBag.idEstablecimiento)
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="div-row">
+            @Html.Label("Comentarios: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <textarea id="observaciones" name="observaciones" placeholder="comentarios" class="form-control  input-sm"> </textarea>
+        </div>
+        <br />
+        <br />
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <button class="btn btn-primary btn-lg col-xs-offset-5" id="btnReferenciar" value="btnReferenciar" data-Observaciones="1" data-sidPaciente="@Model.IdPaciente" onclick="btnReferenciar('1','@Model.IdPaciente')"> <span class="fa fa-floppy-o "></span> Referenciar</button>
+        </div>
+    </fieldset>
+</div>
+<br />
+<br />
+<div>
+    @if (Model.ListPaciente != null && Model.ListPaciente.Count() > 0)
+    {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Establecimiento Origen</th>
+                <th>Establecimiento de Referencia</th>
+                <th>Fecha Referencia</th>
+                <th>Usuario Referencia</th>
+                <th>Comentario Referencia</th>
+            </tr>
+        <thead>
+            @foreach (var item in Model.ListPaciente)
+            {
+            <tr>
+                <td>@item.EstablecimientoOrigen</td>
+                <td>@item.EstablecimientoDestino</td>
+                <td>@item.FechaReferencia</td>
+                <td>@item.UsuarioReferencia</td>
+                <td>@item.comentario</td>
+            </tr>
+            }
+    </table>
+    }
+</div>

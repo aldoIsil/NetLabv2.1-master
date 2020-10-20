@@ -1,0 +1,74 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de los examenes para agregar a un examen.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Examen>
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarExamen", new { ViewBag.idAreaProcesamiento }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+}
+<br />
+@using (Html.BeginForm("AgregarExamen", "AreaProcesamiento", new { ViewBag.idAreaProcesamiento }, FormMethod.Post, new { @id = "formAgregarExamen" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+
+        <div class="table-responsive">
+            <table class="table" id="ExamenTable">
+                <tr>
+                    <th><input type='checkbox' name="chkAll" id="chkAll" /></th>
+                    <th>CPT</th>
+                    <th>LOINC</th>
+                    <th>Examen</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="examenes" value="@item.idExamen" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cpt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Loinc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombre)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <button id="btnGuardarExamen" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Grabar</button>
+
+        @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+                @*<input type="Submit" value="Guardar" class="btn-link" onclick="return ExisteElementoSeleccionado();"/>*@
+    }
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarExamen", new { page, ViewBag.search, ViewBag.idAreaProcesamiento }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>

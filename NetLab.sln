@@ -1,0 +1,171 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetLab", "NetLab\NetLab.csproj", "{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renaes", "Renaes\Renaes.csproj", "{7527CA8D-F72F-47B9-ABBD-FC9F5068205D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F7F9F305-BA50-4501-995A-555CE411D247}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renaes.Test", "Renaes.Test\Renaes.Test.csproj", "{784A25B4-110B-4B53-BDAA-28D87F654AC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reniec", "Reniec\Reniec.csproj", "{E58FD391-32B5-4B63-8905-725DD2ED4645}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2E588952-5389-42E5-8ED8-C42B9E38F6D7} = {2E588952-5389-42E5-8ED8-C42B9E38F6D7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reniec.Test", "Reniec.Test\Reniec.Test.csproj", "{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebServices", "WebServices", "{D8D5A81E-178B-4AD5-8543-76BF452911E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E} = {12C409A1-80FC-45AF-B511-80D95BF39D1E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{2E588952-5389-42E5-8ED8-C42B9E38F6D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{A7C12F64-A37D-468D-A3AA-47BB91D79168}"
+	ProjectSection(ProjectDependencies) = postProject
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E} = {12C409A1-80FC-45AF-B511-80D95BF39D1E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.DAL", "Framework.DAL\Framework.DAL.csproj", "{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.DAL.Settings", "Framework.DAL.Settings\Framework.DAL.Settings.csproj", "{12C409A1-80FC-45AF-B511-80D95BF39D1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.WebCommon", "Framework.WebCommon\Framework.WebCommon.csproj", "{36960B03-0723-4535-B229-D82AE39B04CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioWindows", "ServicioWindows\ServicioWindows.csproj", "{01B202CE-E616-4713-8337-F885B0D4810E}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "EnvioAlertas.Installer", "EnvioAlertas.Installer\EnvioAlertas.Installer.vdproj", "{12FE76B4-E8BB-4834-A4B9-E7FBD75BCA31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilitario", "Utilitario\Utilitario.csproj", "{663DF441-4F38-44F3-865C-CD9BC296C7A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7527CA8D-F72F-47B9-ABBD-FC9F5068205D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7527CA8D-F72F-47B9-ABBD-FC9F5068205D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7527CA8D-F72F-47B9-ABBD-FC9F5068205D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7527CA8D-F72F-47B9-ABBD-FC9F5068205D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{784A25B4-110B-4B53-BDAA-28D87F654AC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{784A25B4-110B-4B53-BDAA-28D87F654AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{784A25B4-110B-4B53-BDAA-28D87F654AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{784A25B4-110B-4B53-BDAA-28D87F654AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58FD391-32B5-4B63-8905-725DD2ED4645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58FD391-32B5-4B63-8905-725DD2ED4645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58FD391-32B5-4B63-8905-725DD2ED4645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58FD391-32B5-4B63-8905-725DD2ED4645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E588952-5389-42E5-8ED8-C42B9E38F6D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E588952-5389-42E5-8ED8-C42B9E38F6D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E588952-5389-42E5-8ED8-C42B9E38F6D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E588952-5389-42E5-8ED8-C42B9E38F6D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C12F64-A37D-468D-A3AA-47BB91D79168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C12F64-A37D-468D-A3AA-47BB91D79168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C12F64-A37D-468D-A3AA-47BB91D79168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C12F64-A37D-468D-A3AA-47BB91D79168}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C409A1-80FC-45AF-B511-80D95BF39D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36960B03-0723-4535-B229-D82AE39B04CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36960B03-0723-4535-B229-D82AE39B04CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36960B03-0723-4535-B229-D82AE39B04CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36960B03-0723-4535-B229-D82AE39B04CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01B202CE-E616-4713-8337-F885B0D4810E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B202CE-E616-4713-8337-F885B0D4810E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B202CE-E616-4713-8337-F885B0D4810E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B202CE-E616-4713-8337-F885B0D4810E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12FE76B4-E8BB-4834-A4B9-E7FBD75BCA31}.Debug|Any CPU.ActiveCfg = Debug
+		{12FE76B4-E8BB-4834-A4B9-E7FBD75BCA31}.Debug|Any CPU.Build.0 = Debug
+		{12FE76B4-E8BB-4834-A4B9-E7FBD75BCA31}.Release|Any CPU.ActiveCfg = Release
+		{12FE76B4-E8BB-4834-A4B9-E7FBD75BCA31}.Release|Any CPU.Build.0 = Release
+		{663DF441-4F38-44F3-865C-CD9BC296C7A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{663DF441-4F38-44F3-865C-CD9BC296C7A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{663DF441-4F38-44F3-865C-CD9BC296C7A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{663DF441-4F38-44F3-865C-CD9BC296C7A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7527CA8D-F72F-47B9-ABBD-FC9F5068205D} = {D8D5A81E-178B-4AD5-8543-76BF452911E3}
+		{784A25B4-110B-4B53-BDAA-28D87F654AC3} = {F7F9F305-BA50-4501-995A-555CE411D247}
+		{E58FD391-32B5-4B63-8905-725DD2ED4645} = {D8D5A81E-178B-4AD5-8543-76BF452911E3}
+		{6CE0C489-8CBA-473E-B29F-D03B55FCFCDE} = {F7F9F305-BA50-4501-995A-555CE411D247}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 15
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfsnetlab.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BusinessLayer\\BusinessLayer.csproj
+		SccProjectName1 = BusinessLayer
+		SccLocalPath1 = BusinessLayer
+		SccProjectUniqueName2 = DataLayer\\DataLayer.csproj
+		SccProjectName2 = DataLayer
+		SccLocalPath2 = DataLayer
+		SccProjectUniqueName3 = Framework.DAL.Settings\\Framework.DAL.Settings.csproj
+		SccProjectName3 = Framework.DAL.Settings
+		SccLocalPath3 = Framework.DAL.Settings
+		SccProjectUniqueName4 = Framework.DAL\\Framework.DAL.csproj
+		SccProjectName4 = Framework.DAL
+		SccLocalPath4 = Framework.DAL
+		SccProjectUniqueName5 = Framework.WebCommon\\Framework.WebCommon.csproj
+		SccProjectName5 = Framework.WebCommon
+		SccLocalPath5 = Framework.WebCommon
+		SccProjectUniqueName6 = Model\\Model.csproj
+		SccProjectName6 = Model
+		SccLocalPath6 = Model
+		SccProjectUniqueName7 = NetLab\\NetLab.csproj
+		SccProjectName7 = NetLab
+		SccLocalPath7 = NetLab
+		SccProjectUniqueName8 = Renaes.Test\\Renaes.Test.csproj
+		SccProjectTopLevelParentUniqueName8 = NetLab.sln
+		SccProjectName8 = Renaes.Test
+		SccLocalPath8 = Renaes.Test
+		SccProjectUniqueName9 = Renaes\\Renaes.csproj
+		SccProjectTopLevelParentUniqueName9 = NetLab.sln
+		SccProjectName9 = Renaes
+		SccLocalPath9 = Renaes
+		SccProjectUniqueName10 = Reniec.Test\\Reniec.Test.csproj
+		SccProjectTopLevelParentUniqueName10 = NetLab.sln
+		SccProjectName10 = Reniec.Test
+		SccLocalPath10 = Reniec.Test
+		SccProjectUniqueName11 = Reniec\\Reniec.csproj
+		SccProjectTopLevelParentUniqueName11 = NetLab.sln
+		SccProjectName11 = Reniec
+		SccLocalPath11 = Reniec
+		SccProjectUniqueName12 = ServicioWindows\\ServicioWindows.csproj
+		SccProjectName12 = ServicioWindows
+		SccLocalPath12 = ServicioWindows
+		SccProjectUniqueName13 = EnvioAlertas.Installer\\EnvioAlertas.Installer.vdproj
+		SccProjectName13 = EnvioAlertas.Installer
+		SccLocalPath13 = EnvioAlertas.Installer
+		SccProjectUniqueName14 = Utilitario\\Utilitario.csproj
+		SccProjectName14 = Utilitario
+		SccLocalPath14 = Utilitario
+	EndGlobalSection
+EndGlobal

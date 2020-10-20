@@ -1,0 +1,20 @@
+﻿@*  Descripción: Vista, muestra el combo de Materiales en el mantenimiento de plantillas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Material>
+
+@Html.DropDownList(
+    "IdMaterial",
+    new SelectList(Model, "idMaterial", "descripcion"),
+    new
+    {
+        @id = "idMaterial",
+        data_val = "true",
+        data_val_required = "Debe seleccionar el material",
+        @class = "form-control input-sm",
+        @data_url = @Url.Action("GetTiposMuestra"),
+        @data_loading_image = @Url.Content("~/Content/images/loading.gif")
+    })
+@Html.ValidationMessage("IdMaterial", new { @class = "msj-error" })

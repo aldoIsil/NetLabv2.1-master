@@ -1,0 +1,16 @@
+﻿@*  Descripción: Vista, muestra la pantalla con el combo de los Distritos por Provincia cargado.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.DistritoViewModels
+
+@Html.DropDownList(
+    Model.DistritoSelectId,
+    Model.Distritos, "- Seleccione el distrito -",
+    new
+    {
+        id = Model.DistritoSelectId,
+        @class = "form-control",
+        onchange = $"onChangeDistrito('{Model.DistritoSelectId}');"
+    })

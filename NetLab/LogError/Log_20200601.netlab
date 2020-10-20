@@ -1,0 +1,56 @@
+11:07:36 AM LogNetLab - zona de exception aprox: OrdenBl.InsertOrden - Datos de Objeto :  - fin de Datos --- Error : System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Guid.Parse(String input)
+   at BusinessLayer.OrdenBl.InsertarOrden(Orden orden, OrdenDal ordenDal, TipoRegistroOrden tipo, Boolean covidxls, Int32 idAnalitoOpcionResultado) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 308
+   at BusinessLayer.OrdenBl.InsertOrden(Orden orden, TipoRegistroOrden tipo) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 74
+11:07:36 AM LogNetLab - zona de exception aprox: antes de ordenBl.InsertOrden(orden, tipoRegistro) - Datos de Objeto :  - idpaciente: a42d97be-84ea-4a83-b9ef-28f7cd0e4112 - idUsuario: 1143 - idEstablecimiento:  - fin de Datos --- Error : System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at BusinessLayer.OrdenBl.InsertOrden(Orden orden, TipoRegistroOrden tipo) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 92
+   at NetLab.Controllers.OrdenController.Save(Orden orden, String idEstablecimiento, String hddDatoEESSOrigen, String CodigoUnicoOrigen, String idEstablecimientoFrecuente, String hddDatoEESSEnvio, String CodigoUnicoEnvio, String[] fechaMuestra, String[] horaMuestra, Int32[] idDato, String codigoOrdenTmp, String ActualDepartamento, String ActualProvincia, String ActualDistrito, String idOrdenTmp, String[] codificacion, Boolean chkActualizarUbicacion) in J:\Proyectos\INS\NetLab\principal\NetLabs\NetLab\Controllers\OrdenController.cs:line 2483
+11:14:07 AM LogNetLab - zona de exception aprox: OrdenBl.InsertOrden - Datos de Objeto :  - fin de Datos --- Error : System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Guid.Parse(String input)
+   at BusinessLayer.OrdenBl.InsertarOrden(Orden orden, OrdenDal ordenDal, TipoRegistroOrden tipo, Boolean covidxls, Int32 idAnalitoOpcionResultado) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 308
+   at BusinessLayer.OrdenBl.InsertOrden(Orden orden, TipoRegistroOrden tipo) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 74
+11:14:07 AM LogNetLab - zona de exception aprox: antes de ordenBl.InsertOrden(orden, tipoRegistro) - Datos de Objeto :  - idpaciente: a42d97be-84ea-4a83-b9ef-28f7cd0e4112 - idUsuario: 1143 - idEstablecimiento: 991 - fin de Datos --- Error : System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at BusinessLayer.OrdenBl.InsertOrden(Orden orden, TipoRegistroOrden tipo) in J:\Proyectos\INS\NetLab\principal\NetLabs\BusinessLayer\OrdenBl.cs:line 92
+   at NetLab.Controllers.OrdenController.Save(Orden orden, String idEstablecimiento, String hddDatoEESSOrigen, String CodigoUnicoOrigen, String idEstablecimientoFrecuente, String hddDatoEESSEnvio, String CodigoUnicoEnvio, String[] fechaMuestra, String[] horaMuestra, Int32[] idDato, String codigoOrdenTmp, String ActualDepartamento, String ActualProvincia, String ActualDistrito, String idOrdenTmp, String[] codificacion, Boolean chkActualizarUbicacion) in J:\Proyectos\INS\NetLab\principal\NetLabs\NetLab\Controllers\OrdenController.cs:line 2483
+12:21:49 PM LogNetLab - zona de exception aprox: DESKTOP-GNBMRRC - Datos de Objeto : Global.asax - path: /ReporteResultados/Index - fin de Datos --- Error : System.Web.HttpException (0x80004005): A public action method 'Index' was not found on controller 'NetLab.Controllers.ReporteResultadosController'.
+   at System.Web.Mvc.Controller.HandleUnknownAction(String actionName)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+12:35:37 PM LogNetLab - zona de exception aprox: DESKTOP-GNBMRRC - Datos de Objeto : Global.asax - path: /ReporteResultados/Index - fin de Datos --- Error : System.Web.HttpException (0x80004005): A public action method 'Index' was not found on controller 'NetLab.Controllers.ReporteResultadosController'.
+   at System.Web.Mvc.Controller.HandleUnknownAction(String actionName)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)

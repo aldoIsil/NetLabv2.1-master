@@ -1,0 +1,81 @@
+﻿@*  Descripción: Vista, muestra la pantalla para mostrar los tipos de muestra de un examen.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.ExamenTipoMuestra
+<br />
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+@using (Html.BeginForm("GuardarTipoMuestra", "Examen", FormMethod.Post, new { id = "frmAgregarTipoMuestra" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IdExamen)
+
+    <div class="form-horizontal">
+        <br />
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdTipoMuestra, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.DropDownListFor(model => model.IdTipoMuestra, new SelectList(new List<SelectListItem>()), new
+           {
+               id = "idTipoMuestra",
+               @class = "form-control input-sm",
+               data_url = @Url.Action("GetTiposDeMuestra"),
+               data_loading_image = @Url.Content("~/Content/images/loading.gif")
+           })
+                @Html.ValidationMessageFor(model => model.IdTipoMuestra, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Caracteristica, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(model => model.Caracteristica, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Caracteristica, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Transporte, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(model => model.Transporte, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Transporte, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+
+                @*<button id="btnGuardarTipoMuestra" class="btn btn-primary">Grabar</button>
+
+                    <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+
+
+
+
+                <button id="btnGuardarTipoMuestra" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Guardar</button>
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+                @*<input type="submit" value="Guardar" class="btn-link" />*@
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        selectChosenConfig("idTipoMuestra", "Seleccione el Tipo de Muestra");
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+        $.validator.unobtrusive.parse("#frmAgregarTipoMuestra");
+    });
+</script>

@@ -1,0 +1,98 @@
+﻿@* Descripción: Vista para construir la tabla y mostrar informacion de los datos clinicos, solo podrá visualizar la informacion.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Enfermedad
+
+
+@if (Model != null)
+{
+
+    foreach (var itemCategoriaDato in Model.categoriaDatoList)
+    {
+        <h6>@Html.Raw(itemCategoriaDato.Nombre)</h6>
+
+        <table class="table" width="1200">
+
+            <tr>
+                <th width="400">Descripción</th>
+                <th width="400">Valor</th>
+            </tr>
+
+            @Html.Hidden("nombreCategoriaDato", itemCategoriaDato.Nombre)
+            @Html.Hidden("idCategoriaDatoPadre", itemCategoriaDato.IdCategoriaDato)
+
+            @if (itemCategoriaDato.OrdenDatoClinicoList != null)
+            {
+
+                foreach (var item in itemCategoriaDato.OrdenDatoClinicoList)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.Raw(item.Dato.Prefijo)
+                            @{
+                                String idCheckNoPrecisaPre = "checkPreDato" + item.Dato.IdDato;
+                                String idCheckNoPrecisa = "checkDato" + item.Dato.IdDato;
+                                String idControl = "valueDato" + item.Dato.IdDato;
+                            }
+                        </td>
+                        <td>
+
+                            @if (item.noPrecisa)
+                            {
+                                @Html.Raw("No Precisa")
+                            }
+                            else
+                            {
+
+                                if (item.Dato.IdTipo == (int)Enums.TipoCampo.CHECKBOX)
+                                {
+                                    @Html.Raw(item.ValorString.Equals("1") ? "Si" : "No")
+                                }
+                                else if (item.Dato.IdTipo == (int)Enums.TipoCampo.COMBO)
+                                {
+                                    if (item.Dato != null && item.Dato.ListaDato != null && item.Dato.ListaDato.Opciones != null)
+                                    {
+                                        var opcionDato = item.Dato.ListaDato.Opciones.FirstOrDefault(x => x.IdOpcionDato == Convert.ToInt32(item.ValorString));
+
+                                        if (opcionDato != null)
+                                        {
+                                            @Html.Raw(opcionDato.Valor)
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.Raw(item.ValorString)
+                                }
+                            }
+
+
+                        </td>
+
+
+                        
+
+                        @Html.Hidden("prefijoDato", item.Dato.Prefijo)
+                        @Html.Hidden("idEnfermedadDato", Model.idEnfermedad)
+                        @Html.Hidden("idTipoDato", item.Dato.IdTipo)
+                        @Html.Hidden("idDato", item.Dato.IdDato)
+                        @Html.Hidden("idCategoriaDato", itemCategoriaDato.IdCategoriaDato)
+
+
+
+                    </tr>
+
+                    }
+                }
+
+
+        </table>
+
+
+
+
+        }
+    }

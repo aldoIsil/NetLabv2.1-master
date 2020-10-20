@@ -1,0 +1,95 @@
+﻿@*  Descripción: Vista, muestra la pantalla para listar los analitos o componentes de un examen.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.AnalitoExamenViewModels
+
+@{
+    ViewBag.Title = "Registro de Analitos por Examen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Componentes para el Examen:</h2>
+<h2> "@Model.Examen.nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Componentes", "AgregarAnalitos", new { Model.Examen.idExamen }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+<br />
+@if (Model != null && Model.Analitos.Count > 0)
+{
+    <table class="table" style="width: 600px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Analitos.First().Nombre)
+            </th>
+            <th>Eliminar</th>
+        </tr>
+
+        @for (var index = 0; index < Model.Analitos.Count; index++)
+        {
+            var item = Model.Analitos[index];
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @Html.ActionLink(" ", "EliminarAnalito", new { Model.Examen.idExamen, item.IdAnalito, OrdenAnalito = index + 1 }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/AnalitoExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+}
+
+<style type="text/css">
+    .form-group {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+</style>

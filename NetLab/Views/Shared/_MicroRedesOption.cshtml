@@ -1,0 +1,11 @@
+﻿@* Descripción: Vista, muestra la pantalla con el combo de las microredes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.MicroRedesViewModels
+<option value="">-Seleccione-</option>
+@foreach(Model.MicroRed microRed in @Model.Data)
+{
+    <option value="@microRed.IdMicroRed" >@microRed.NombreMicroRed</option>
+}

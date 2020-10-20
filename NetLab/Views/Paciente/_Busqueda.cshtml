@@ -1,0 +1,158 @@
+﻿@model PagedList.IPagedList<Model.Paciente>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Historial de Exámenes de Paciente";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    var tipo = ViewBag.Tipo;
+}
+
+
+<h3 class="text-primary">Historial de Exámenes del Paciente</h3>
+<br />
+@*@if (tipo == 1)
+{
+    <button type="button" class="btn btn-outline-primary" id="btnImprimir">Imprimir</button>
+}*@
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table id="dtPacienteBusqueda" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                @if (tipo == 1)
+                {
+                    <th></th>
+                }        
+                <th>
+                    Nro Oficio
+                </th>
+                <th>
+                    Código Orden
+                </th>
+                <th>
+                    Fecha Obtención
+                </th>
+                <th>
+                    Enfermedad
+                </th>
+                <th>
+                    Examen
+                </th>
+                <th>
+                    Componente
+                </th>
+                <th>
+                    Resultado
+                </th>
+                <th>
+                    Fecha Publicacion Resultado
+                </th>
+                <th>
+                    EESS-Origen
+                </th>
+                <th>
+                    EESS-Destino
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Criterio de Rechazo
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+                {
+            <tr>
+                @if (tipo == 1)
+                {
+                    <td>
+                        @if (item.EstatusE == 11 && !String.IsNullOrEmpty(item.Resultado))
+                        {
+                            <a href="@(Url.Action( "ImprimirResultadosBusqueda", "ReporteResultados", new { idOrden = item.idOrden, idLaboratorio = item.idEstablecimiento,idExamen=item.idExamen }))" target="_blank" class="lnkForm">
+                                <img src="~/img/imgPdf.gif" />
+                            </a>
+                        }
+                        else if (item.estatus > 0)
+                        {
+                            <a href="@(Url.Action( "ImprimirResultadosKobos", "ReporteResultados", new { id = item.estatus }))" target="_blank" class="lnkForm">
+                                <img src="~/img/imgPdf.gif" />
+                            </a>
+                        }
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroOficio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoOrden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaObtencion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enfermedad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Examen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Componente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resultado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaValidacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EESSOrigen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstablecimientoDestino)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstadoResultado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CriteriosRechazo)
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">@ViewBag.notFound</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/datatables.js")
+    @Scripts.Render("~/Scripts/datatables.min.js")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+
+    @Scripts.Render("~/Scripts/dataTables.bootstrap.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap.min.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap4.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Scripts/dataTables.foundation.js")
+    @Scripts.Render("~/Scripts/dataTables.foundation.min.js")
+    @Scripts.Render("~/Scripts/dataTables.jqueryui.js")
+    @Scripts.Render("~/Scripts/dataTables.jqueryui.min.js")
+    @Scripts.Render("~/Scripts/datatables.js")
+    @Scripts.Render("~/Scripts/datatables.min.js")
+    @Scripts.Render("~/Scripts/dataTables.semanticui.js")
+    @Scripts.Render("~/Scripts/dataTables.semanticui.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#dtPacienteBusqueda').DataTable({
+                "scrollY": "600px",
+                "scrollX": "200px",
+                "scrollCollapse": true
+            });
+            $('.dataTables_length').addClass('bs-select');
+            });
+    </script>
+}

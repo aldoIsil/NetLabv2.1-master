@@ -1,0 +1,244 @@
+﻿@model List<Model.ViewData.EnfermedadResultados>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string checkedReg = "checked";
+    string checkedCol = "";
+    string checkedRes = "";
+    string checkedReRom = "";
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+
+    string esFechaRegistro = ViewBag.esFechaRegistro;
+    switch (esFechaRegistro)
+    {
+        case "2":
+            checkedReg = "";
+            checkedCol = "checked";
+            checkedRes = "";
+            checkedReRom = "";
+            break;
+        case "3":
+            checkedReg = "";
+            checkedCol = "";
+            checkedReRom = "checked";
+            checkedRes = "";
+            break;
+        case "4":
+            checkedReg = "";
+            checkedCol = "";
+            checkedReRom = "";
+            checkedRes = "checked";
+            break;
+    }
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css">
+
+<fieldset class="default">
+    <legend class="default">Consulta de Resultados:</legend>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 divWidth">
+                <div class="input-group radioButtonWidthReg">
+                    <span class="input-group-addon">
+                        <input type="radio" id="rbnFechaRegistro" name="esFechaRegistro" value="1" @checkedReg>
+                    </span>
+                    <label type="text" for="rbnFechaRegistro" class="form-control radioButtonWidth">Fecha Registro</label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group radioButtonWidthColec">
+                    <span class="input-group-addon">
+                        <input type="radio" id="rbnFechaColeccion" name="esFechaRegistro" value="2" @checkedCol>
+                    </span>
+                    <label type="text" for="rbnFechaColeccion" class="form-control radioButtonWidth">Fecha Obtención</label>
+                </div>
+            </div>
+            <div class="col-sm-3" style="margin-left: 10px;">
+                <div class="input-group radioButtonWidthColec">
+                    <span class="input-group-addon">
+                        <input type="radio" id="rbnFechaResultadoROM" name="esFechaRegistro" value="3" @checkedReRom>
+                    </span>
+                    <label type="text" for="rbnFechaResultadoROM" class="form-control radioButtonWidth">Fecha Recepción ROM</label>
+                </div>
+            </div>
+            <div class="col-sm-2" style="margin-left: 10px;">
+                <div class="input-group radioButtonWidthColec">
+                    <span class="input-group-addon">
+                        <input type="radio" id="rbnFechaResultado" name="esFechaRegistro" value="4" @checkedRes>
+                    </span>
+                    <label type="text" for="rbnFechaResultado" class="form-control radioButtonWidth">Fecha Resultado</label>
+                </div>
+            </div>
+            <div class="col-sm-1">
+            </div>
+        </div>
+    </div>
+    @*<div id="dvBusquedaUsuario2">
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Fecha Inicio: ", new { @class = "control -label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                </div>
+                @Html.Label("Fecha Fin: ", new { @class = "control -label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = classDatePicker, autocomplete = "off" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group radioButtonWidthColec">
+            <span class="input-group-addon">
+                <input type="checkbox" id="rbnDatoClinico" name="esDatoClinico" value="1">
+            </span>
+            <label type="text" for="rbnDatoClinico" class="form-control radioButtonWidth">Con Datos Clínico</label>
+        </div>
+    </div>*@
+    @*<div class="form-group">
+            <div class="row">
+                @Html.Label("Estado Resultado:", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownList("estadoResultado", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="Pendiente Verificación de Resultados", Value = "7" },
+                            new SelectListItem{ Text="Resultado Verificado", Value = "8" },
+                            new SelectListItem{ Text="Rechazo Laboratorio/Rechazo Rom", Value = "9" },
+                            new SelectListItem{ Text="Rechazo Laboratorio", Value = "10" },
+                            new SelectListItem{ Text="Rechazo Rom", Value = "11" },
+                            new SelectListItem{ Text="Ingresado por Rom", Value = "10" },
+                            new SelectListItem{ Text="Resultado Pendiente", Value = "11" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                </div>
+            </div>
+        </div>*@
+    @*<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Buscar</button>*@
+    @Html.ActionLink("Buscar", "ConsultaResultadosCovid", "ConsultaResultados", new {  }, new { @class = "btn btn-primary"})
+</fieldset>
+
+@*@using (Html.BeginForm("ConsultaEnfermedadResultados", "ConsultaResultados", FormMethod.Post))
+{ 
+}*@
+@*@if (Model != null)
+{
+    if (Model.Count > 0)
+    {
+        <a href="@(Url.Action("ExportarExcelResultados", "ConsultaResultados", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Excel</a>
+        <br />
+        <table id="dtConsultaResultados" border="1">
+            <thead>
+                <tr>
+                    <th>Fecha Solicitud</th>
+                    <th>Código Orden</th>
+                    <th>Codigo Muestra</th>
+                    <th>Documento Referencia</th>
+                    <th> Departamento Origen</th>
+                    <th> Provincia Origen</th>
+                    <th> Distrito Origen</th>
+                    <th> Disa Origen</th>
+                    <th> Red Origen</th>
+                    <th> Micro Red Origen</th>
+                    <th> EE.SS Origen</th>
+                    <th> Departamento Destino</th>
+                    <th> Provincia Destino</th>
+                    <th> Distrito Destino</th>
+                    <th> Disa Destino</th>
+                    <th> Red Destino</th>
+                    <th> Micro Red Destino</th>
+                    <th>EESS / LAB Destino</th>
+                    <th>Documento Identidad</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Paciente</th>
+                    <th>Edad</th>
+                    <th>Sexo</th>
+                    <th>Tipo Muestra</th>
+                    <th>Enfermedad</th>
+                    <th>Examen</th>
+                    <th>Componente</th>
+                    <th>Fecha Registro Orden</th>
+                    <th>Fecha Colección</th>
+                    <th>Fecha Recepción ROM</th>
+                    <th>Fecha Recepción LAB</th>
+                    <th>Fecha Verificación</th>
+                    <th>Muestra Conforme</th>
+                    <th>Criterio de Rechazo</th>
+                    <th>Resultado</th>
+                    <th>Estado Resultado</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ConFechaSolicitud)</td>
+                    <td>@Html.DisplayFor(modelItem => item.codigoOrden)</td>
+                    <td>@Html.DisplayFor(modelItem => item.codigoMuestra)</td>
+                    <td>@Html.DisplayFor(modelItem => item.nroOficio)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDepartamentoOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConProvinciaOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDistritoOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDisaOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConRedOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConMicroRedOrigen)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConEstablecimientoSolicitante)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDepartamentoDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConProvinciaDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDistritoDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConDisaDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConRedDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConMicroRedDestino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.nombreEstablecimiento)</td>
+                    <td>@Html.DisplayFor(modelItem => item.nroDocumento)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConfechaNacimiento)</td>
+                    <td>@Html.DisplayFor(modelItem => item.nombrePaciente)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EdadAnios)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConSexo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConTipoMuestra) </td>
+                    <td>@Html.DisplayFor(modelItem => item.nombreEnfermedad) </td>
+                    <td>@Html.DisplayFor(modelItem => item.nombreExamen) </td>
+                    <td>@Html.DisplayFor(modelItem => item.ConComponente) </td>
+                    <td>@Html.DisplayFor(modelItem => item.fechaRegistro) </td>
+                    <td>@Html.DisplayFor(modelItem => item.ConFechaHoraColeccion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConFechaHoraRecepcionROM)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConFechaHoraRecepcionLAB)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConFechaHoravalidado)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConMuestraConforme)</td>
+                    <td>@Html.DisplayFor(modelItem => item.criteriosRechazo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ConnResultado) </td>
+                    <td>@Html.DisplayFor(modelItem => item.ConEstatusE)</td>
+                </tr>
+            }
+
+        </table>
+    }
+}*@
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*@Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Ubigeo.js")*@
+    @*@Scripts.Render("~/Scripts/App/ConsultaResultados.js")*@
+    
+    @*<script src="~/Scripts/export.js"></script>
+    <script src="~/Scripts/export.min.js"></script>*@
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+
+    <style type="text/css" media="all">
+        .datePickerWidth {
+            width: 100px !important;
+        }
+        .lnkForm img {
+        height: 26px;
+    }
+    </style>
+}
+
+

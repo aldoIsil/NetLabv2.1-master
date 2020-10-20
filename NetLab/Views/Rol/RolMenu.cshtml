@@ -1,0 +1,96 @@
+﻿@*  Descripción: Vista, permite agregar una opcion de menu a un rol.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+
+@model NetLab.Models.RolMenuViewModels
+
+@{
+    ViewBag.Title = "Registro de Opciones de Menu por Rol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Opciones de Menú para el Rol: </h2>
+<h2>"@Model.Rol.nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Opciones de Menú", "AgregarMenu", new { Model.Rol.idRol }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null)
+{
+    if (Model.Menues != null && Model.Menues.Count > 0)
+    {
+        <table class="table table-responsive" id="mydata">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Menues.First().nombre)
+                    </th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.Menues)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                    <td class="text-center" style="width:20px">
+                        @Html.ActionLink(" ", "EliminarMenu", new { item.idMenu, Model.Rol.idRol }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.EmptyTable()
+    }
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+<br />
+<br />
+<div>
+
+    @*Alexander Buchelli - inicio - fecha 7/12/18 - Se comentaron los actionlink y se coloco un boton de retroceso que regresa en a la pantalla de la ultima busqueda sin mostrar nuevamente toda la tabla de datos*@
+    @*<a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>*@
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+    @*<a href="#" onclick="window.history.back()">Retroceder</a>*@
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/RolMenu.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

@@ -1,0 +1,774 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el registro/edicion de un paciente.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Paciente
+
+@{
+    ViewBag.Title = "Agregar Paciente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*Alexander Buchelli - inicio - fecha 28/08/17 - se quitaron estilos propios para redimensionar columnas con las clases bootstrap*@
+
+
+
+<style>
+    .field-validation-error {
+        padding: 8px 35px 8px 14px;
+        margin-bottom: 18px;
+        color: #c09853;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        background-color: #fcf8e3;
+        border: 1px solid #fbeed5;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .validation-summary-errors {
+        /*font-weight: bold !important;*/
+        color: #b94a48;
+        background-color: #f2dede;
+        border-color: #eed3d7;
+    }
+</style>
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+
+@{var funcion = "New"; }
+@if (Model.IdPaciente == Guid.Empty)
+{
+    <h3 style="text-align:center">Agregar Paciente</h3>
+}
+else
+{
+    <h3 style="text-align:center">Editar Paciente</h3>
+    funcion = "Edit";
+}
+
+@using (Html.BeginForm(@funcion, "Paciente", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    if (Model.IdPaciente != Guid.Empty)
+    {
+        @Html.HiddenFor(model => model.IdPaciente);
+    }
+
+    if (ViewBag.SourceIsListaValidar == null)
+    {
+        ViewBag.SourceIsListaValidar = 0;
+    }
+
+    @Html.Hidden("RegistroOrdenRecepcion", (int)ViewBag.RegistroOrdenRecepcion)
+    @Html.Hidden("SourceIsListaValidar", (int)ViewBag.SourceIsListaValidar)
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary()
+        @Html.HiddenFor(model => model.estatus)
+        @Html.HiddenFor(model => model.EstadoReniec)
+        @*  Descripción: Vista, status = 0 Datos sin validar en Reniec.
+            Author: Terceros.
+            Fecha Creacion: 01/01/2017
+            Fecha Modificación: 02/02/2017.
+            Modificación: Se agregaron comentarios.*@
+
+        @if (Model.estatus == 0 && Model.EstatusE != 11)
+        {
+
+            <div id="divSinDocumento" style="display:none">
+                <div id="spanSinDocumento" class="alert alert-info"></div>
+            </div>
+            <fieldset class="default">
+                <legend class="default">Datos Generales</legend>
+                <div class="div-row">
+                    @Html.Hidden("RegistroOrdenRecepcion", (int)ViewBag.RegistroOrdenRecepcion)
+                    @Html.LabelFor(model => model.TipoDocumento, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+
+
+                        @*@Html.LabelFor(model => model.TipoDocumento, new { @class = "label-width" })
+                            <div class="control-width" style="display: flex">*@
+                        @if (@funcion == "Edit")
+                        {
+                            if (Model.TipoDocumento != null)
+                            {
+                                var listaTipoDocumento = (List<SelectListItem>)ViewBag.tipoDocumentoList;
+                                var value = Model.TipoDocumento == null ? "0" : Model.TipoDocumento.ToString();
+                                var tipoDocumento = listaTipoDocumento.FirstOrDefault(x => x.Value == value);
+
+                                if (tipoDocumento != null)
+                                {
+                                    <span>@tipoDocumento.Text</span>
+                                    @Html.HiddenFor(model => model.TipoDocumento)
+                                }
+                            }
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.TipoDocumento, (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control" })
+                            @*<div class="obligatorio">
+                                    <span>*</span>
+                                </div>*@
+                            @Html.ValidationMessageFor(model => model.TipoDocumento)
+                        }
+                    </div>
+                    <div>
+                        @Html.Label("Documento:", new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                        <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2" @*style="display:flex"*@>
+                            @*<div style="display:flex">
+                                @Html.Label("Documento:", new { @class = "label-width2" })
+                                <div class="control-width2" style="display:flex">*@
+                            @if (@funcion == "Edit" && ViewBag.SourceIsListaValidar != 1)
+                            {
+                            <span>@Html.Raw(Model.NroDocumento)</span>
+                            @*@Html.EditorFor(model => model.NroDocumento, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.HiddenFor(model => model.NroDocumento)
+                            }
+                            else
+                            {
+                                @*@Html.EditorFor(model => model.NroDocumento, new { htmlAttributes = new { @class = "form-control  input-sm numericOnly", @readonly = "readonly", autocomplete = "off" } })*@
+                                @Html.EditorFor(model => model.NroDocumento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", autocomplete = "off" } })
+                            <div class="obligatorio">
+                                <span>*</span>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.FechaNacimiento, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.FechaNacimiento, new { Style = "width: 120px; padding-left: 10px" })
+                            <div class="control-width3" style="display: flex">*@
+
+
+                        @if (@funcion == "Edit" && ViewBag.SourceIsListaValidar == 1)
+                        {
+                            if (Model.FechaNacimiento != null)
+                            {
+                        <span>@Html.Raw(((DateTime)Model.FechaNacimiento).ToString("dd/MM/yyyy"))</span>
+                        @Html.HiddenFor(model => model.FechaNacimiento)
+                            }
+                        }
+                        else
+                        {
+                        @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                        @Html.TextBoxFor(model => model.FechaNacimiento, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker input-sm ValidateLength dateOnly", autocomplete = "off", Style = "width: 105px;", placeholder = "dd/mm/yyyy" })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                        @*@Html.ValidationMessageFor(model => model.FechaNacimiento)*@
+
+                        }
+                    </div>
+                    <div id="DivTutorsinDatos" style="display:none" class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                        @if (@funcion == "Edit")
+                        {
+                            if (Model.mcaDatoTutor.ToString() != null)
+                            {
+                                <div class="control-text text-info">
+                                    SIN DATOS DEL TUTOR
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="control-text text-info">
+                                ¿Sin datos del Tutor?
+                                <input type="checkbox" name="chkSinDatosTutor" id="chkSinDatosTutor" />
+                            </div>
+                        }
+                    </div>
+
+
+                </div>
+                <br /><br /><br />
+
+
+                <div class="div-row">
+                    @Html.LabelFor(model => model.ApellidoPaterno, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                        @*Html.LabelFor(model => model.ApellidoPaterno, new { @class = "label-width" })
+                            <div class="control-width" style="display: flex">*@
+                        @if (@funcion == "Edit")
+                        {
+                        @*<span>@Html.Raw(Model.ApellidoPaterno)</span>*@
+                        @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control input-sm ValidateLength lettersOnly" } })
+                        @Html.HiddenFor(model => model.ApellidoPaterno)
+                        }
+                        else
+                        {
+                        @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control input-sm ValidateLength lettersOnly" } })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                        }
+
+
+                    </div>
+                    @Html.LabelFor(model => model.ApellidoMaterno, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2" @*style="display:flex"*@>
+                        @*@Html.LabelFor(model => model.ApellidoMaterno, new { @class = "label-width2" })
+                            <div class="control-width2" style="display:flex">*@
+                        @if (@funcion == "Edit")
+                        {
+                        @*<span>@Html.Raw(Model.ApellidoMaterno)</span>*@
+                        @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control input-sm ValidateLength lettersOnly" } })
+                        @Html.HiddenFor(model => model.ApellidoMaterno)
+                        }
+                        else
+                        {
+                        @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                        }
+                    </div>
+                    @Html.LabelFor(model => model.Nombres, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.Nombres, new { @class = "label-width3" })
+                            <div class="control-width3" style="display: flex">*@
+                        @if (@funcion == "Edit")
+                        {
+                        @*<span>@Html.Raw(Model.Nombres)</span>*@
+                        @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control input-sm ValidateLength lettersOnly" } })
+                        @Html.HiddenFor(model => model.Nombres)
+                        }
+                        else
+                        {
+                        @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                        }
+                    </div>
+                    @Html.LabelFor(model => model.Genero, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.Genero, new { @class = "label-width4" })
+                            <div class="control-width4" style="display: flex">*@
+                        @if (@funcion == "Edit")
+                        {
+                            if (ViewBag.generoList != null)
+                            {
+                                var generoList = ((List<SelectListItem>)ViewBag.generoList);
+                                var value = Model.Genero == null ? "0" : Model.Genero.ToString();
+                                var genero = generoList.FirstOrDefault(x => x.Value == value);
+                                if (genero != null)
+                                {
+                        @*<span>@genero.Text.ToUpper()</span>*@
+                              @Html.DropDownListFor(model => model.Genero, generoList, new { @class = "form-control" })
+                        @Html.HiddenFor(model => model.Genero)
+                                }
+                            }
+                        }
+                        else
+                        {
+                        @Html.DropDownListFor(model => model.Genero, (List<SelectListItem>)ViewBag.generoList, new { @class = "form-control  input-sm" })
+                        @Html.ValidationMessageFor(model => model.Genero)
+                        }
+                    </div>
+                </div>
+
+
+            </fieldset>
+        }
+        else
+        {
+            <fieldset class="default">
+                <legend class="default">Datos Generales</legend>
+                <div class="div-row">
+                    @Html.LabelFor(model => model.TipoDocumento, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.TipoDocumento, new { @class = "label-width" })
+                            <div class="control-width">*@
+                        <span>@Html.Raw(ViewBag.TipoDocumento)</span>
+                        @Html.HiddenFor(model => model.TipoDocumento)
+                    </div>
+                    @Html.LabelFor(model => model.NroDocumento, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.NroDocumento, new { @class = "label-width2" })
+                            <div class="control-width2">*@
+                        <span>@Html.Raw(Model.NroDocumento)</span>
+                        @Html.HiddenFor(model => model.NroDocumento)
+                    </div>
+                    @Html.LabelFor(model => model.FechaNacimiento, new { @class = " -label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @*@Html.LabelFor(model => model.FechaNacimiento, new { Style = "width: 120px; padding-left: 10px" })
+                            <div class="control-width3">*@
+                        @Html.TextBoxFor(model => model.FechaNacimiento, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker  input-sm ValidateLength dateOnly", onkeydown = "return false;", Style = "width: 95px;", autocomplete = "off" })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="div-row">
+                    @Html.LabelFor(model => model.ApellidoPaterno, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-1" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                        @*@Html.LabelFor(model => model.ApellidoPaterno, new { @class = "label-width" })
+                            <div class="control-width">*@
+
+
+
+                        <span>
+                            @Html.Raw(Model.ApellidoPaterno)
+                        </span>
+                        @Html.HiddenFor(model => model.ApellidoPaterno)
+                        @Html.Hidden("ApePatHdd", Model.ApellidoPaterno)
+                    </div>
+                    @Html.LabelFor(model => model.ApellidoMaterno, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-1" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+                        @*@Html.LabelFor(model => model.ApellidoMaterno, new { @class = "label-width2" })
+                            <div class="control-width2">*@
+
+
+                        <span>
+                            @Html.Raw(Model.ApellidoMaterno)
+                        </span>
+                        @Html.HiddenFor(model => model.ApellidoMaterno)
+                        @Html.Hidden("ApeMatHdd", Model.ApellidoMaterno)
+                    </div>
+                    @Html.LabelFor(model => model.Nombres, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-1" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+
+                        @*@Html.LabelFor(model => model.Nombres, new { @class = "label-width3" })
+                            <div class="control-width3">*@
+
+
+                        <span>
+                            @Html.Raw(Model.Nombres)
+                        </span>
+                        @Html.HiddenFor(model => model.Nombres)
+                    </div>
+
+                    @Html.LabelFor(model => model.Genero, new { @class = "-label col-xs-12 col-sm-7 col-md-3 col-lg-1" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-2">
+
+
+                        @*@Html.LabelFor(model => model.Genero, new { @class = "label-width4" })
+                            <div class="control-width4">*@
+
+
+                        <span>@Html.Raw(ViewBag.Genero)</span>
+                        @Html.HiddenFor(model => model.Genero)
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="default">
+                <legend class="default">Dirección Reniec</legend>
+                <div class="div-row">
+                    @Html.LabelFor(model => model.UbigeoReniec.Departamento, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-1">
+                        <span>@Html.Raw(Model.UbigeoReniec.Departamento)</span>
+                        @Html.HiddenFor(model => model.UbigeoReniec.Id)
+                    </div>
+
+                    @Html.LabelFor(model => model.UbigeoReniec.Provincia, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-1">
+                        <span>@Html.Raw(Model.UbigeoReniec.Provincia)</span>
+                        @Html.HiddenFor(model => model.UbigeoReniec.Id)
+                    </div>
+                    @Html.LabelFor(model => model.UbigeoReniec.Distrito, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-2" })
+                    <div class="-label col-xs-12 col-sm-2 col-md-2 col-lg-3">
+                        <span>
+                            @Html.Raw(Model.UbigeoReniec.Distrito)
+                        </span>
+                        @Html.HiddenFor(model => model.UbigeoReniec.Id)
+                    </div>
+
+                    <br /><br /><br />
+                    @Html.LabelFor(model => model.DireccionReniec, new { @class = "-label col-xs-12 col-sm-7 col-md-2 col-lg-1" })
+                    <div class="-label col-xs-12 col-sm-3 col-md-4 col-lg-8">
+                        <span>@Html.Raw(Model.DireccionReniec)</span>
+                        @Html.HiddenFor(model => model.DireccionReniec)
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+
+        @*  Descripción: Vista, muestra la pantalla para el registro/edicion de un paciente. Edita informacion de ubigeo del paciente.
+            Author: Terceros.
+            Fecha Creacion: 01/01/2017
+            Fecha Modificación: 02/02/2017.
+            Modificación: Se agregaron comentarios.*@
+        <fieldset class="default">
+            <legend class="default">Dirección Actual de Residencia</legend>
+
+            @if (Model.estatus == 1)
+            {
+                <div class="div-row">
+                    <div class="alert alert-info" @*style="display:flex"*@>
+                        <div style="float: left" class="control-label">
+                            <input type="checkbox" name="chckDireccionActual" id="chckDireccionActual" />
+                        </div>
+
+                        @Html.Label(" Considerar la dirección de Reniec como dirección Actual", new { @for = "chckDireccionActual" })
+                    </div>
+                </div>
+            }
+
+            <div id="direccionActualFieldSet1" class="div-row">
+                @Html.LabelFor(model => model.UbigeoActual.Departamento, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+
+                    @Html.Action("GetDepartamentos", "UbigeoPaciente",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         provinciaDivId = "dvProvincias",
+                         distritoDivId = "dvDistritos",
+                         selectedValue = Model.UbigeoActual.Id.Substring(0, 2)
+                     })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+                @Html.LabelFor(model => model.UbigeoActual.Provincia, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div id="dvProvincias" class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+
+                    @*@Html.LabelFor(model => model.UbigeoActual.Provincia, new { @class = "label-provincia-width" })
+                        <div id="dvProvincias" class="control-provincia-width" style="display:flex">*@
+
+
+                    @Html.Action("GetProvinciasPorDepartamento", "UbigeoPaciente",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         distritoDivId = "dvDistritos",
+                         codigoDepartamento = Model.UbigeoActual.Id.Substring(0, 2),
+                         selectedValue = Model.UbigeoActual.Id.Substring(2, 2)
+                     })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+                @Html.LabelFor(model => model.UbigeoActual.Distrito, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div id="dvDistritos" class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3" @*style="display:flex"*@>
+
+                    @*@Html.LabelFor(model => model.UbigeoActual.Distrito, new { @class = "label-distrito-width" })
+                        <div id="dvDistritos" class="control-distrito-width" style="display:flex">*@
+
+
+                    @Html.Action("GetDistritosPorProvincia", "UbigeoPaciente", new
+               {
+                   distritoSelectId = "ActualDistrito",
+                   codigoDepartamento = Model.UbigeoActual.Id.Substring(0, 2),
+                   codigoProvincia = Model.UbigeoActual.Id.Substring(2, 2),
+                   selectedValue = Model.UbigeoActual.Id.Substring(4, 2)
+               })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+                <br /><br /><br />
+                @Html.LabelFor(model => model.DireccionActual, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-4 col-lg-8">
+                    @*@Html.LabelFor(model => model.DireccionActual, new { @class = "label-direccion-width" })
+                        <div class="control-direccion-width" style="display:flex">*@
+                    @Html.EditorFor(model => model.DireccionActual, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        
+        @*  Descripción: Vista, muestra la pantalla para el registro/edicion de un paciente.
+            Edita información personal del paciente.
+            Author: Terceros.
+            Fecha Creacion: 01/01/2017
+            Fecha Modificación: 02/02/2017.
+            Modificación: Se agregaron comentarios.*@
+        <fieldset class="default">
+            <legend class="default">Datos de Contacto</legend>
+            <div class="div-row">
+                @Html.LabelFor(model => model.TelefonoFijo, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                    @Html.EditorFor(model => model.TelefonoFijo, new { htmlAttributes = new { @class = "form-control  input-sm telefonoFijoValido" } })
+                </div>
+                @Html.LabelFor(model => model.Celular1, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                    @Html.EditorFor(model => model.Celular1, new { htmlAttributes = new { @class = "form-control  input-sm celular1Valido" } })
+                </div>
+
+                @Html.LabelFor(model => model.Celular2, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                    @Html.EditorFor(model => model.Celular2, new { htmlAttributes = new { @class = "form-control  input-sm celular2Valido" } })
+                </div>
+                @Html.LabelFor(model => model.correoElectronico, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                    @Html.EditorFor(model => model.correoElectronico, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                </div>
+            </div>
+            @*<div class="div-row">
+                    @Html.LabelFor(model => model.TelefonoFijo, new { @class = "label-departamento-width" })
+                    <div class="control-telefono-width">
+                        @Html.EditorFor(model => model.TelefonoFijo, new { htmlAttributes = new { @class = "form-control  input-sm telefonoFijoValido" } })
+                    </div>
+                    @Html.LabelFor(model => model.Celular1, new { @class = "label-celular-width" })
+                    <div class="control-telefono-width">
+                        @Html.EditorFor(model => model.Celular1, new { htmlAttributes = new { @class = "form-control  input-sm celular1Valido" } })
+                    </div>
+
+                    @Html.LabelFor(model => model.Celular2, new { @class = "label-celular-width" })
+                    <div class="control-telefono-width">
+                        @Html.EditorFor(model => model.Celular2, new { htmlAttributes = new { @class = "form-control  input-sm celular2Valido" } })
+                    </div>
+                    @Html.LabelFor(model => model.correoElectronico, new { @class = "label-correo-width" })
+                    <div class="control-correo-width">
+                        @Html.EditorFor(model => model.correoElectronico, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                    </div>
+                </div>*@
+        </fieldset>
+
+        @*  Descripción: Vista, muestra la pantalla para el registro/edicion de un paciente.
+            Edita datos del paciente.
+            Author: Terceros.
+            Fecha Creacion: 01/01/2017
+            Fecha Modificación: 02/02/2017.
+            Modificación: Se agregaron comentarios.*@
+        <fieldset class="default">
+            <legend class="default">Ocupación</legend>
+            <div class="div-row">
+                @Html.LabelFor(model => model.ocupacion, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+                    @Html.EditorFor(model => model.ocupacion, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                    @Html.ValidationMessageFor(model => model.ocupacion)
+                </div>
+                @Html.LabelFor(model => model.tipoSeguroSalud, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-2" })
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+                    @Html.DropDownListFor(model => model.tipoSeguroSalud, (List<SelectListItem>)ViewBag.seguroList, "- Seleccione el Tipo de Seguro -", new { @class = "form-control  input-sm" })
+                </div>
+                <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                    @Html.EditorFor(model => model.otroSeguroSalud, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+
+
+
+
+            @*<div class="div-row">
+                    @Html.LabelFor(model => model.ocupacion, new { @class = "label-departamento-width" })
+                    <div class="control-ocupacion-width">
+                        @Html.EditorFor(model => model.ocupacion, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                        @Html.ValidationMessageFor(model => model.ocupacion)
+                    </div>
+                    @Html.LabelFor(model => model.tipoSeguroSalud, new { @class = "label-tiposeguro-width" })
+                    <div class="control-tiposeguro-width">
+                        @Html.DropDownListFor(model => model.tipoSeguroSalud, (List<SelectListItem>)ViewBag.seguroList, "- Seleccione el Tipo de Seguro -", new { @class = "form-control  input-sm" })
+                    </div>
+                    <div class="control-otroseguro-width">
+                        @Html.EditorFor(model => model.otroSeguroSalud, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                    </div>
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>*@
+
+        </fieldset>
+
+        <br />
+
+        <div class="form-group">
+            @*<input type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary" />*@
+
+            <button class="btn btn-primary col-md-4 col-md-offset-1" id="btnGuardar" value="Guardar"> <span class="fa fa-floppy-o "></span> Guardar</button>
+            <a class="btn btn-primary col-md-4 col-md-offset-1" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+        </div>
+    </div>
+
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Paciente/New.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Ubigeo.js?updated={0}", new Random().Next(0, 999))))
+}
+
+<style type="text/css">
+    .obligatorio {
+        float: left;
+    }
+
+        .obligatorio span {
+            color: red;
+            margin-left: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+    fieldset.form {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 0.4em 1.4em !important;
+        margin: 0 auto !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #000;
+        max-width: 1230px;
+    }
+
+    legend.form {
+        font-size: 1.1em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        height: 15px;
+        border-bottom: none;
+    }
+
+    /*.div-row {
+        display: flex;
+        padding-left: 2px;
+        height: 35px;
+        width: 1000px;
+    }
+
+    .div-row2 {
+        display: flex;
+        padding-left: 10px;
+        height: 35px;
+        width: 1000px;
+    }*/
+
+    /*.label-width {
+        text-align: left;
+        width: 100px;
+    }
+
+    .label-width2 {
+        padding-left: 10px;
+        text-align: left;
+        width: 120px;
+    }
+
+    .label-width3 {
+        padding-left: 10px;
+        text-align: left;
+        width: 90px;
+    }
+
+    .label-width4 {
+        padding-left: 10px;
+        text-align: left;
+        width: 80px;
+    }
+
+    .label-departamento-width {
+        text-align: left;
+        width: 80px;
+    }
+
+    .label-provincia-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 70px;
+    }
+
+    .label-distrito-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 65px;
+    }
+
+    .label-direccion-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 70px;
+    }
+
+    .label-celular-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 70px;
+    }
+
+    .label-correo-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 110px;
+    }
+
+    .label-tiposeguro-width {
+        padding-left: 10px;
+        text-align: left;
+        width: 120px;
+    }*/
+
+    .control-width {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width2 {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width3 {
+        width: 160px;
+        display: flex;
+    }
+
+    .control-width4 {
+        width: 140px;
+        display: flex;
+    }
+
+    .control-departamento-width {
+        width: 280px;
+    }
+
+    .control-provincia-width {
+        width: 240px;
+    }
+
+    .control-distrito-width {
+        width: 225px;
+    }
+
+    .control-direccion-width {
+        width: 260px;
+    }
+
+    .control-telefono-width {
+        width: 80px;
+    }
+
+    .control-correo-width {
+        width: 180px;
+    }
+
+    .control-ocupacion-width {
+        width: 260px;
+    }
+
+    .control-tiposeguro-width {
+        width: 200px;
+    }
+
+    .control-otroseguro-width {
+        padding-left: 10px;
+        width: 260px;
+    }
+</style>
+
+@**Alexander Buchelli - fin**@

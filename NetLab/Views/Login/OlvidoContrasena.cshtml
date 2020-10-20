@@ -1,0 +1,127 @@
+﻿@*  Descripción: Vista, muestra la pantalla para recuperar y/o cambiar de contraseña.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@{
+    ViewBag.Title = "Enviar Contraseña";
+}
+
+
+<div id="divLogo" class="img-responsive">
+    <img src="~/img/logo.png" />
+</div>
+
+<div class="col-12 col-md-7 col-xl-8 py-md-3 pl-md-5">
+    <form id="frmLogin" method="post" action="">
+
+        <p style="text-align:center">Recuperar el acceso a tu cuenta</p>
+
+        <p style="text-align:center">Proporciona uno de los siguientes datos Para comenzar.</p>
+
+        <div class="form-group">
+            <input type="radio" onclick="document.getElementById('txtlogin').disabled = false; document.getElementById('txtcorreo').disabled = true" name="opciones" value="login" style="width:40px">Login de Usuario:
+            <div class="col-md-10">
+                <input id="txtlogin" type="text" name="txtlogin" class="form-control" disabled="disabled" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="radio" onclick="document.getElementById('txtlogin').disabled = true; document.getElementById('txtcorreo').disabled = false" name="opciones" value="correo" style="width:40px"> Dirección de correo:
+            <div class="col-md-10">
+                <input id="txtcorreo" type="text" name="txtcorreo" class="form-control" disabled="disabled" />
+            </div>
+        </div>
+
+
+
+        <div class="form-group fg-btn">
+            <div class="col-md-offset-2 col-md-10">
+                @*<a id="btnEnviar" href="#">Enviar</a>*@
+                <button type="button" class="btn btn-primary" id="btnEnviar" href="#"><span class="fa fa-sign-in" aria-hidden="true"></span> Enviar</button>
+
+            </div>
+        </div>
+
+
+
+        <div class="form-group linksGroup">
+
+            @if (ViewBag.mensajePassword > 0)
+            {
+                string mensajePassword = "";
+                switch ((int)ViewBag.mensajePassword)
+                {
+
+                    case 1: mensajePassword = "Ingrese una opcion"; break;
+                    case 2: mensajePassword = "Estimado usuario:" + "El login de usuario o la cuenta de correo que ingresado no es valido,Por favor verifique los datos ingresados, si el problema persiste,Comuníquese con el Administrador del NetLab."; break;
+                    case 3: mensajePassword = "Estimado usuario, le informamos que  enviamos a su cuenta de correo su nueva contraseña temporal.De no encontrar el correo por favor revise su SPAM."; break;
+                    case 4: mensajePassword = "Estimado usuario:" + "El login de usuario o la cuenta de correo que ingresado no es valido,Por favor verifique los datos ingresados, si el problema persiste,Comuníquese con el Administrador del NetLab."; break;
+                    case 5: mensajePassword = "Estimado usuario, le informamos que  enviamos a su cuenta de correo su nueva contraseña temporal.De no encontrar el correo por favor revise su SPAM."; break;
+
+                }
+                <br />
+                <span class="msj-error">@mensajePassword</span>
+                <br />                <br />                <br />
+                @*<p style="align-content:center">@Html.ActionLink("Salir", "Index", "Login")</p>*@
+                @Html.ActionLink(" Salir", "Index", "Login", new { @class = "btn btn-default btn-block fa fa-window-close" })
+
+            }
+        </div>
+
+
+
+
+
+    </form>
+</div>
+
+
+
+<style type="text/css">
+    .form-group {
+        padding-top: 20px;
+    }
+
+    .form-control {
+        width: 80% !important;
+    }
+
+    .fg-btn {
+        text-align: right;
+        padding-right: 64px;
+    }
+
+    .control-label {
+        margin-top: 5px;
+        margin-top: 0px;
+        padding-left: 0px;
+    }
+
+    .linksGroup div {
+        padding-top: 10px;
+    }
+
+    #txtEmail {
+        width: 120px;
+    }
+</style>
+
+<script type="text/javascript">
+        // Descripción: funciones de carga para la validacion de los botones y cajas de texto.
+        // Author: Terceros.
+        // Fecha Creacion: 01/01/2017
+        // Fecha Modificación: 02/02/2017.
+        // Modificación: Se agregaron comentarios.
+        window.onload = function () {
+            $('#btnEnviar').click(function () {
+                $('#frmLogin').submit();
+            });
+
+            $('#txtUser').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('#frmEnviar').submit();
+                }
+            });
+        };
+</script>

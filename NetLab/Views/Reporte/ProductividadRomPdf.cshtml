@@ -1,0 +1,120 @@
+﻿@model List<Model.ReportesDTO.reporteProductividadRom>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>REPORTE PRODUCTIVIDAD ROM</title>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssHeader")
+    @Styles.Render("~/Content/telerik/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery-ui")
+</head>
+<body>
+    <div id="x">
+        @*<center><h2>REPORTE PRODUCTIVIDAD ROM</h2></center>*@
+        Nombre: <span><b>@ViewBag.usuario</b></span>
+        Establecimiento: <span><b>@ViewBag.establecimiento</b></span>
+    </div>
+    <br />
+    <div>
+        <table>
+            <thead>
+                <tr style="height:80px;">
+                    <th>
+                        CODIGO ORDEN
+                    </th>
+                    <th>
+                        CODIGO MUESTRA
+                    </th>
+                    <th>
+                        MUESTRA
+                    </th>
+                    <th>
+                        PACIENTE
+                    </th>
+                    <th>
+                        ESTABLECIMIENTO ORIGEN
+                    </th>
+                    <th>
+                        FECHA SOLICITUD
+                    </th>
+                    <th>
+                        FECHA REGISTRO
+                    </th>
+                    <th>
+                        FECHA RECEPCION
+                    </th>
+                    <th>
+                        ENFERMEDAD
+                    </th>
+                    <th>
+                        EXAMEN
+                    </th>
+
+                </tr>
+            </thead>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoOrden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoMuestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Muestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Paciente)
+                        </td>
+                        
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreEstablecimientoOrigen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaSolicitud)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaRegistro)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaRecepcion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Enfermedad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreExamen)
+                        </td>
+
+                    </tr>
+                }
+
+</table>
+    </div>
+</body>
+</html>
+
+<style type="text/css">
+    
+tr { 
+    page-break-inside: avoid;
+    
+}
+
+
+
+</style>

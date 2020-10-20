@@ -1,0 +1,139 @@
+﻿@*  Descripción: Vista, muestra la pantalla con Pacientes pendientes de Validar con RENIEC.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+
+@model PagedList.IPagedList<Model.Paciente>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Lista de Pacientes por Validar sus datos con RENIEC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+
+
+<h3 class="text-primary">Pacientes pendientes de Validar con RENIEC</h3>
+@using (Html.BeginForm("ListaValidar", "Paciente", FormMethod.Get))
+{
+    <div id="dvBusquedaPaciente">
+
+        <div class="form-group">
+
+            <div style="float: left">
+                @Html.Label("Fecha Registro Desde: ", new { @class = "control-label", style = "width: 120px !important;" })
+            </div>
+            <div style="float: left">
+                @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = "form-control datepickerTelerik datePickerWidth inFechaRec1", onkeydown= "return false;", autocomplete = "off" })
+            </div>
+            <div style="float: left; padding-left: 10px">
+                @Html.Label("Fecha Registro Hasta: ", new { @class = "control-label" })
+            </div>
+            <div style="float: left; width: 120px">
+                @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = "form-control datepickerTelerik datePickerWidth inFechaRec1", onkeydown= "return false;", autocomplete = "off" })
+            </div>
+            <div style="float: left; width: 100px">
+                @*<input type="submit" id="btnBuscar" value="Buscar" class="btn-link"/>*@
+
+                <button type="submit" class="btn btn-primary " id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+            </div>
+        </div>
+        
+    </div>
+   
+}
+<br />
+<div>
+    @if (Model != null && Model.TotalItemCount > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    Tipo de Documento
+                </th>
+                <th>
+                    Número de Documento
+                </th>
+                <th>
+                    Apellido Paterno
+                </th>
+                <th>
+                    Apellido Materno
+                </th>
+                <th>
+                    Nombres
+                </th>
+                <th>
+                    Fecha de Nacimiento
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.listaDetalleTipoDocumento.Glosa )
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NroDocumento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombres)
+                    </td>
+
+                    <td>
+                        @if (item.FechaNacimiento != default(DateTime))
+                        {
+                            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                        }
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", "Paciente", new { idPaciente = item.IdPaciente, RegistroOrdenRecepcion = ViewBag.RegistroOrdenRecepcion, ViewBag.SourceIsListaValidar }, new {  })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Validar", "Validar", "Paciente", new { idPaciente = item.IdPaciente, NroDocumento = item.NroDocumento, Nombre = item.Nombres + " " + item.ApellidoPaterno + " " + item.ApellidoMaterno }, new { @class = "validarPaciente" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+   
+</div>
+@Html.PagedListPager(Model, page => Url.Action("ListaValidar", new { page = page, search = ViewBag.search }))
+
+<div id="dialog-open" style="display: none">
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")  
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Paciente/ListaValidar.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}
+
+<style type="text/css">
+    .control-label {
+        width: 110px;
+    }
+
+    .datePickerWidth {
+        width: 100px;
+    }
+</style>
+

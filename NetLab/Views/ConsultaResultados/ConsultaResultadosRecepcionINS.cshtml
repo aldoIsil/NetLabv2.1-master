@@ -1,0 +1,60 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConsultaResultadosRecepcionINS</title>
+</head>
+<body>
+    <fieldset class="default">
+        <legend class="default">Consulta de Resultados</legend>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Enfermedad", new { @class = "control -label col-md-1" })
+                    <div class="col-md-3">
+                        <select id="idEnfermedad" name="idEnfermedad" class="form-control">
+                            <option value="0">Seleccione Enfermedad</option>
+                            @foreach (var item in ViewBag.enfermedad)
+                            {
+                                <option value="@item.idEnfermedad">@item.nombre</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    @Html.Label("Fecha Inicio: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Fin: ", new { @class = "control -label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" onclick="BuscarResultados()"><span class="glyphicon glyphicon-search"></span> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+</body>
+</html>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/ConsultaResultados.js")
+
+    <style type="text/css" media="all">
+        .datePickerWidth {
+            width: 100px !important;
+        }
+    </style>
+}

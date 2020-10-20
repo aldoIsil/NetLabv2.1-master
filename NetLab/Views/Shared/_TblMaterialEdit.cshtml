@@ -1,0 +1,88 @@
+﻿@* Descripción: Vista para mostrar la informacion seleccionada, en la parte de los materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMaterial>
+
+<style type="text/css">
+    .enfermedad {
+        width: 100px;
+        height: 80px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .texto {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+    /*JRCR-REQ01*/
+    .dis-none {
+        display: none;
+    }
+</style>
+
+
+
+<table id="tableMaterial" class="table" width="1200">
+    <tr>
+        <th width="350">Examen</th>
+        <th width="100">Lab. Destino Registro</th>
+        <th width="300">Lab. Destino</th>
+    </tr>
+    @if (Model != null)
+    {
+        <tbody id="tbodyMaterial" style="font-size: 9px">
+            @foreach (var item in Model)
+            {
+                var idRow = item.idOrdenMaterial.ToString();
+                string idVolumenMuestra = "volMuestra" + idRow;
+                string idNoPrecisaVolumen = "noVol" + idRow;
+                string idLaboratorio = "laboratorio" + idRow;
+                string laboratorioNombre = "laboratorioNombre" + idRow;
+
+                <tr>
+                    <td class="texto" title='@Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)'>
+                        @*<div class="enfermedad">*@
+                        @if (!String.IsNullOrEmpty(item.ExamenNombreCompleto))
+                        {
+                            @Html.Raw(item.ExamenNombreCompleto)
+                        }
+                        else
+                        {
+                            @Html.Raw(item.OrdenExamen.Examen.nombre)
+                        }
+                        @*</div>*@
+                        @Html.Hidden("idOrdenMaterial", idRow)
+                    </td>
+                    <td class="texto">
+                        @item.Laboratorio.Nombre
+                    </td>
+                    <td>
+                        <select id="@idLaboratorio" class="form-control input-sm idLaboratorioDestinoMaterial"
+                                name="@idLaboratorio">
+                            <option value=""></option>                           
+                        </select>
+
+                        @if (item.Laboratorio != null)
+                        {
+                            <input type="hidden" id="@laboratorioNombre" name="@laboratorioNombre" value="@item.Laboratorio.Nombre" />
+                        }
+                        @Html.HiddenFor(model => item.Material.descripcion, new { @class = "dis-none" })
+                        @Html.Hidden("cantidad" + idRow, item.cantidad, new { @class = "dis-none" })
+                        @Html.Hidden("volumenMuestraColectada" + idRow, item.volumenMuestraColectada, new { @class = "dis-none" })
+                        @Html.Hidden(idVolumenMuestra, item.volumenMuestraColectada, new { @class = "dis-none" })
+                        @Html.CheckBox(idNoPrecisaVolumen, item.noPrecisaVolumen == 1, new { @class = "dis-none" })
+                    </td>
+                    @*<td>
+                        <input type="text" name="nroMuestra[]" value="@item.nroMuestra" />
+                    </td>*@
+
+                </tr>
+            }
+        </tbody>
+    }
+</table>
+

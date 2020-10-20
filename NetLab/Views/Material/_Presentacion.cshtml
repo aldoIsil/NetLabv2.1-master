@@ -1,0 +1,10 @@
+﻿@*  Descripción: muestra y carga combo con las Presentaciones
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Presentacion>
+
+@Html.DropDownList("idPresentacion",
+new MultiSelectList(Model, "idPresentacion", "glosa"),
+new { value = "0", @class = "form-control sizeChosen" })

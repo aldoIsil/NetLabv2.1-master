@@ -1,0 +1,237 @@
+﻿@*/// Descripción: Busca historial de los pacientes NetLab v2.0.
+    /// Author: Yonatan Clemente
+    /// Fecha Creacion: 08/05/2018*@
+
+
+@model List<Model.Paciente>
+
+@{
+    ViewBag.Title = "ConsultaHistPaciente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/font-awesome.css">
+@using (Html.BeginForm("ConsultaHistPaciente", "Paciente", FormMethod.Get))
+{
+    <fieldset class="default">
+        <legend class="default">
+            SEGUIMIENTO ORDEN PACIENTE
+        </legend>
+        <div id="dvBusquedaUsuario">
+            <div class="form-group">
+                <div>
+                    @Html.Label("Tipo de Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                    @Html.Label("Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-3" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control", autocomplete = "off" })
+                </div>
+            </div>
+            <br /><br /><br />
+            <div class="form-group">
+                <div>
+                    @Html.Label("Apellido Paterno:", new { @class = "-label col-xs-6 col-sm-3  col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoPaterno", (string)ViewBag.apellidoPaterno, new { @class = "form-control input-sm", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Apellido Materno:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoMaterno", (string)ViewBag.apellidoMaterno, new { @class = "form-control", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Nombre:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("nombre", (string)ViewBag.nombre, new { @class = "form-control", autocomplete = "off" })
+                </div>
+            </div><br />
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  col-sm-offset-5 col-md-offset-5 col-lg-offset-5">
+                    <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+}
+<br /><br />
+<br /><br />
+<br /><br />
+@if (Model != null && Model.Count > 0)
+{
+    <table id="dtPaciente">
+        <thead>
+            <tr>
+                <th>
+                    Tipo de Documento
+                </th>
+                <th>
+                    Número de Documento
+                </th>
+                <th>
+                    Apellido Paterno
+                </th>
+                <th>
+                    Apellido Materno
+                </th>
+                <th>
+                    Nombres
+                </th>
+                <th>Historial de Exámenes del Paciente</th>
+                <th>Información de Prueba Rápida</th>
+                <th>Historial de Exámenes del Paciente NetLab1</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr data-pruebarapida="@item.TienePruebaRapidaSiscovid">
+                <td>
+                    @Html.DisplayFor(modelItem => item.tipoDocumentoNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombres)
+                </td>
+                <td>
+                    @*<button type="button" class="btn btn-default btn-block fa fa-user-md" id="HCPaciente" data-target="#HisClinica"
+                        href="@Url.Action("ShowHistoriaClinicaPaciente", "Paciente", new { NroDocumento = item.NroDocumento})"></button>*@
+                    <button type="button" class="btn btn-default btn-block fa fa-user-md" data-target="#HisClinica"
+                            onclick="ShowHisClinico('@item.NroDocumento')"></button>
+                </td>
+                @if (item.TienePruebaRapidaSiscovid > 0)
+                {
+                <td>
+                    <button type="button" class="btn btn-default btn-block fa fa-medkit" data-target="#InfoPruebaRapida"
+                            onclick="MostrarPruebaRapida('@item.NroDocumento')"></button>
+                </td>
+                }
+                else
+                {
+                    <td>No registra Prueba Rápida SISCOVID</td>
+                }
+                <td>
+                    <button class="btn btn-default  btn-block fa fa-book" id="HCPacienteNetLab1"
+                            data-toggle="collapse" data-target="#HisNetLab1" onclick="Paginacion()"
+                            href="@Url.Action("ShowInformacionNetLabv1", "Paciente")" data-nrodocumento="@item.NroDocumento"></button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">No se encontraron resultados</div>
+}
+@*<button type="button" class="btn btn-outline-primary" id="btnImprimir">Imprimir</button>*@
+<br /><br /><br />
+<div id="HisClinica" class="table-responsive">
+    @*<div class="alert alert-danger">@ViewBag.notFound</div>*@
+    @Html.Hidden("tipoPage")
+    @foreach (var item in Model)
+    {
+        if (item.EESSOrigen != null)
+        {
+            @Html.Partial("_Busqueda", (Model.Paciente)ViewBag.Paciente)
+        }
+    }
+</div>
+<div id="HisNetLab1" class="table-responsive">
+    @*<div class="alert alert-danger">@ViewBag.notFound</div>*@
+    @foreach (var item in Model)
+    {
+        if (item.EESSOrigen != null)
+        {
+            @Html.Partial("_PacienteNetLabv1", (Model.Paciente)ViewBag.Paciente)
+        }
+    }
+</div>
+<div id="InfoPruebaRapida" class="table-responsive">
+    @*<div class="alert alert-danger">@ViewBag.notFound</div>*@
+    @Html.Hidden("tipoPage")
+    @*@foreach (var item in Model)
+    {
+        if (item.EESSOrigen != null)
+        {
+            @Html.Partial("_ResultadosPRSiscovidPorNrodocumento", (Model.Paciente)ViewBag.Paciente)
+        }
+    }*@
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Paciente.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+    <script type="text/javascript">
+        function ShowHisClinico(NroDocumento) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: URL_BASE + "Paciente/ShowHistoriaClinicaPaciente",
+                data: { page: 1, NroDocumento: NroDocumento, tipo: 1 },
+                success: function (result) {
+                    /*Cambio el valor del scroll X Y a 100% para que no se mueva el header*/
+                    $('#HisClinica').html(result);
+                    $('#dtPacienteBusqueda').DataTable({
+                        "scrollY": "500px",
+                        "scrollX": "100%",
+                        "scrollCollapse": true
+                    });
+                    $('.dataTables_length').addClass('bs-select');
+                }
+            });
+            console.log("entro");
+
+            return false;
+        }
+
+        $(document).ready(function () {
+            $('#dtPaciente').DataTable({
+                "scrollY": "600px",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+
+
+        });
+
+        function MostrarPruebaRapida(NroDocumento) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: URL_BASE + "Paciente/MostrarPruebaRapidaSiscovidPaciente",
+                data: { nroDocumento: NroDocumento },
+                success: function (result) {
+                    /*Cambio el valor del scroll X Y a 100% para que no se mueva el header*/
+                    $('#InfoPruebaRapida').html(result);
+                    //$('#dtPRSiscovidPacienteResultados').DataTable({
+                    //    "scrollY": "500px",
+                    //    "scrollX": "100%",
+                    //    "scrollCollapse": true
+                    //});
+                    $('.dataTables_length').addClass('bs-select');
+                }
+            });
+            console.log("entro");
+
+            return false;
+        }
+    </script>
+}

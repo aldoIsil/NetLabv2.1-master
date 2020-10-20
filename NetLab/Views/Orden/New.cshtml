@@ -1,0 +1,841 @@
+﻿@* Descripción: Vista para inicializar la pantalla de registro de una nueva orden,
+    verifica si hubo un registro anterior sin guardar.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+@using Model;
+@{
+    ViewBag.Title = "Agregar Orden";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Juan Muga - obtener session tipoRegistro para cuando sale popup con este mensaje: Existe una Orden que aún no fue guardada, seleccione una acción
+    var tipoRegistro = (Enums.TipoRegistroOrden)Session["tipoRegistro"];
+    int intTipoRegistro = (int)tipoRegistro;
+    var idEstablecimientoOrigen = ViewBag.idEstablecimiento;
+    var labModel = ViewBag.LabUbigeo as Laboratorio;
+
+}
+
+<style>
+    .field-validation-error {
+        color: Red;
+    }
+
+    .obligatorio {
+        color: Red;
+    }
+
+    .ui-autocomplete1 {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #CodigoUnicoOrigen.ui-autocomplete-loading {
+        background-image: url('../../img/loading.gif');
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+</style>
+
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+@*<link rel="stylesheet" href="~/Content/ordenNew.css">*@
+
+@using (Html.BeginForm("Save", "Orden", FormMethod.Post, new { id = "frmOrden" }))
+{
+<div>
+    @Html.Hidden("tipoRegistro", (int)ViewBag.tipoRegistro)
+    @Html.Hidden("codifFinalizar")
+    @Html.Hidden("GuardarFinalizar")
+    @*@Html.Hidden("Archivo")
+        @Html.Hidden("sizeFile")*@
+    @Html.Hidden("procPaciente")
+    @Html.Hidden("dniEjecutorPr")
+    @Html.Hidden("ejecutorPr")
+
+    <input type="hidden" id="hdnsolicitante" name="hdnsolicitante" value="@ViewBag.SolicitanteNombre" />
+    <input type="hidden" id="hdnsolicitanteid" name="hdnsolicitanteid" value="@Model.solicitante" />
+    @if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+    {
+        if (!string.IsNullOrEmpty(ViewBag.textoRegistro))
+        {
+            <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+        }
+        if (!string.IsNullOrEmpty(ViewBag.existeError))
+        {
+            <input type="hidden" value="@ViewBag.existeError" id="existeError" />
+        }
+        switch ((Enums.TipoRegistroOrden)ViewBag.tipoRegistro)
+        {
+            case Enums.TipoRegistroOrden.SOLO_ORDEN:
+            case Enums.TipoRegistroOrden.SOLO_ORDEN_MUESTRA:
+                <h3 style="text-align:center" class="text-primary">Registro de Orden</h3>
+                break;
+            default:
+                <h3 style="text-align:center" class="text-primary">Registro de Orden y Recepción</h3>
+                //@ViewBag.RecordarDato = "S";
+                break;
+        }
+        @Html.Hidden("codigoOrden", "")
+        <input type="hidden" value="a" name="idOrdenTmp" />
+        <input type="hidden" value="" id="textoRegistro" />
+        <input type="hidden" value="" id="existeError" />
+    }
+    else
+    {
+
+        <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+        <input type="hidden" value="@ViewBag.existeError" id="existeError" />
+        if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+        {
+            <h3 style="text-align:center">Editar Orden Nro </h3>
+            <h3 style="text-align:center"> @Html.Raw(Model.codigoOrden) </h3>
+        }
+        <input type="hidden" value="@Html.Raw(Model.codigoOrden)" name="codigoOrdenTmp" />
+        <input type="hidden" value="@Html.Raw(Model.idOrden)" name="idOrdenTmp" />
+        @Html.Hidden("idOrden", (Guid)Model.idOrden)
+    }
+
+    <fieldset class="default">
+
+        <legend class="default">Datos del Paciente</legend>
+
+        <div class="div-row">
+            @Html.LabelFor(model => model.Paciente.NroDocumento, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                <span>@Html.Raw(Model.Paciente.NroDocumento)</span>
+            </div>
+            @Html.Label("Nombre:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.Nombres + " " + Model.Paciente.ApellidoPaterno + " " + Model.Paciente.ApellidoMaterno)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.DireccionActual, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.DireccionActual)</span>
+            </div>
+            @Html.Label("Edad:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                <span>@Html.Raw(Model.Paciente.edadAnios)</span>
+            </div>
+
+            @Html.HiddenFor(model => Model.Paciente.NroDocumento)
+            @Html.HiddenFor(model => Model.Paciente.Nombres)
+            @Html.HiddenFor(model => Model.Paciente.IdPaciente)
+            @Html.HiddenFor(model => Model.Paciente.Genero)
+
+            <input type="hidden" value="@Model.Paciente.IdPaciente" id="idPaciente" />
+            <input type="hidden" value="@Model.Paciente.Genero" id="idSexo" />
+        </div>
+        <br /><br />
+
+        @if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+        {
+            <div><br /><br /></div>
+            <div class="div-row">
+                <div class="well well-sm" @*style="padding-top: 0px; vertical-align: central; align-items:center "*@>
+
+                    <div class="control-text text-info">
+                        Actualizar datos del Paciente
+                        <input type="checkbox" name="chkActualizarUbicacion" id="chkActualizarUbicacion" />
+                    </div>
+
+                </div>
+            </div>
+            <br />
+        }
+
+        <div id="_ubigeoActualNoEditable">
+            <!--primera fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.UbigeoActual.Departamento)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Provincia, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.UbigeoActual.Provincia)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Distrito, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>
+                        @Html.Raw(Model.Paciente.UbigeoActual.Distrito)
+                    </span>
+                </div>
+            </div>
+            <br /> <br />
+            <!--Segunda fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.TelefonoFijo, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.TelefonoFijo)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.Celular1, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.Celular1)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.Celular2, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span> @Html.Raw((String)Model.Paciente.Celular2)</span>
+                </div>
+
+            </div>
+
+            <br /> <br />
+            <!--tercera linea-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.correoElectronico, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.correoElectronico)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.ocupacion, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.ocupacion)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.tipoSeguroSalud, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.tipoSeguro)</span>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.otroSeguroSalud)</span>
+                </div>
+            </div>
+
+
+        </div>
+
+        @if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+        {
+            <div id="_ubigeoActualEditable" style="display:none">
+
+                <div class="div-row">
+                    @Html.LabelFor(model => model.Paciente.UbigeoActual.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetDepartamentos", "UbigeoPaciente",
+                 new
+                 {
+                     departamentoSelectId = "ActualDepartamento",
+                     provinciaSelectId = "ActualProvincia",
+                     distritoSelectId = "ActualDistrito",
+                     provinciaDivId = "dvProvincias",
+                     distritoDivId = "dvDistritos",
+                     selectedValue = Model.Paciente.UbigeoActual.Id.Substring(0, 2)
+                 })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.UbigeoActual.Provincia, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                    <div id="dvProvincias" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetProvinciasPorDepartamento", "UbigeoPaciente",
+                 new
+                 {
+                     departamentoSelectId = "ActualDepartamento",
+                     provinciaSelectId = "ActualProvincia",
+                     distritoSelectId = "ActualDistrito",
+                     distritoDivId = "dvDistritos",
+                     codigoDepartamento = Model.Paciente.UbigeoActual.Id.Substring(0, 2),
+                     selectedValue = Model.Paciente.UbigeoActual.Id.Substring(2, 2)
+                 })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.UbigeoActual.Distrito, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                    <div id="dvDistritos" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetDistritosPorProvincia", "UbigeoPaciente", new
+                   {
+                       distritoSelectId = "ActualDistrito",
+                       codigoDepartamento = Model.Paciente.UbigeoActual.Id.Substring(0, 2),
+                       codigoProvincia = Model.Paciente.UbigeoActual.Id.Substring(2, 2),
+                       selectedValue = Model.Paciente.UbigeoActual.Id.Substring(4, 2)
+                   })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.DireccionActual, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        @Html.EditorFor(model => model.Paciente.DireccionActual, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Segunda fila-->
+                <div class="div-row">
+                    @Html.LabelFor(model => model.Paciente.TelefonoFijo, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.EditorFor(model => model.Paciente.TelefonoFijo, new { htmlAttributes = new { @class = "form-control  input-sm telefonoFijoValido" } })
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.Celular1, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.EditorFor(model => model.Paciente.Celular1, new { htmlAttributes = new { @class = "form-control  input-sm celular1Valido" } })
+                    </div>
+
+                    @Html.LabelFor(model => model.Paciente.Celular2, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.EditorFor(model => model.Paciente.Celular2, new { htmlAttributes = new { @class = "form-control  input-sm celular2Valido" } })
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.correoElectronico, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.EditorFor(model => model.Paciente.correoElectronico, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                    </div>
+                </div>
+                <br /><br /><br /><br /><br /><br /><br /><br />
+                <!--tercera linea-->
+                <div class="div-row">
+                    @Html.LabelFor(model => model.Paciente.ocupacion, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        @Html.EditorFor(model => model.Paciente.ocupacion, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                        @Html.ValidationMessageFor(model => model.Paciente.ocupacion)
+                    </div>
+                    @Html.LabelFor(model => model.Paciente.tipoSeguroSalud, new { @class = "-label- col-xs-12 col-sm-2 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        @Html.DropDownListFor(model => model.Paciente.tipoSeguroSalud, (List<SelectListItem>)ViewBag.seguroList, "- Seleccione el Tipo de Seguro -", new { @class = "form-control  input-sm" })
+                    </div>
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        @Html.EditorFor(model => model.Paciente.otroSeguroSalud, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength" } })
+                    </div>
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </fieldset>
+
+    <fieldset class="default">
+        <legend class="default">EESS/LAB</legend>
+        @if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+        {
+            <div>
+                <div class="div-row">
+                    @Html.LabelFor(model => labModel.UbigeoLaboratorio.Departamento, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetDepartamentos", "Ubigeo",
+                 new
+                 {
+                     departamentoSelectId = "ActualDepartamentoEESS",
+                     provinciaSelectId = "ActualProvinciaEESS",
+                     distritoSelectId = "ActualDistritoEESS",
+                     provinciaDivId = "dvProvinciasEESS",
+                     distritoDivId = "dvDistritosEESS",
+                     selectedValue = labModel.UbigeoLaboratorio.Id.Substring(0, 2)
+                 })
+                    </div>
+                    @Html.LabelFor(model => labModel.UbigeoLaboratorio.Provincia, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div id="dvProvinciasEESS" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                 new
+                 {
+                     departamentoSelectId = "ActualDepartamentoEESS",
+                     provinciaSelectId = "ActualProvinciaEESS",
+                     distritoSelectId = "ActualDistritoEESS",
+                     distritoDivId = "dvDistritosEESS",
+                     codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                     selectedValue = labModel.UbigeoLaboratorio.Id.Substring(2, 2)
+                 })
+                    </div>
+                    @Html.LabelFor(model => labModel.UbigeoLaboratorio.Distrito, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div id="dvDistritosEESS" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                        @Html.Action("GetDistritosPorProvincia", "Ubigeo", new
+                   {
+                       distritoSelectId = "ActualDistritoEESS",
+                       codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                       codigoProvincia = labModel.UbigeoLaboratorio.Id.Substring(2, 2),
+                       selectedValue = labModel.UbigeoLaboratorio.Id.Substring(4, 2)
+                   })
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="div-row">
+                @Html.LabelFor(model => model.idEstablecimiento, new { @class = "-label- col-xs-8 col-sm-1 col-md-1 col-lg-1" })
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+                {
+                    <span>@Html.Raw(Model.establecimiento.Nombre)</span>
+                }
+                else
+                {
+                    <div class="ui-autocomplete1 col-md-10">
+                        @Html.TextBox("CodigoUnicoOrigen", (string)ViewBag.nombreEstablecimiento, new { @class = "form-control" })
+                        @Html.Hidden("hddDatoEESSOrigen", (string)ViewBag.idEstablecimiento)
+                    </div>
+                }
+            </div>
+            if ((Enums.TipoRegistroOrden)ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+            {
+                <br /><br /><br />
+                <div class="div-row">
+                    @Html.LabelFor(model => model.idEstablecimientoEnvio, new { @class = "-label- col-xs-8 col-sm-1 col-md-1 col-lg-1" })
+
+                    <div class="ui-autocomplete1 col-md-10">
+                        @Html.TextBox("CodigoUnicoEnvio", (string)ViewBag.nombreEstablecimientoEnvio, new { @class = "form-control" })
+                        @Html.Hidden("hddDatoEESSEnvio", (string)ViewBag.idEstablecimientoEnvio)
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="div-row">
+                    @Html.LabelFor(model => model.fechaIngresoINS, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaIngresoINS, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                    @Html.LabelFor(model => model.fechaReevaluacionFicha, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-2" })
+                    <div class="col-sm-9 col-md-3 col-lg-3" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaReevaluacionFicha, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                </div>
+            }
+
+            <br /><br /><br />
+            <div class="div-row">
+                @Html.Label("Motivo", new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-1" })
+                @*@Html.LabelFor(model => model.Proyecto, new { @class = "label-proyecto-width" })*@
+                <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                    @Html.DropDownListFor(model => model.Proyecto.IdProyecto, new SelectList(ViewBag.proyectoList, "idProyecto", "nombre"), new { @id = "Proyectoval", @class = "form-control input-sm" })
+                    @*<div class="obligatorio">
+                            <span>*</span>
+                        </div>*@
+                </div>
+                @*Autor: Juan Muga
+                    Descripcion: Quitar el registro del numero de orden.
+                    Fecha: 26/09/2017*@
+                @*@Html.LabelFor(model => model.nroOficio, new { @class = "label-nrooficio-width" })
+                    <div class="control-nrooficio-width">
+                        @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm ValidateLength col-md-3" })
+                    </div>*@
+                @*<div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                    <input style="margin-left: 5px; padding-top: 5px" id="noPrecisaNroOficio" name="noPrecisaNroOficio" type="checkbox" onchange="onChangenoPrecisaNroOficio()" />
+                    @Html.Label("No Precisa", new { @class = "label-noprecisa-width" })*@
+                <div style="display:none">
+                    @Html.LabelFor(model => model.idEstablecimiento, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-9 col-md-3 col-lg-3">
+                        <select class="form-control input-sm" id="idEstablecimiento" name="idEstablecimiento">
+                            <option value=""></option>
+
+                            @if (ViewBag.idEstablecimiento != null)
+                            {
+                                <option selected="selected" value="@ViewBag.idEstablecimiento">@ViewBag.nombreEstablecimiento</option>// cuando el dato viene de una plantilla
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                @*<div class="obligatorio">
+                        <span>*</span>
+                    </div>*@
+                <div style="display:none;">
+                    @Html.Label("EESS/LAB de Origen Frecuente:", new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-2" })
+                    @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+                    {
+
+                    }
+                    else
+                    {
+                        <div class="col-xs-12 col-sm-9 col-md-3 col-lg-3">
+                            @*@Html.DropDownList("idEstablecimientoFrecuente", new SelectList(ViewBag.establecimientoListFrecuentes, "idEstablecimiento", "nombre"), new { @class = "form-control input-sm" })*@
+                        </div>
+                        <div class="obligatorio">
+                            <span>*</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br /><br />
+            <div class="div-row">
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                {
+
+                    @Html.LabelFor(model => model.nroOficio, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div class="control-nrooficio-width col-xs-12 col-sm-8 col-md-3 col-lg-5">
+                        @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm" })
+                    </div>
+                }
+            </div>
+            <br /><br />
+
+        }
+        else
+        {
+            <div class="div-row">
+                @Html.LabelFor(model => model.idProyecto, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-1" })
+                <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                    @if (Model.Proyecto != null && !string.IsNullOrEmpty(Model.Proyecto.Nombre))
+                    {
+                        <span>@Html.Raw(Model.Proyecto.Nombre)</span>
+                    }
+                </div>
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                {
+                    @Html.LabelFor(model => model.nroOficio, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-2" })
+                    if (Model.nroOficio == null || Model.nroOficio.Equals(""))
+                    {
+                        <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                            @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm" })
+                        </div>
+                        @*<div class="obligatorio">
+                                <span>*</span>
+                            </div>*@
+                        @*<input checked="checked" style="margin-left: 5px; padding-top: 5px" id="noPrecisaNroOficio" name="noPrecisaNroOficio" type="checkbox" onchange="onChangenoPrecisaNroOficio()" />*@
+                        @*@Html.Label("No Precisa", new { @class = "label-noprecisa-width" })*@
+
+                    }
+                    else
+                    {
+                        <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                            @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm" }) @*, disabled = "disabled"*@
+                        </div>
+                        @*<div class="obligatorio">
+                                <span>*</span>
+                            </div>
+                            <input style="margin-left: 5px; padding-top: 5px" id="noPrecisaNroOficio" name="noPrecisaNroOficio" type="checkbox" onchange="onChangenoPrecisaNroOficio()" />
+                            @Html.Label("No Precisa", new { @class = "label-noprecisa-width" })*@
+                    }
+                }
+                @Html.LabelFor(model => model.idEstablecimiento, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-1" })
+                <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.establecimiento.Nombre)</span>
+                </div>
+            </div>
+        }
+
+    </fieldset>
+
+    @*<fieldset class="default">
+            <legend class="default">País de Procedencia</legend>
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.TextBox("ciudad", (string)ViewBag.textoCiudad, new { @class = "form-control", placeholder = "Ciudad - País", type = "search" })
+                    @Html.Hidden("id", (string)ViewBag.valueCiudad)
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-default" id="btnAgregar">
+                        <span class="glyphicon .glyphicon-plus-sign">Agregar</span>
+                    </button>
+                </div>
+                <div class="col-md-5">
+                    <center>
+                        <table id="dtCiudad" style="display:none" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    <th style="text-align:center">Ciudad</th>
+                                    <th style="text-align:center"> </th>
+                                </tr>
+                            </thead>
+                            <tbody id="TbCiudad"></tbody>
+                        </table>
+                    </center>
+                </div>
+            </div>
+        </fieldset>*@
+
+    @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+    {
+        <fieldset class="default">
+            <legend class="default">Examenes</legend> <div id="dvTblExamen" class="table-responsive div-row-width">
+                @Html.Partial("_TblExamenNoEdit", (List<Model.OrdenExamen>)Model.ordenExamenList)
+            </div>
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default">Muestras</legend>
+            <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+                @Html.Partial("_TblOrdenMuestraNoEdit", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset class="default">
+            <legend class="default">
+                Examenes
+                <span>
+                    @*<a href="@Url.Action("ShowPopupEnfermedadExamen", "Orden")" id="btnShowPopupEnfermedadExamen" title="Agregar Examen">Agregar</a>*@
+                    <button class="btn btn-default btn-sm" href="@Url.Action("ShowPopupEnfermedadExamen", "Orden")" id="btnShowPopupEnfermedadExamen" title="Agregar Examen">
+                        <span class="glyphicon glyphicon-plus "></span> Agregar
+                    </button>
+                </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>
+                    @*<a href="@Url.Action("index", "Catalogo")" title="Ver Catalogo" target="_blank">Ver Catalogo</a>*@
+                </span>
+            </legend>
+            <div id="dvTblExamen" class="table-responsive div-row-width">
+                @Html.Partial("_TblExamen", (List<Model.OrdenExamen>)Model.ordenExamenList)
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default">Muestras</legend>
+            <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.SOLO_ORDEN)
+                {
+                    @Html.Partial("_TblOrdenMuestra", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                }
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                {
+                    @Html.Partial("_TblOrdenMuestraRecepcionar", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                }
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.SOLO_ORDEN_MUESTRA)
+                {
+                    @Html.Partial("_TblOrdenMuestraManual", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                }
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default"> </legend>
+            <div id="dvTblMaterial" class="table-responsive div-row-width">
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.SOLO_ORDEN)
+                {
+                    @Html.Partial("_TblMaterial", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+                }
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                {
+                    @Html.Partial("_TblMaterialRecepcionar", (List<Model.OrdenMaterial>)Model.ordenMaterialList);
+                }
+                @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.SOLO_ORDEN_MUESTRA)
+                {
+                    @Html.Partial("_TblMaterial", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+                }
+
+
+                <br /><br />
+            </div>
+        </fieldset>
+    }
+
+    <fieldset class="default">
+        <legend class="default">Datos Clínicos Epidemiologicos</legend>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="tabs">
+                @Html.Partial("_TabDatoClinico", (List<Model.Enfermedad>)Model.enfermedadList)
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <fieldset class="default">
+        <legend class="default">Datos del personal que realiza la prueba rápida</legend>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            @Html.Label("DNI: ", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-1" })
+            <div class="col-md-1">
+                @Html.TextBox("dniPr", (string)ViewBag.dniPr, new { @class = "form-control", placeholder = "DNI", maxlength = 8, type = "search" })
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-default" id="btnBuscarValidar">
+                    <span class="glyphicon glyphicon-plus-sign">Buscar</span>
+                </button>
+            </div>
+            @Html.Label("Nombre: ", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-1" })
+            <div class="col-md-3">
+                <input class="form-control" type="text" id="ejecutor" placeholder="Nombre y apellidos">
+            </div>
+
+        </div>
+    </fieldset>
+    <br />
+    <fieldset class="default">
+        <legend class="default">Observaciones</legend>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+            {
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(model => model.fechaSolicitud, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.fechaSolicitud))</span>
+                    </div>
+                    @Html.Label("Solicitante: ", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-1" })
+                    <div id="divSolicitante" class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        @Html.Partial("_Solicitante")
+                    </div>
+                    <div>
+                        <a href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnShowPopupSolicitante" title="Agregar Solicitante" class="btn btn-default">
+                            <span class="fa fa-user-plus" aria-hidden="true"></span>
+                            Agregar
+                        </a>
+
+                    </div>
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.LabelFor(model => model.fechaSolicitud, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                <div class="col-xs-8 col-sm-3 col-md-2 col-lg-2">
+                    @*Juan Muga - inicio - permitir ingresar fecha manualmente*@
+                    @*@Html.TextBoxFor(model => model.fechaSolicitud, "{0:dd/MM/yyyy}", new { @class = "form-control datepickerTelerik  input-sm ", Style = "width: 85px;", onkeydown = "return false;", autocomplete = "off" })  *@
+                    @Html.TextBoxFor(model => model.fechaSolicitud, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    @*Juan Muga - fin*@
+                </div>
+                @*<div class="obligatorio">
+                        <span>*</span>
+                    </div>*@
+
+                @Html.Label("Solicitante: ", new { @class = "-label- col-xs-12 col-sm-12 col-md-1 col-lg-1" })
+                if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+                {
+                    <div id="divSolicitante" class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        @Html.Partial("_Solicitante")
+                    </div>
+                    <div>
+                        @*<a href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnShowPopupSolicitante" title="Agregar Solicitante">Agregar</a>*@
+
+                        <a href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnShowPopupSolicitante" title="Agregar Solicitante" class="btn btn-default">
+                            <span class="fa fa-user-plus" aria-hidden="true"></span>
+                            Agregar
+
+                        </a>
+
+                    </div>
+                    <div class="obligatorio">
+                        <span>*</span>
+                    </div>
+                }
+                else
+                {
+
+                    <div class="-label- col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <span>@Html.Raw(ViewBag.SolicitanteNombre)</span> <br /><br /><br />
+                    </div>
+                }
+            }
+            @Html.LabelFor(model => model.observacion, new { @class = "-label- col-xs-12 col-sm-12 col-md-2 col-lg-1" })
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+                &nbsp;&nbsp;&nbsp;&nbsp;         @Html.TextAreaFor(model => model.observacion, 2, 100, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+            </div>
+            <br /><br /><br /><br /><br />
+            @*<div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.file, new { @class = "control-label col-md-1" })
+                        <input type="file" id="files" name="files" accept="application/pdf" />
+                        <br />
+                    </div>
+                </div>*@
+
+        </div>
+
+        <br /><br /><br /><br /><br /><br />
+    </fieldset>
+    <br /><br /><br /><br /><br /><br />
+    @if (string.IsNullOrWhiteSpace(Model.codigoOrden))
+    {
+        <button class="btn btn-primary btn-lg col-xs-offset-10" id="btnGuardar" value="Guardar"> <span class="fa fa-floppy-o "></span> Guardar</button>
+    }
+    else
+    {
+        if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+        {
+            <button class="btn btn-danger  btn-lg col-xs-offset-10" id="btnEditar" value="Editar"> <span class="fa fa-exclamation "></span> Editar</button>
+        }
+        else
+        {
+            <button class="btn btn-primary  btn-lg col-xs-offset-10" id="btnFinalizar" value="Finalizar"> <span class="fa fa-exclamation "></span> Finalizar</button>
+        }
+    }
+
+
+</div>
+    <div id="dialog-open" style="display: none">
+    </div>
+    <div id="divTblMultiple" style="display: none">
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Solicitante.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/PopupAgregarExamen.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/PopupAgregarMaterial.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/CrearOrden.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Search.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/OrdenExamenPruebaRapida.js", new Random().Next(0, 999))))
+    @*ADAPTIVE MODAL*@
+    @*@Scripts.Render("~/Scripts/jquery.dialogOptions.js")*@
+    <script type="text/javascript">
+        function mostrarConfirmacion() {
+            var ordenExistente = '@ViewBag.OrdenExistente'; //$("#ordenExistente").val();
+            if (ordenExistente == 'true' || ordenExistente == 'True') {
+                $.alerts.okButton = "Ignorar";
+                $.alerts.cancelButton = "Continuar";
+
+                jConfirm('Existe una Orden que aún no fue guardada, seleccione una acción',
+                    'Confirmar Nueva Orden',
+                    function (r) {
+                        if (r) {
+                            $.ajax(
+                            {
+                                url: URL_BASE + "Orden/DelSessionOrden",
+                                cache: false,
+                                method: "POST",
+                                data: { pacienteId: '@Model.Paciente.IdPaciente' },
+                                success: function () {
+                                    window.location = URL_BASE + "Orden/New?idPaciente=@Model.Paciente.IdPaciente&NroDocumento=''&Nombre=''&tipoRegistro=@intTipoRegistro";
+                                }
+                            });
+                        }
+                    });
+
+                $.alerts.okButton = "Ok";
+                $.alerts.cancelButton = "Cancelar";
+            }
+        }
+
+        //if (window.File && window.FileReader && window.FileList && window.Blob) {
+        //    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+        //} else {
+        //    alert('The File APIs are not fully supported in this browser.');
+        //}
+        //var NameFile = null;
+        //var typeFile = null;
+        //var sizeFile = null;
+        //function handleFileSelect(evt) {
+        //    debugger;
+        //    var f = evt.target.files[0]; // FileList object
+        //    var reader = new FileReader();
+        //    // Closure to capture the file information.
+        //    reader.onload = (function (theFile) {
+        //        return function (e) {
+        //            var binaryData = e.target.result;
+        //            //Converting Binary Data to base 64
+        //            var base64String = window.btoa(binaryData);
+        //            //showing file converted to base64
+        //            //document.getElementById('Archivo').value = base64String;
+        //            $('#Archivo').val(base64String);
+        //            //alert('File converted to base64 successfuly!\nCheck in Textarea');
+        //        };
+        //    })(f);
+        //    // Read in the image file as a data URL.
+        //    reader.readAsBinaryString(f);
+        //    NameFile = f.name;
+        //    typeFile = f.type;
+        //    sizeFile = (f.size / 1024);
+        //    $('#sizeFile').val(sizeFile);
+        //    if (sizeFile > 1024) {
+        //        jAlert('El peso del archivo no debe exceder los 1Mb', 'Alerta')
+        //        return false;
+        //    }
+        //}
+        
+        //JRCR - REQ01
+        $(function () {
+            $(".datepickerExtension").setDefaultDatePicker();
+            SetDateOnly();
+        });
+    </script>
+    <!--String idPaciente, String NroDocumento, String Nombre, String codigoOrden, int? tipoRegistro -->
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Ubigeo.js?updated={0}", new Random().Next(0, 999))))
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}

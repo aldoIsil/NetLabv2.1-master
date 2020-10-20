@@ -1,0 +1,9 @@
+﻿@*JRCR-REQ02*@
+@if (ViewBag.Solicitantes != null)
+{
+    @Html.DropDownList("solicitante", new SelectList(ViewBag.Solicitantes, "Value", "Text"), new { @class = "form-control input-sm" })
+}
+else
+{
+    @Html.DropDownList("solicitante", new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control input-sm" })
+}

@@ -1,0 +1,314 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el ingreso de datos de tipo de muestra.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.TipoMuestra>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Mantenimiento de Tipos de Muestra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Tipos de Muestra</h2>
+@using (Html.BeginForm("Index", "TipoMuestra", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese un nombre o descripción:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+    @*@Html.ActionLink("Nuevo", "NuevoTipoMuestra", new { page = ViewBag.page, ViewBag.search }, new { id = "openDialog" })*@
+
+    @Html.ActionLink("+ Nuevo", "NuevoTipoMuestra", new { page = ViewBag.page, ViewBag.search }, new { id = "openDialog", @class = "btn btn btn-primary " })
+
+}
+<br />
+
+
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th width="120">
+                    @Html.DisplayNameFor(model => model.First().nombre)
+                </th>
+                <th width="200">
+                    @Html.DisplayNameFor(model => model.First().descripcion)
+                </th>
+                <th width="30">
+                    @Html.DisplayNameFor(model => model.First().nemo)
+                </th>
+                <th width="20">
+                    @Html.DisplayNameFor(model => model.First().Estado)
+                </th>
+                <th width="50">Editar</th>
+                <th width="70">Criterios de Rechazo</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.descripcion)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.nemo)
+                </td>
+                <td>
+                    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+                    @if (item.Estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+                </td>
+                <td class="text-center">
+                    @*@Html.ActionLink("Editar", "EditarTipoMuestra", new { id = item.idTipoMuestra, page = Model.PageNumber, ViewBag.search }, new { @class = "editDialog" })*@
+                    @Html.ActionLink(" ", "EditarTipoMuestra", new { id = item.idTipoMuestra, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+
+
+
+
+                    @*@Html.ActionLink("Eliminar", "EliminarTipoMuestra", new { id = item.idTipoMuestra, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+
+
+                </td>
+                <td class="text-center">
+                    @*@Html.ActionLink("Criterios de Rechazo", "CriterioRechazo", new { id = item.idTipoMuestra })*@
+                    @Html.ActionLink("  ", "CriterioRechazo", new { id = item.idTipoMuestra }, new { @class = "btn btn-default btn-block fa fa-exclamation-triangle" })
+
+
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+@if (Model != null)
+{
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+
+@*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/TipoMuestra.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+    <script type="text/javascript">
+
+
+
+
+        $("body").on("submit", "#formAgregarTipoMuestra", function (e) {
+
+            var ok = false;
+
+
+            var ok2=false;
+
+            var ok3=false;
+
+
+            var nombre = $.trim($('#nombre').val());
+
+            var descripcion = $.trim($('#descripcion').val());
+
+
+
+
+            if (descripcion === '') {
+                jAlert("Ingrese la descripción del tipo de muestra.", "¡Alerta!");
+
+            }else {
+                ok3=true;
+            }
+
+
+            if (nombre === '') {
+                jAlert("Ingrese el nombre del tipo de muestra.", "¡Alerta!");
+
+            }else {
+                ok=true;
+            }
+
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+
+
+            var nom=nombre.toUpperCase();
+            if (statesAvailable.includes(nom)  ) {
+                jAlert("Ya existe un Tipo de Muestra con ese nombre.", "¡Alerta!");
+
+            }else {
+                ok2=true;
+            }
+
+
+
+            if (ok && ok2 && ok3)
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+
+                        $("#btnCrear").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+
+                        jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+
+
+
+
+
+        $("body").on("submit", "#formEditarTipoMuestra", function (e) {
+
+            var ok = false;
+
+
+            var ok2=false;
+
+            var ok3=false;
+
+
+            var nombre = $.trim($('#nombre').val());
+
+            var descripcion = $.trim($('#descripcion').val());
+
+
+            var someDataFromPartialSomehow = $("#someDataFromPartialSomehow").val();
+            var nombreController=someDataFromPartialSomehow.toUpperCase();
+
+
+            if (descripcion === '') {
+                jAlert("Ingrese la descripción del tipo de muestra.", "¡Alerta!");
+
+            }else {
+                ok3=true;
+            }
+
+
+            if (nombre === '') {
+                jAlert("Ingrese el nombre del tipo de muestra.", "¡Alerta!");
+
+            }else {
+                ok=true;
+            }
+
+            var nom=nombre.toUpperCase();
+
+            if (nom==nombreController) {
+                ok2=true;
+            }else {
+
+                var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+
+                if (statesAvailable.includes(nom)  ) {
+                    jAlert("Ya existe un Tipo de Muestra con ese nombre.", "¡Alerta!");
+
+                }else {
+                    ok2=true;
+                }
+
+            }
+
+
+
+
+
+            if (ok && ok2 && ok3)
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+
+                        $("#btnGuardar").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+
+                        jAlert("Tipo de Muestra Editado Satisfactoriamente", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+    </script>
+
+}
+
+<style type="text/css">
+    .table1 {
+        width: 1690px;
+    }
+</style>

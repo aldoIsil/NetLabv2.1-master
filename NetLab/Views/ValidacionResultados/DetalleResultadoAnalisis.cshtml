@@ -1,0 +1,76 @@
+﻿@*  Descripción: Vista, Permite mostrar el detalle de los componentes configurados y seleccionar un resultado.
+    Author: Stero Bustamante.
+    Fecha Creacion: 21/10/2017
+    Fecha Modificación: 21/10/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.ResultAnalito>
+<br />
+@if (Model != null)
+{
+    if (Model.Any())
+    {
+        <table id="tblAnalito" class="table">
+            <thead>
+                <tr>
+                    <th class="rowExamen2">Examen</th>
+                    <th class="rowExamen2">Componente</th>
+                    <th class="rowExamen">Resultado</th>
+                    <th class="rowExamen2">Observaciones</th>
+                    <th class="rowExamen">Unidad</th>
+                    <th class="rowExamen">Valor Normal / Referencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {                   
+                    var tipoValorAnalito = item.tipo;
+
+                    if (item.tipo == 1 && item.ValorSuperior <= 0 && item.ValorInferior <= 0) { tipoValorAnalito = 100; }
+                    if (item.tipo == 3 && item.ValorReferencia == "") { tipoValorAnalito = 100; }
+
+                    <tr class="rowResultados @item.IdAnalito" validacion="@Json.Encode(new {Tipo = tipoValorAnalito, Maximo = item.ValorSuperior, Minimo = item.ValorInferior, ValorNormal = item.ValorReferencia })">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Examen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Analito)
+                            <input type="hidden" name="idOrdenResultadoAnalito[]" class="form-control" value="@item.IdOrdenResultadoAnalito"/>
+                            <input type="hidden" name="idAnalito[]" class="form-control" value="@item.IdAnalito" />
+                        </td>
+                        <td>
+                            @if (item.tipo == 1 || item.tipo == 2)
+                            {
+                                <input type="text" name="resultado[]" class="form-control resultadoAnalito" value="@item.Resultado"/>
+                            }
+                            @if (item.tipo == 3)
+                            {
+                                <select name="resultado[]" class="form-control resultadoAnalito">
+                                    <option value="">Seleccione</option>
+                                    @foreach (var opcion in item.Metodos)
+                                    {
+                                        var selectedItemOpcion = "";
+                                        if (item.Resultado == opcion.Glosa)
+                                        {
+                                            selectedItemOpcion = "selected";
+                                        }
+                                        <option value="@opcion.IdAnalitoOpcionResultado" @selectedItemOpcion>@opcion.Glosa</option>
+                                    }
+                                </select>
+                            }
+                        </td>
+                        <td>
+                            <input type="text" name="observacion[]" class="form-control" value="@item.Observacion"/>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Unidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ValorReferencia)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <br />
+}

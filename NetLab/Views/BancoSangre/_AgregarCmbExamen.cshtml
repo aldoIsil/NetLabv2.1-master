@@ -1,0 +1,10 @@
+﻿@*  Descripción: Vista, carga combo de Examenes. 
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.Examen>
+
+@Html.DropDownList("cmbExamen",
+new SelectList(Model, "idExamen", "nombre"), 
+new { value = "0"})

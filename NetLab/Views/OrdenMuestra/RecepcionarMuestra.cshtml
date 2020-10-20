@@ -1,0 +1,290 @@
+﻿@*  Descripción: Vista, permite recepcionar o recazar las muestras de una orden.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+@using Model;
+@{
+    var labModel = ViewBag.LabUbigeo as Laboratorio;
+    var idLabUsuario = ViewBag.idLabUsuario;
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+@using (Html.BeginForm("RecepcionarMuestra", "OrdenMuestra", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "formRecepcionarMuestra" }))
+{
+    @Html.AntiForgeryToken()
+
+    <link rel="stylesheet" href="../Content/multiple-select.css" />
+
+    <h4 class="centered" align="center">Orden de Análisis N° @Model.codigoOrden</h4>
+    <input type="hidden" id="asd24dgs" autofocus />
+    <input type="hidden" id="generoOrden" name="generoOrden" value="@Model.genero" />
+    if (Model.usuarioEnvio != null)
+    {
+        <input type="hidden" id="telefonoUTM" name="telefonoUTM" value="@Model.usuarioEnvio.Celular" />
+        <input type="hidden" id="codigo" name="Codigo" value="@Model.codigoOrden" />
+    }
+
+
+    <br />
+
+    <div class="div-row">
+        @Html.Label("Establecimiento/Laboratorio Recibido: ", new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-4">
+            <span style="font-weight:bold">@ViewBag.nomLabUsuario</span>
+            <input type="hidden" value=@ViewBag.idLabUsuario name="cmbIdLabRecepcion" id="cmbIdLabRecepcion" />
+        </div>
+    </div>
+    <br /><br />
+    //Autor: Juan Muga
+    //Descripcion: Ingreso del Nro de Oficio
+    //Fecha : 26/09/2017
+    <div class="div-row">
+        @Html.LabelFor(model => model.nroOficio, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-4">
+            @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm" })
+        </div>
+    </div>
+    <br />
+    <br />
+    if (idLabUsuario == 991)
+    {
+
+        <div class="div-row">
+            @Html.LabelFor(model => model.fechaIngresoINS, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-4">
+                @Html.TextBoxFor(model => model.fechaIngresoINS, "{0:dd/MM/yyyy}",
+           //inFechaRec2 datePickerWidth datepickerRecepcion dateOnly
+           new
+           {
+               @class = "form-control  input-sm datepickerMaxValue dateOnly",
+               Style = "width: 105px;",
+               autocomplete = "off",
+               placeholder = "dd/mm/yyyy"
+           })
+            </div>
+            @Html.LabelFor(model => model.fechaReevaluacionFicha, new { @class = "-label- col-xs-1 col-sm-3 col-md-3 col-lg-3" })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                @Html.TextBoxFor(model => model.fechaReevaluacionFicha, "{0:dd/MM/yyyy}",
+           //inFechaRec2 datePickerWidth datepickerRecepcion dateOnly
+           new
+           {
+               @class = "form-control  input-sm datepickerMaxValue dateOnly",
+               Style = "width: 105px;",
+               autocomplete = "off",
+               placeholder = "dd/mm/yyyy"
+           })
+            </div>
+        </div>
+        <br />
+        <br />
+    }
+    @*@if (ViewBag.idLabUsuario == "991")
+    {*@
+    @*}*@
+
+    <fieldset class="default">
+        <legend class="default">Establecimiento Envío</legend>
+        <div>
+            <div class="div-row">
+                @Html.LabelFor(model => labModel.UbigeoLaboratorio.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-1" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    @Html.Action("GetDepartamentos", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamentoEESS",
+                         provinciaSelectId = "ActualProvinciaEESS",
+                         distritoSelectId = "ActualDistritoEESS",
+                         provinciaDivId = "dvProvinciasEESS",
+                         distritoDivId = "dvDistritosEESS",
+                         selectedValue = labModel.UbigeoLaboratorio.Id.Substring(0, 2)
+                     })
+                </div>
+                @Html.LabelFor(model => labModel.UbigeoLaboratorio.Provincia, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                <div id="dvProvinciasEESS" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamentoEESS",
+                         provinciaSelectId = "ActualProvinciaEESS",
+                         distritoSelectId = "ActualDistritoEESS",
+                         distritoDivId = "dvDistritosEESS",
+                         codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                         selectedValue = labModel.UbigeoLaboratorio.Id.Substring(2, 2)
+                     })
+                </div>
+                @Html.LabelFor(model => labModel.UbigeoLaboratorio.Distrito, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                <div id="dvDistritosEESS" class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    @Html.Action("GetDistritosPorProvincia", "Ubigeo", new
+           {
+               distritoSelectId = "ActualDistritoEESS",
+               codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+               codigoProvincia = labModel.UbigeoLaboratorio.Id.Substring(2, 2),
+               selectedValue = labModel.UbigeoLaboratorio.Id.Substring(4, 2)
+           })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="div-row">
+            @Html.LabelFor(model => model.idEstablecimientoEnvio, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+
+            <div class="ui-autocomplete1 col-md-10">
+                @Html.TextBox("CodigoUnicoEnvio", (string)ViewBag.nombreEstablecimientoEnvio, new { @class = "form-control" })
+                @Html.Hidden("hddDatoEESSEnvio", (string)ViewBag.idEstablecimientoEnvio)
+            </div>
+        </div>
+    </fieldset>
+   
+    <br />
+
+            <div>
+
+                @if (Model != null)
+                {
+                    int i = 0;
+                    int j = 0;
+                    string nombre;
+                    string rechazoNom;
+                    string idCheck;
+                    int k = 0;
+                    foreach (var item in Model.ordenMaterialList)
+                    {
+                        i++;
+                        j = 0;
+                        if (item.ordenMuestraRecepcionList != null && item.ordenMuestraRecepcionList.Count() > 0)
+                        {
+                            <hr />
+                            <h3 style="font-weight:bold">@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</h3>
+                            <hr />
+                            <table id="tblDatosRecepcion" name="tblDatosRecepcion" class="table">
+                                <thead>
+                                <th width="100px" align="center">Item</th>
+                                <th hidden="hidden">Id</th>
+                                <th>Código de Muestra</th>
+                                <th>Fecha - Hora Obtención</th>
+                                <th>Examen</th>
+                                @*@*<th>Tipo</th>*@ <!--muestra primaria: 1 / alicuota: 2-->
+                                <th>Fecha Recepción Muestra</th>
+                                <th>Hora Recepción</th>
+                                <th>Muestra Conforme</th>
+                                <th width="340">Motivos de Rechazo</th>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item1 in item.ordenMuestraRecepcionList)
+                            {
+                                rechazoNom = k.ToString();
+                                j++;
+                                k++;
+                                nombre = "ost_" + i.ToString() + "_" + j.ToString();
+                                idCheck = "chkOm_" + item1.idOrdenMuestraRecepcion;
+                                        <tr>
+                                            <th>@Html.Label(item1.presentacionNombreNro)</th>
+                                            <td class="left" hidden="hidden">@Html.Hidden("idOrdenRecepcion", item1.idOrdenMuestraRecepcion)</td>
+                                            <td>@Html.Label(item1.codigoMuestra)</td>
+                                            <td>@Html.Raw(item1.fechaHoraColeccionStr)</td>
+                                            <td>
+                                                @Html.Label(item1.examenNombre)
+                                                @Html.Hidden("idExamenMuestra", item1.idExamen, new { @id = "idExamenMuestra" })
+                                            </td>
+                                            @*<td>
+                                                    @if (item1.Tipo == 1)
+                                                    {
+                                                        @Html.Label("Muestra Primaria")
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Label("Alícuota")
+                                                    }
+                                                </td>*@
+                                            @*Juan Muga - permitir ingreso manual de fechas*@
+                                            <td>@Html.TextBox("fechaRecepcion", "", new { @id = "fechaRecepcion" + nombre, @class = "form-control input-sm datepickerMaxValue dateOnly", name = "fechaRecepcion[]", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy"})</td>
+                                            <td>@Html.TextBox("horaRecepcion", "", new { @id = "horaRecepcion" + nombre, @class = "inHoraRec2 hourPickerWidth", name = "horaRecepcion[]" })</td>
+                                            <td align="center">
+
+                                                <input type="checkbox" name=@Html.Raw(idCheck) checked="checked" class="checkboxNoPrecisa2 chkConformeMuestra" />
+
+                                            </td>
+                                            <td>
+                                                <div class="selMotivoRechazoDiv">
+                                                    @Html.DropDownList("motivoRechazo" + @rechazoNom, (List<SelectListItem>)ViewBag.listaCriterios[item.idTipoMuestra], new { @id = "selMotivoRechazo" + nombre, @multiple = "multiple", @class = "selMotivoRechazo", @style = "display:none;" })
+                                                    <span class="obligatorio">*</span>
+                                                </div>
+                                                @*<div class="selMotivoRechazoDiv">
+                                                    </div>*@
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    }
+                }
+            </div>
+            <button class="btn btn-primary" value="Guardar" type="submit"> <span class="fa fa-floppy-o"></span> Guardar</button>
+            <button class="btn btn-default" id="btnCancelarRecepcion" value="Cancelar" type="submit"> <span class="fa fa-times"></span> Cancelar</button>
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function (e) {
+        //$('.selMotivoRechazo').SumoSelect({ placeholder: 'Seleccione Motivo de Rechazo' });
+
+        //$('.selMotivoRechazo').multiselect({
+        //    columns: 2,
+        //    placeholder: 'Select options'
+        //});
+        
+        $(".datepickerMaxValue").setDatePickerWithMaxValue();
+        $('.selMotivoRechazo').change(function () {
+        }).multipleSelect({
+            width: '98%',
+            multiple: true,
+            multipleWidth: 300
+        });
+
+
+        //$("#tblDatosRecepcion .inFechaRec2").datepicker();
+        $("#tblDatosRecepcion .inHoraRec2").timeEntry({ show24Hours: true });
+        $("#tblDatosRecepcion .inFechaRec2").val(dia + "/" + mes + "/" + anio);
+
+        myDate = new Date();
+        var hora = (myDate.getHours() >= 10) ? myDate.getHours() : "0" + myDate.getHours();
+        var minutos = (myDate.getMinutes() >= 10) ? myDate.getMinutes() : "0" + myDate.getMinutes();
+
+        $("#tblDatosRecepcion .inHoraRec2").val(hora + ":" + minutos);
+
+    });
+    $(function () {
+        $(".datepickerExtension").setDefaultDatePicker();
+        SetDateOnly();
+    });
+</script>
+
+<style type="text/css" media="all">
+    .hourPickerWidth {
+        text-align: center;
+        width: 70px !important;
+    }
+
+    .obligatorio {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/jquery.alerts/jquery.alerts.js?updated={0}", new Random().Next(0, 999))))
+
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/RecepcionMuestra.js?updated={0}", new Random().Next(0, 999))))
+   @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/CrearOrden.js?updated={0}", new Random().Next(0, 999))))
+@Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden.js?updated={0}", new Random().Next(0, 999))))
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}

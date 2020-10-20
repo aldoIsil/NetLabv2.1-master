@@ -1,0 +1,216 @@
+﻿@*  Descripción: Vista, para definir la asignacio de usuarios para un establecimiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using Model
+@using NetLab.Helpers
+@using PagedList
+@using PagedList.Mvc
+@model NetLab.Models.UsuarioEstablecimientoViewModels
+
+@{
+    ViewBag.Title = "Asignación de Usuarios por EESS/LAB";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h3 {
+        display: inline;
+    }
+    -->
+</style>
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Asignación de Usuarios por EESS/LAB</h2>
+<br />
+<h3 class="text-info">Usuario: </h3>
+<h3>@Model.Usuario.login</h3>
+<br /><br />
+@using (Html.BeginForm("AsignarEstablecimiento", "Usuario", FormMethod.Post, new { id = "frmEstablecimientos" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("idUsuario", Model.Usuario.idUsuario)
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-3">
+                @Html.CheckBox("chkPorJerarquia", new { @id = "chkPorJerarquia", @checked = "checked" })
+                Por Jerarquía
+            </div>
+
+            <div class="col-md-3">
+                @Html.CheckBox("chkPorEstablecimiento", new { @id = "chkPorEstablecimiento" })
+                Por EESS/LAB
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <div class="row">
+            @Html.Label("INSTITUCIÓN:", new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.CodigoInstitucion, Model.SelectInstituciones, new { @class = "form-control", onchange = "onChangeInstitucion()" })
+            </div>
+            <div class="col-md-4">
+                <div class="linksForm">
+                    <button id="btnAgregarInstitucion" type="submit" name="Submit" value="Institucion" class="btn btn-default"><i class="fa fa-plus-circle" aria-hidden="true"></i> Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            @Html.Label("DISA/DIRESA/GERESA:", new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                <select id="CodigoDisa" name="CodigoDisa" class="form-control">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <div class="linksForm">
+                    <button id="btnAgregarDisa" type="submit" name="Submit" value="Disa" class="btn btn-default"><i class="fa fa-plus-circle" aria-hidden="true"></i> Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            @Html.Label("RED:", new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                <select id="CodigoRed" name="CodigoRed" class="form-control">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <div class="linksForm">
+                    <button id="btnAgregarRed" type="submit" name="Submit" value="Red" class="btn btn-default"><i class="fa fa-plus-circle" aria-hidden="true"></i> Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            @Html.Label("MICRO RED:", new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                <select id="CodigoMicroRed" name="CodigoMicroRed" class="form-control">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <div class="linksForm">
+                    <button id="btnAgregarMicroRed" type="submit" name="Submit" value="MicroRed" class="btn btn-default"><i class="fa fa-plus-circle" aria-hidden="true"></i> Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            @Html.Label("EESS/LAB:", new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                <select id="CodigoEstablecimiento" name="CodigoEstablecimiento" class="form-control">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <div class="linksForm">
+                    <button id="btnAgregarEstablecimiento" type="submit" name="Submit" value="Establecimiento" class="btn btn-default"><i class="fa fa-plus-circle" aria-hidden="true"></i> Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    if (Model != null && Model.Establecimientos?.Count > 0)
+    {
+        <div class="linksForm">
+            <button id="btnEliminarTodos" type="submit" name="Submit" value="DeleteAll" class="btn btn-default rigthMenuItem"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar Todos</button>
+            <button id="btnEliminar" type="submit" name="Submit" value="Delete" class="btn btn-default rigthMenuItem col-md-2"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar Seleccionados</button>
+        </div>
+        <br />        <br />
+        <table class="table table-responsive" id="mydata">
+            <thead>
+                <tr>
+                    <th>
+                        Institución
+                    </th>
+                    <th>
+                        DISA / DIRESA / GERESA
+                    </th>
+                    <th>
+                        Red
+                    </th>
+                    <th>
+                        MicroRed
+                    </th>
+                    <th>
+                        EE.SS/LAB
+                    </th>
+                    <th>
+                        Seleccionar Todos<br />
+                        <input type="checkbox" name="chkSeleccionar" id="chkSeleccionar" />
+                    </th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.Establecimientos)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomInstitucion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomDisa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomRed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomMicrored)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomEstablecimiento)
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="chkEliminar" value="@item.idEstablecimiento" />
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.EmptyTable()
+    }
+    if (Model != null)
+    {
+        //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+
+    @*@Html.PagedListPager(new StaticPagedList<UsuarioEstablecimiento>(Model.Establecimientos, Model.PagingMetaData),
+        page => Url.Action("Establecimientos", new { Model.Usuario.idUsuario, page }))*@
+    }
+}
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/UsuarioEstablecimiento.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

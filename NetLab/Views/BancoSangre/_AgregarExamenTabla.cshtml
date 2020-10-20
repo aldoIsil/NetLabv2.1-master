@@ -1,0 +1,41 @@
+﻿@*  Descripción: Vista, muestra y carga los examenes seleccionados.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.ViewData.ExamenVd>
+
+
+<table class="table" width="80" >
+    <tr>
+        <th>
+            Examen
+        </th>
+        <th>
+            Tipos de Muestra
+        </th>
+        <th></th>
+    </tr>
+
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            
+            <tr>
+             
+                <td>
+                    @Html.DisplayFor(modelItem => item.examen.nombre)
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.examen.idExamen)>
+                    @Html.DropDownList("cmbTipoMuestra",
+                    new MultiSelectList(item.tipoMuestraList, "idTipoMuestra", "nombre"), new { value = "0", @class = "chosen-select cmbTipoMuestra", multiple = "multiple" })
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.examen.idExamen)>
+                    <a class="eliminarExamen">Eliminar</a>
+                </td>
+            </tr>
+        }
+    }
+
+</table>

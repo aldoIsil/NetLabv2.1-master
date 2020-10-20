@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "RegistroPacientes";
+}
+
+<div id="wrapper-module" style="position: relative;">
+    <div id="module">
+        <div class="header">
+            <div class="title head">
+                <h2>
+                    Procesar Excel
+                </h2>
+            </div>
+        </div>
+        <div class="content" id="create-page">
+            @using (Html.BeginForm("RegistrarPacientes", "ProcesoDesatendido", FormMethod.Post, new { enctype = "multipart/form-data", id = "registropacientesfrm", name = "registropacientesfrm" }))
+            {
+                <div id="pageinfo">
+                    <div class="sectioninfo">
+                        <table width='80%'>
+                            <tr>
+                                <th>
+                                    <label>
+                                        Select file:
+                                    </label>
+                                </th>
+                                <td>
+                                    <input type="file" id="fileUpload" name="fileUpload" size="23" style="width: 80%;" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row footer">
+                    <input type="submit" id="submitload" value="Registrar" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

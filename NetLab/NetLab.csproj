@@ -1,0 +1,1507 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7E2B6F4D-A613-4976-A0BA-C0ECE6C1B7EC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetLab</RootNamespace>
+    <AssemblyName>NetLab</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>58509</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.80.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.80.1\lib\net40-client\ClosedXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="idautomation.aztecservercontrol, Version=2009.0.0.0, Culture=neutral, PublicKeyToken=73d52f3f4f2e98a9">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferenciasGlobales\idautomation.aztecservercontrol.dll</HintPath>
+    </Reference>
+    <Reference Include="LumenWorks.Framework.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5ad3ea2f85776344, processorArchitecture=MSIL">
+      <HintPath>..\packages\LumenWorksCsvReader.4.0.0\lib\net45\LumenWorks.Framework.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MVC Foolproof Validation, Version=0.9.4517.16477, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.6.4\lib\net40\Rotativa.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Code\StaticCache.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ActualizaEstadoController.cs" />
+    <Compile Include="Controllers\AnalitoController.cs" />
+    <Compile Include="Controllers\AnimalController.cs" />
+    <Compile Include="Controllers\AreaProcesamientoController.cs" />
+    <Compile Include="Controllers\ArraList.cs" />
+    <Compile Include="Controllers\CatalogoController.cs" />
+    <Compile Include="Controllers\CatalogoOfflineController.cs" />
+    <Compile Include="Controllers\CategoriaController.cs" />
+    <Compile Include="Controllers\CCSeguimientoController.cs" />
+    <Compile Include="Controllers\ComunController.cs" />
+    <Compile Include="Controllers\ConfiguracionEvalControlCalidadController.cs" />
+    <Compile Include="Controllers\ConsultaResultadosController.cs" />
+    <Compile Include="Controllers\CuentaController.cs" />
+    <Compile Include="Controllers\CuentaUsuarioController.cs" />
+    <Compile Include="Controllers\DisaMantController.cs" />
+    <Compile Include="Controllers\EESSController.cs" />
+    <Compile Include="Controllers\ExternoController.cs" />
+    <Compile Include="Controllers\IndicadorController.cs" />
+    <Compile Include="Controllers\InstitucionController.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\DetalleCatalogoController.cs" />
+    <Compile Include="Controllers\MicroRedController.cs" />
+    <Compile Include="Controllers\MuestrasOdkCollectController.cs" />
+    <Compile Include="Controllers\OrdenNuevoController.cs" />
+    <Compile Include="Controllers\ProcesoDesatendidoController.cs" />
+    <Compile Include="Controllers\ReactivoController.cs" />
+    <Compile Include="Controllers\RecepcionController.cs" />
+    <Compile Include="Controllers\RecepcionMuestraKoboController.cs" />
+    <Compile Include="Controllers\RedController.cs" />
+    <Compile Include="Controllers\ReporteController.cs" />
+    <Compile Include="Controllers\ReporteResultadosController.cs" />
+    <Compile Include="Content\FormConverter\Entities\UsuarioConverterRequest.cs" />
+    <Compile Include="Controllers\ResultadoPEECController.cs" />
+    <Compile Include="Controllers\ResultadoSemaforoController.cs" />
+    <Compile Include="Controllers\RolController.cs" />
+    <Compile Include="Controllers\CriterioRechazoController.cs" />
+    <Compile Include="Controllers\DatosController.cs" />
+    <Compile Include="Controllers\EnfermedadController.cs" />
+    <Compile Include="Controllers\EstablecimientoController.cs" />
+    <Compile Include="Controllers\ExamenController.cs" />
+    <Compile Include="Content\FormConverter\AnimalConverter.cs" />
+    <Compile Include="Content\FormConverter\CategoriaConverter.cs" />
+    <Compile Include="Content\FormConverter\DatoConverter.cs" />
+    <Compile Include="Content\FormConverter\Entities\AnimalConverterRequest.cs" />
+    <Compile Include="Content\FormConverter\Entities\CategoriaConverterRequest.cs" />
+    <Compile Include="Content\FormConverter\Entities\DatoConverterRequest.cs" />
+    <Compile Include="Content\FormConverter\Entities\LaboratorioConverterRequest.cs" />
+    <Compile Include="Content\FormConverter\Interfaces\ILaboratorioConverter.cs" />
+    <Compile Include="Content\FormConverter\Interfaces\IDatoConverter.cs" />
+    <Compile Include="Content\FormConverter\Interfaces\ICategoriaConverter.cs" />
+    <Compile Include="Content\FormConverter\Interfaces\IAnimalConverter.cs" />
+    <Compile Include="Content\FormConverter\LaboratorioConverter.cs" />
+    <Compile Include="Controllers\InsumosController.cs" />
+    <Compile Include="Controllers\LaboratorioController.cs" />
+    <Compile Include="Controllers\LiberacionResultadosController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MuestraController.cs" />
+    <Compile Include="Controllers\BancoSangreController.cs" />
+    <Compile Include="Controllers\OrdenAnimalController.cs" />
+    <Compile Include="Controllers\OrdenMuestraController.cs" />
+    <Compile Include="Controllers\ParentController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdenController.cs" />
+    <Compile Include="Controllers\PacienteController.cs" />
+    <Compile Include="Controllers\PlantillaController.cs" />
+    <Compile Include="Controllers\ResultadosAnalisisController.cs" />
+    <Compile Include="Controllers\DisaController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\SolicitanteController.cs" />
+    <Compile Include="Controllers\SolicitudExamenController.cs" />
+    <Compile Include="Controllers\UbigeoController.cs" />
+    <Compile Include="Controllers\PresentacionController.cs" />
+    <Compile Include="Controllers\TipoMuestraController.cs" />
+    <Compile Include="Controllers\UbigeoPacienteController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
+    <Compile Include="Controllers\ValidacionResultadosController.cs" />
+    <Compile Include="Extensions\ActionResults\ExcelResult.cs" />
+    <Compile Include="Extensions\Request\Request.cs" />
+    <Compile Include="Extensions\Request\SendRquest.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AutoComplete.cs" />
+    <Compile Include="Helpers\ControlExtensions.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\FileHelpers.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AnalitoValorViewModels.cs" />
+    <Compile Include="Models\AnalitoOpcionViewModels.cs" />
+    <Compile Include="Models\AnalitoMetodoViewModels.cs" />
+    <Compile Include="Models\AsignarEstablecimientoViewModels.cs" />
+    <Compile Include="Models\DatoClinico\ListaDatoViewModels.cs" />
+    <Compile Include="Models\ExamenMetodoViewModels.cs" />
+    <Compile Include="Models\ExcelResultadoViewModels.cs" />
+    <Compile Include="Models\Login\LocalViewModel.cs" />
+    <Compile Include="Models\MicroRedesViewModels.cs" />
+    <Compile Include="Models\OpcionDatoViewModels.cs" />
+    <Compile Include="Models\OrdenMuestraRechazo.cs" />
+    <Compile Include="Models\PEED\Baciloscopia.cs" />
+    <Compile Include="Models\PEED\EvaluacionPanelesViewModels.cs" />
+    <Compile Include="Models\PEED\MedioCultivo.cs" />
+    <Compile Include="Models\PEED\ResultadoPEEDViewModels.cs" />
+    <Compile Include="Models\PEED\SuceptibilidadGenotype.cs" />
+    <Compile Include="Models\ReactivoPresentacionViewModels.cs" />
+    <Compile Include="Models\RedesViewModels.cs" />
+    <Compile Include="Models\MaterialViewModels.cs" />
+    <Compile Include="Models\ResultadosAnalisisViewModels.cs" />
+    <Compile Include="Models\SeguimientoViewModels.cs" />
+    <Compile Include="Models\Shared\InstitucionesViewModels.cs" />
+    <Compile Include="Models\SolicitanteViewModels.cs" />
+    <Compile Include="Models\SolicitudExamenTropismoViewModels.cs" />
+    <Compile Include="Models\UsuarioAreaProcesamientoViewModels.cs" />
+    <Compile Include="Models\UsuarioEnfermedadExamenViewModels.cs" />
+    <Compile Include="Models\UsuarioEstablecimientoViewModels.cs" />
+    <Compile Include="Models\UsuarioRolViewModels.cs" />
+    <Compile Include="Models\Shared\PresentacionViewModels.cs" />
+    <Compile Include="Models\Shared\ReactivoViewModels.cs" />
+    <Compile Include="Models\Shared\TipoMuestraViewModels.cs" />
+    <Compile Include="Models\PresentacionTipoMuestraViewModels.cs" />
+    <Compile Include="Models\ValoresAnalitoViewModels.cs" />
+    <Compile Include="Models\OpcionesAnalitoViewModels.cs" />
+    <Compile Include="Models\MetodosAnalitoViewModels.cs" />
+    <Compile Include="Models\AnalitoExamenViewModels.cs" />
+    <Compile Include="Models\Animal\AnimalViewModels.cs" />
+    <Compile Include="Models\Animal\PacienteViewModels.cs" />
+    <Compile Include="Models\AreaExamenViewModels.cs" />
+    <Compile Include="Models\CriterioRechazo\CriterioViewModels.cs" />
+    <Compile Include="Models\CriterioRechazo\TipoCriterioViewModels.cs" />
+    <Compile Include="Models\DatoClinico\CategoriaEditViewModels.cs" />
+    <Compile Include="Models\DatoClinico\CategoriaListaViewModels.cs" />
+    <Compile Include="Models\DatoClinico\CategoriaViewModels.cs" />
+    <Compile Include="Models\DatoClinico\DatoListaViewModels.cs" />
+    <Compile Include="Models\DatoClinico\DatoViewModels.cs" />
+    <Compile Include="Models\DatoClinico\TipoDatoViewModels.cs" />
+    <Compile Include="Models\Reportes\ReporteResultadoViewModels.cs" />
+    <Compile Include="Models\RolMenuViewModels.cs" />
+    <Compile Include="Models\AnalitoViewModels.cs" />
+    <Compile Include="Models\ExamenTipoMuestraViewModels.cs" />
+    <Compile Include="Models\MuestraCriterioRechazoViewModels.cs" />
+    <Compile Include="Models\Rol\RolViewModels.cs" />
+    <Compile Include="Models\UsuarioViewModels.cs" />
+    <Compile Include="Models\ExamenViewModels.cs" />
+    <Compile Include="Models\LaboratorioExamenViewModels.cs" />
+    <Compile Include="Models\LaboratorioViewModels.cs" />
+    <Compile Include="Models\Orden\OrdenAnimalViewModels.cs" />
+    <Compile Include="Models\Plantilla\EstablecimientoPlantillaViewModels.cs" />
+    <Compile Include="Models\Plantilla\ExamenMuestraViewModels.cs" />
+    <Compile Include="Models\Plantilla\PlantillaMuestraViewModels.cs" />
+    <Compile Include="Models\Plantilla\PlantillaViewModels.cs" />
+    <Compile Include="Models\Plantilla\TipoMuestraViewModels.cs" />
+    <Compile Include="Models\Shared\ClaseGeneroViewModels.cs" />
+    <Compile Include="Models\Shared\EnfermedadViewModels.cs" />
+    <Compile Include="Models\Shared\EstablecimientoViewModels.cs" />
+    <Compile Include="Models\Shared\GeneroViewModels.cs" />
+    <Compile Include="Models\Animal\OrigenViewModels.cs" />
+    <Compile Include="Models\Animal\SexoViewModels.cs" />
+    <Compile Include="Models\DepartamentoViewModels.cs" />
+    <Compile Include="Models\DistritoViewModels.cs" />
+    <Compile Include="Models\EnfermedadExamenViewModels.cs" />
+    <Compile Include="Models\Animal\EspecieViewModels.cs" />
+    <Compile Include="Models\ProvinciaViewModels.cs" />
+    <Compile Include="Models\Animal\RazaViewModels.cs" />
+    <Compile Include="Models\PDFCodigoMuestraModel.cs" />
+    <Compile Include="Models\Shared\ListaDetalleViewModels.cs" />
+    <Compile Include="Models\Shared\ProyectoViewModels.cs" />
+    <Compile Include="Models\Shared\TipoDocumentoViewModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QR\WFCodBar.aspx.cs">
+      <DependentUpon>WFCodBar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QR\WFCodBar.aspx.designer.cs">
+      <DependentUpon>WFCodBar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="QR\WFCodBarra.aspx.cs">
+      <DependentUpon>WFCodBarra.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QR\WFCodBarra.aspx.designer.cs">
+      <DependentUpon>WFCodBarra.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RazorPDF\PdfResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\BusinessLayer.dll" />
+    <Content Include="bin\BusinessLayer.pdb" />
+    <Content Include="bin\ClosedXML.dll" />
+    <Content Include="bin\DataLayer.dll" />
+    <Content Include="bin\DataLayer.pdb" />
+    <Content Include="bin\DocumentFormat.OpenXml.dll" />
+    <!--<Content Include="bin\es\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll" />-->
+    <!--<Content Include="bin\es\System.Web.Helpers.resources.dll" />-->
+    <!--<Content Include="bin\es\System.Web.Mvc.resources.dll" />
+    <Content Include="bin\es\System.Web.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Deployment.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.resources.dll" />-->
+    <Content Include="bin\ExcelDataReader.dll" />
+    <Content Include="bin\ExcelDataReader.xml" />
+    <Content Include="bin\Framework.DAL.dll" />
+    <Content Include="bin\Framework.DAL.pdb" />
+    <Content Include="bin\Framework.DAL.Settings.dll" />
+    <Content Include="bin\Framework.DAL.Settings.pdb" />
+    <Content Include="bin\Framework.WebCommon.dll" />
+    <Content Include="bin\Framework.WebCommon.pdb" />
+    <Content Include="bin\idautomation.aztecservercontrol.dll" />
+    <Content Include="bin\LumenWorks.Framework.IO.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Model.dll" />
+    <Content Include="bin\Model.pdb" />
+    <Content Include="bin\MVC Foolproof Validation.dll" />
+    <Content Include="bin\NetLab.dll" />
+    <Content Include="bin\NetLab.pdb" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\PagedList.dll" />
+    <Content Include="bin\PagedList.Mvc.dll" />
+    <Content Include="bin\Reniec.dll" />
+    <Content Include="bin\Reniec.pdb" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\Rotativa.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\Utilitario.dll" />
+    <Content Include="bin\Utilitario.pdb" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\chosen-sprite%402x.png" />
+    <Content Include="Content\chosen-sprite.png" />
+    <Content Include="Content\cssAutocomplete\main.css" />
+    <Content Include="Content\cssAutocomplete\normalize.css" />
+    <Content Include="Content\cssAutocomplete\normalize.min.css" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\animated-overlay.gif" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\jquery-ui-1.10.4.custom.css" />
+    <Content Include="Content\cssAutocomplete\ui-lightness\jquery-ui-1.10.4.custom.min.css" />
+    <Content Include="Content\DataTables-1.10.16\images\sort_asc.png" />
+    <Content Include="Content\DataTables-1.10.16\images\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables-1.10.16\images\sort_both.png" />
+    <Content Include="Content\DataTables-1.10.16\images\sort_desc.png" />
+    <Content Include="Content\DataTables-1.10.16\images\sort_desc_disabled.png" />
+    <Content Include="Content\datatables.min.css" />
+    <Content Include="Content\dpLoading-2.x-min.css" />
+    <Content Include="Content\dpLoading-2.x-skin-grey-min.css" />
+    <Content Include="Content\dpLoading-2.x-skin-grey.gif" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\barcode2dx.png" />
+    <Content Include="Content\images\calendar.gif" />
+    <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\spinnerBlue.png" />
+    <Content Include="Content\images\spinnerBlueBig.png" />
+    <Content Include="Content\images\spinnerDefault.png" />
+    <Content Include="Content\images\spinnerDefaultBig.png" />
+    <Content Include="Content\images\spinnerGem.png" />
+    <Content Include="Content\images\spinnerGemBig.png" />
+    <Content Include="Content\images\spinnerGreen.png" />
+    <Content Include="Content\images\spinnerGreenBig.png" />
+    <Content Include="Content\images\spinnerOrange.png" />
+    <Content Include="Content\images\spinnerOrangeBig.png" />
+    <Content Include="Content\images\spinnerSquare.png" />
+    <Content Include="Content\images\spinnerSquareBig.png" />
+    <Content Include="Content\images\spinnerText.png" />
+    <Content Include="Content\images\spinnerTextBig.png" />
+    <Content Include="Content\images\spinnerUpDown.png" />
+    <Content Include="Content\images\spinnerUpDownBig.png" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\chosen.css" />
+    <Content Include="Content\chosen.min.css" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
+    <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\jquery.timeentry-es.js" />
+    <Content Include="Content\jquery.timeentry.css" />
+    <Content Include="Content\Login.css" />
+    <Content Include="Content\menubar.css" />
+    <Content Include="Content\multiple-select.css" />
+    <Content Include="Content\multiple-select.png" />
+    <Content Include="Content\ordenNew.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\resultados.css" />
+    <Content Include="Content\sumoselect.css" />
+    <Content Include="Content\TablaCSS.css" />
+    <Content Include="Content\telerik\Default\editor.png" />
+    <Content Include="Content\telerik\Default\imagebrowser.png" />
+    <Content Include="Content\telerik\Default\indeterminate.gif" />
+    <Content Include="Content\telerik\Default\loading-image.gif" />
+    <Content Include="Content\telerik\Default\loading.gif" />
+    <Content Include="Content\telerik\Default\loading_2x.gif" />
+    <Content Include="Content\telerik\Default\markers.png" />
+    <Content Include="Content\telerik\Default\markers_2x.png" />
+    <Content Include="Content\telerik\Default\slider-h.gif" />
+    <Content Include="Content\telerik\Default\slider-v.gif" />
+    <Content Include="Content\telerik\Default\sprite.png" />
+    <Content Include="Content\telerik\Default\sprite_2x.png" />
+    <Content Include="Content\telerik\Default\sprite_kpi.png" />
+    <Content Include="Content\telerik\Default\sprite_kpi_2x.png" />
+    <Content Include="Content\telerik\fonts\DejaVu\LICENSE.txt" />
+    <Content Include="Content\telerik\images\back.png" />
+    <Content Include="Content\telerik\images\kendoui.svg" />
+    <Content Include="Content\telerik\images\wp8_icons.png" />
+    <Content Include="Content\telerik\images\wp8_inverseicons.png" />
+    <Content Include="Content\telerik\kendo.common.min.css" />
+    <Content Include="Content\telerik\kendo.default.min.css" />
+    <Content Include="Content\telerik\kendo.silver.min.css" />
+    <Content Include="Content\telerik\Silver\editor.png" />
+    <Content Include="Content\telerik\Silver\imagebrowser.png" />
+    <Content Include="Content\telerik\Silver\indeterminate.gif" />
+    <Content Include="Content\telerik\Silver\loading-image.gif" />
+    <Content Include="Content\telerik\Silver\loading.gif" />
+    <Content Include="Content\telerik\Silver\loading_2x.gif" />
+    <Content Include="Content\telerik\Silver\markers.png" />
+    <Content Include="Content\telerik\Silver\markers_2x.png" />
+    <Content Include="Content\telerik\Silver\slider-h.gif" />
+    <Content Include="Content\telerik\Silver\slider-v.gif" />
+    <Content Include="Content\telerik\Silver\sprite.png" />
+    <Content Include="Content\telerik\Silver\sprite_2x.png" />
+    <Content Include="Content\telerik\Silver\sprite_kpi.png" />
+    <Content Include="Content\telerik\Silver\sprite_kpi_2x.png" />
+    <Content Include="Content\telerik\textures\brushed-metal.png" />
+    <Content Include="Content\telerik\textures\dots1.png" />
+    <Content Include="Content\telerik\textures\dots10.png" />
+    <Content Include="Content\telerik\textures\dots11.png" />
+    <Content Include="Content\telerik\textures\dots12.png" />
+    <Content Include="Content\telerik\textures\dots13.png" />
+    <Content Include="Content\telerik\textures\dots2.png" />
+    <Content Include="Content\telerik\textures\dots3.png" />
+    <Content Include="Content\telerik\textures\dots4.png" />
+    <Content Include="Content\telerik\textures\dots5.png" />
+    <Content Include="Content\telerik\textures\dots6.png" />
+    <Content Include="Content\telerik\textures\dots7.png" />
+    <Content Include="Content\telerik\textures\dots8.png" />
+    <Content Include="Content\telerik\textures\dots9.png" />
+    <Content Include="Content\telerik\textures\glass-lighter.png" />
+    <Content Include="Content\telerik\textures\glass.png" />
+    <Content Include="Content\telerik\textures\highlight.png" />
+    <Content Include="Content\telerik\textures\hsv-gradient.png" />
+    <Content Include="Content\telerik\textures\hue.png" />
+    <Content Include="Content\telerik\textures\leather1.png" />
+    <Content Include="Content\telerik\textures\leather2.png" />
+    <Content Include="Content\telerik\textures\noise.png" />
+    <Content Include="Content\telerik\textures\stripe1.png" />
+    <Content Include="Content\telerik\textures\stripe2.png" />
+    <Content Include="Content\telerik\textures\stripe3.png" />
+    <Content Include="Content\telerik\textures\stripe4.png" />
+    <Content Include="Content\telerik\textures\stripe5.png" />
+    <Content Include="Content\telerik\textures\stripe6.png" />
+    <Content Include="Content\telerik\textures\transparency.png" />
+    <Content Include="Content\telerik\textures\transtexture.png" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="img\001_01.png" />
+    <Content Include="img\001_013.png" />
+    <Content Include="img\001_01a.png" />
+    <Content Include="img\001_01x.png" />
+    <Content Include="img\001_02.png" />
+    <Content Include="img\001_05.png" />
+    <Content Include="img\001_051.png" />
+    <Content Include="img\001_06.png" />
+    <Content Include="img\001_061.png" />
+    <Content Include="img\001_07.png" />
+    <Content Include="img\001_072.png" />
+    <Content Include="img\001_08.png" />
+    <Content Include="img\001_081.png" />
+    <Content Include="img\001_09.png" />
+    <Content Include="img\001_091.png" />
+    <Content Include="img\001_10.png" />
+    <Content Include="img\001_11.png" />
+    <Content Include="img\001_20.png" />
+    <Content Include="img\001_31.png" />
+    <Content Include="img\001_47.png" />
+    <Content Include="img\001_49.png" />
+    <Content Include="img\001_50.png" />
+    <Content Include="img\001_76.png" />
+    <Content Include="img\001_77.png" />
+    <Content Include="img\001_78.png" />
+    <Content Include="img\001_79.png" />
+    <Content Include="img\a.gif" />
+    <Content Include="img\add.png" />
+    <Content Include="img\agenda.png" />
+    <Content Include="img\barcode2dx.png" />
+    <Content Include="img\brushes.png" />
+    <Content Include="img\calendar.gif" />
+    <Content Include="img\calendario.png" />
+    <Content Include="img\camera.png" />
+    <Content Include="img\carga.gif" />
+    <Content Include="img\certificate.png" />
+    <Content Include="img\checkmark.png" />
+    <Content Include="img\checkmark1.png" />
+    <Content Include="img\checkmark10.png" />
+    <Content Include="img\checkmark11.png" />
+    <Content Include="img\checkmark9.png" />
+    <Content Include="img\chess.png" />
+    <Content Include="img\Comunicado.PNG" />
+    <Content Include="img\construccion.jpg" />
+    <Content Include="img\curriculum.png" />
+    <Content Include="img\Dashboard_COVID.jpg" />
+    <Content Include="img\Dashboard_Genoma.jpg" />
+    <Content Include="img\de.gif" />
+    <Content Include="img\degrade_head.png" />
+    <Content Include="img\diskette.png" />
+    <Content Include="img\down.png" />
+    <Content Include="img\en.gif" />
+    <Content Include="img\es.gif" />
+    <Content Include="img\excel_download.gif" />
+    <Content Include="img\firma.png" />
+    <Content Include="img\Folder.png" />
+    <Content Include="img\FolderDocuments.png" />
+    <Content Include="img\FolderGrey.png" />
+    <Content Include="img\FolderMusic.png" />
+    <Content Include="img\FolderNetwork.png" />
+    <Content Include="img\foot-logo.png" />
+    <Content Include="img\fresh-seaweeds.gif" />
+    <Content Include="img\front_desk.png" />
+    <Content Include="img\gear.png" />
+    <Content Include="img\guitar.png.png" />
+    <Content Include="img\hammer.png" />
+    <Content Include="img\Headphones.png" />
+    <Content Include="img\help.png" />
+    <Content Include="img\home.png" />
+    <Content Include="img\iconos_menu\administrador.ico" />
+    <Content Include="img\iconos_menu\administrador.png" />
+    <Content Include="img\iconos_menu\animal.png" />
+    <Content Include="img\iconos_menu\asignar_examen_laboratorio.png" />
+    <Content Include="img\iconos_menu\blood.ico" />
+    <Content Include="img\iconos_menu\busqueda_ordenes.png" />
+    <Content Include="img\iconos_menu\calidad.ico" />
+    <Content Include="img\iconos_menu\cepas.jpg" />
+    <Content Include="img\iconos_menu\codigo.ico" />
+    <Content Include="img\iconos_menu\codigos_muestra.png" />
+    <Content Include="img\iconos_menu\configurar_plantilla.png" />
+    <Content Include="img\iconos_menu\consultas.png" />
+    <Content Include="img\iconos_menu\control_calidad.png" />
+    <Content Include="img\iconos_menu\default.png" />
+    <Content Include="img\iconos_menu\dog.ico" />
+    <Content Include="img\iconos_menu\edicion.png" />
+    <Content Include="img\iconos_menu\GeneradordeQR.png" />
+    <Content Include="img\iconos_menu\hospital.ico" />
+    <Content Include="img\iconos_menu\impresion_codigo_muestra.png" />
+    <Content Include="img\iconos_menu\impresion_resultados.png" />
+    <Content Include="img\iconos_menu\liberacion.png" />
+    <Content Include="img\iconos_menu\listado_reportes.png" />
+    <Content Include="img\iconos_menu\medical_invoice_information.ico" />
+    <Content Include="img\iconos_menu\microscopio.ico" />
+    <Content Include="img\iconos_menu\muestra.png" />
+    <Content Include="img\iconos_menu\muestras.ico" />
+    <Content Include="img\iconos_menu\paciente.png" />
+    <Content Include="img\iconos_menu\personal.ico" />
+    <Content Include="img\iconos_menu\procesamiento.png" />
+    <Content Include="img\iconos_menu\Recepciondemuestras.png" />
+    <Content Include="img\iconos_menu\recepcion_muestra.png" />
+    <Content Include="img\iconos_menu\Recepcion_Rechazo.png" />
+    <Content Include="img\iconos_menu\Registrodeexamenes.png" />
+    <Content Include="img\iconos_menu\RegistrodeMateriales.png" />
+    <Content Include="img\iconos_menu\Registrodeusuarios.png" />
+    <Content Include="img\iconos_menu\registro_analitos.png" />
+    <Content Include="img\iconos_menu\registro_area_procesamiento.png" />
+    <Content Include="img\iconos_menu\registro_categoria.png" />
+    <Content Include="img\iconos_menu\registro_criterio_rechazo.png" />
+    <Content Include="img\iconos_menu\Registro_DISA.png" />
+    <Content Include="img\iconos_menu\Registro_EESS_LAB.png" />
+    <Content Include="img\iconos_menu\registro_examenes.png" />
+    <Content Include="img\iconos_menu\registro_materiales.png" />
+    <Content Include="img\iconos_menu\Registro_MicroRED.png" />
+    <Content Include="img\iconos_menu\registro_orden_animal.png" />
+    <Content Include="img\iconos_menu\registro_orden_cepas.png" />
+    <Content Include="img\iconos_menu\registro_orden_humano.png" />
+    <Content Include="img\iconos_menu\registro_orden_sangre.png" />
+    <Content Include="img\iconos_menu\registro_presentaciones.png" />
+    <Content Include="img\iconos_menu\registro_reactivos.png" />
+    <Content Include="img\iconos_menu\registro_recepcion_muestra.png" />
+    <Content Include="img\iconos_menu\Registro_RED.png" />
+    <Content Include="img\iconos_menu\registro_resultados.png" />
+    <Content Include="img\iconos_menu\registro_roles.png" />
+    <Content Include="img\iconos_menu\registro_servicios.png" />
+    <Content Include="img\iconos_menu\registro_tipo_muestra.png" />
+    <Content Include="img\iconos_menu\registro_usuarios.png" />
+    <Content Include="img\iconos_menu\RENIPRESS.png" />
+    <Content Include="img\iconos_menu\report.ico" />
+    <Content Include="img\iconos_menu\reportes.ico" />
+    <Content Include="img\iconos_menu\reportes.png" />
+    <Content Include="img\iconos_menu\reportes2.png" />
+    <Content Include="img\iconos_menu\reportes32.png" />
+    <Content Include="img\iconos_menu\resultados_online.png" />
+    <Content Include="img\iconos_menu\Semaforo.png" />
+    <Content Include="img\iconos_menu\TipodeMuestra.png" />
+    <Content Include="img\iconos_menu\tubo.ico" />
+    <Content Include="img\iconos_menu\users.ico" />
+    <Content Include="img\iconos_menu\validacion_pacientes_reniec.png" />
+    <Content Include="img\iconos_menu\validacion_resultados.png" />
+    <Content Include="img\iconos_menu\Verifiacionderesultados.png" />
+    <Content Include="img\imgPdf.gif" />
+    <Content Include="img\INS_Web.png" />
+    <Content Include="img\INS_Web2.png" />
+    <Content Include="img\it.gif" />
+    <Content Include="img\ja.gif" />
+    <Content Include="img\Laptop.png" />
+    <Content Include="img\loading.gif" />
+    <Content Include="img\logo ins.jpg" />
+    <Content Include="img\logo institucional.png" />
+    <Content Include="img\logo regional.png" />
+    <Content Include="img\logo.jpg" />
+    <Content Include="img\logo.png" />
+    <Content Include="img\LogoInacal.jpg" />
+    <Content Include="img\logoMinsa.png" />
+    <Content Include="img\Marcadeagua.png" />
+    <Content Include="img\mensajeINS.bmp" />
+    <Content Include="img\monitor.png" />
+    <Content Include="img\music.png" />
+    <Content Include="img\MyComputer.png" />
+    <Content Include="img\Network.png" />
+    <Content Include="img\openMenuRight.png" />
+    <Content Include="img\pdf-icon.gif" />
+    <Content Include="img\pdf-icon.png" />
+    <Content Include="img\pencil.png" />
+    <Content Include="img\picture.png" />
+    <Content Include="img\quicktime.png" />
+    <Content Include="img\redactar.png" />
+    <Content Include="img\REGIONAL ins.png" />
+    <Content Include="img\remove.png" />
+    <Content Include="img\ru.gif" />
+    <Content Include="img\se.gif" />
+    <Content Include="img\sello.png" />
+    <Content Include="img\Sello_VIH.png" />
+    <Content Include="img\Semaforo-Amarillo.png" />
+    <Content Include="img\Semaforo-Rojo.png" />
+    <Content Include="img\Semaforo-Verde.png" />
+    <Content Include="img\sended.png" />
+    <Content Include="img\star.png" />
+    <Content Include="img\tinta.png" />
+    <Content Include="img\Tower.png" />
+    <Content Include="img\user.png" />
+    <Content Include="img\video.png" />
+    <Content Include="QR\WFCodBar.aspx" />
+    <Content Include="QR\WFCodBarra.aspx" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+    <Content Include="Scripts\App\AnalitoValor.js" />
+    <Content Include="Scripts\App\AnalitoOpcion.js" />
+    <Content Include="Scripts\App\AnalitoMetodo.js" />
+    <Content Include="Scripts\App\AnalitoExamen.js" />
+    <Content Include="Scripts\App\Animal.js" />
+    <Content Include="Scripts\App\AreaExamen.js" />
+    <Content Include="Scripts\App\AreaProcesamiento.js" />
+    <Content Include="Scripts\App\Catalogo.js" />
+    <Content Include="Scripts\App\Categoria.js" />
+    <Content Include="Scripts\App\Contactar.js" />
+    <Content Include="Scripts\App\CuentaUsuario.js" />
+    <Content Include="Scripts\App\DetalleAnalito.js" />
+    <Content Include="Scripts\App\DetalleCatalogo.js" />
+    <Content Include="Scripts\App\DisaMant.js" />
+    <Content Include="Scripts\App\Dropdownlists.js" />
+    <Content Include="Scripts\App\ExamenMetodo.js" />
+    <Content Include="Scripts\App\IngresoResultadoExcel.js" />
+    <Content Include="Scripts\App\Institucion.js" />
+    <Content Include="Scripts\App\Login.js" />
+    <Content Include="Scripts\App\Material.js" />
+    <Content Include="Scripts\App\MicroRedMant.js" />
+    <Content Include="Scripts\App\OrdenMuestraDetalle.js" />
+    <Content Include="Scripts\App\OrdenMuestraReferenciada.js" />
+    <Content Include="Scripts\App\Orden\Covid.js" />
+    <Content Include="Scripts\App\Orden\CrearOrden.js" />
+    <Content Include="Scripts\App\Orden\OrdenExamenPruebaRapida.js" />
+    <Content Include="Scripts\App\Orden\OrdenReferencia.js" />
+    <Content Include="Scripts\App\Orden\Solicitante.js" />
+    <Content Include="Scripts\App\PEED\ConfiguracionMaterialEval.js" />
+    <Content Include="Scripts\App\PEED\ConfiguracionPanelEval.js" />
+    <Content Include="Scripts\App\PEED\IngresoResultados.js" />
+    <Content Include="Scripts\App\Plantilla\ListaDato.js" />
+    <Content Include="Scripts\App\Plantilla\OpcionDato.js" />
+    <Content Include="Scripts\App\PresentacionTipoMuestra.js" />
+    <Content Include="Scripts\App\ConsultaResultados.js" />
+    <Content Include="Scripts\App\Reactivo.js" />
+    <Content Include="Scripts\App\ReactivoPresentacion.js" />
+    <Content Include="Scripts\App\RedMant.js" />
+    <Content Include="Scripts\App\Rol.js" />
+    <Content Include="Scripts\App\CriterioRechazo.js" />
+    <Content Include="Scripts\App\Dato.js" />
+    <Content Include="Scripts\App\EnfermedadExamen.js" />
+    <Content Include="img\chosen-sprite%402x.png" />
+    <Content Include="img\chosen-sprite.png" />
+    <Content Include="Scripts\App\Analito.js" />
+    <Content Include="Scripts\App\Examen.js" />
+    <Content Include="Scripts\App\BancoSangre.js" />
+    <Content Include="Scripts\App\ExamenTipoMuestra.js" />
+    <Content Include="Scripts\App\Laboratorio.js" />
+    <Content Include="Scripts\App\LaboratorioExamen.js" />
+    <Content Include="Scripts\App\LiberacionResultados.js" />
+    <Content Include="Scripts\App\NetLab.js" />
+    <Content Include="Scripts\App\Orden\PopupAgregarExamen.js" />
+    <Content Include="Scripts\App\Orden\PopupAgregarMaterial.js" />
+    <Content Include="Scripts\App\Orden\Search.js" />
+    <Content Include="Scripts\App\Paciente\New.js" />
+    <Content Include="Scripts\App\Paciente\ListaValidar.js" />
+    <Content Include="Scripts\App\Plantilla\EstablecimientoPlantilla.js" />
+    <Content Include="Scripts\App\Plantilla\MuestraPlantilla.js" />
+    <Content Include="Scripts\App\Plantilla\Plantilla.js" />
+    <Content Include="Scripts\App\Seguimiento.js" />
+    <Content Include="Scripts\App\Solicitante.js" />
+    <Content Include="Scripts\App\SolicitudExamen.js" />
+    <Content Include="Scripts\App\tabladata.js" />
+    <Content Include="Scripts\App\tabladata1.js" />
+    <Content Include="Scripts\App\UsuarioAreaProcesamiento.js" />
+    <Content Include="Scripts\App\UsuarioEstablecimiento.js" />
+    <Content Include="Scripts\App\UsuarioExamen.js" />
+    <Content Include="Scripts\App\UsuarioRol.js" />
+    <Content Include="Scripts\App\Setup.js" />
+    <Content Include="Scripts\App\RolMenu.js" />
+    <Content Include="Scripts\App\TipoMuestraCriterioRechazo.js" />
+    <Content Include="Scripts\App\Disa.js" />
+    <Content Include="Scripts\App\ValidacionResultadosPendientes.js" />
+    <Content Include="Scripts\App\ValidacionResultados.js" />
+    <Content Include="Scripts\App\ResultadosAnalisis.js" />
+    <Content Include="Scripts\App\Presentacion.js" />
+    <Content Include="Scripts\App\Orden.js" />
+    <Content Include="Scripts\App\OrdenAnimal.js" />
+    <Content Include="Scripts\App\RecepcionMuestra.js" />
+    <Content Include="Scripts\App\OrdenMuestra.js" />
+    <Content Include="Scripts\App\Paciente.js" />
+    <Content Include="Scripts\App\Ubigeo.js" />
+    <Content Include="Scripts\App\Usuario.js" />
+    <Content Include="Scripts\App\TipoMuestra.js" />
+    <Content Include="Scripts\bootstrap-notify.js" />
+    <Content Include="Scripts\bootstrap-notify.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSans-Bold.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSans-BoldOblique.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSans-ExtraLight.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSans-Oblique.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSans.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSansMono-Bold.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSansMono-BoldOblique.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSansMono-Oblique.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSansMono.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSerif-Bold.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSerif-BoldItalic.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSerif-Italic.ttf" />
+    <Content Include="Content\telerik\fonts\DejaVu\DejaVuSerif.ttf" />
+    <Content Include="Content\telerik\images\kendoui.ttf" />
+    <Content Include="Content\telerik\images\kendoui.woff" />
+    <Content Include="App_Browsers\qt.browser" />
+    <Content Include="Content\bootstrap-chosen-variables.less" />
+    <Content Include="Content\bootstrap-chosen-variables.scss" />
+    <Content Include="Content\bootstrap-chosen.less" />
+    <Content Include="Content\bootstrap-chosen.scss" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="bin\NetLab.dll.config" />
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Documentos\CARTERA DE SERVICIOS.xlsx" />
+    <Content Include="Documentos\FORMULARIO_PARA_ACCESO_25.10.19_FOR568.pdf" />
+    <Content Include="Documentos\RD_ITT_535_CREACIÓN_CORREO_ELECTRÓNICO_PARA_ACCESO_NETLAB.pdf" />
+    <Content Include="Documentos\RD_ITT_536_CORRECTO_LLENADO_FORMULARIO_ACCESO_NETLAB.pdf" />
+    <Content Include="Documentos\RD_ITT_537_REGISTRO_Y_ACTUALIZACIÓN_DE_USUARIOS_SISTEMA_NETLAB.pdf" />
+    <Content Include="Documentos\SOLICITUD_DE_ACCESO_25.10.19_FOR567.pdf" />
+    <Content Include="Documentos\CARTERA DE SERVICIOSv1.xlsx" />
+    <Content Include="Documentos\FORMULARIO_PARA_ACCESO_NETLABV2_FOR567.pdf" />
+    <Content Include="Documentos\FORMULARIO_PARA_ACTUALIZACION_USUARIOS_NETLABV2_FOR568.pdf" />
+    <Content Include="Documentos\ITT-CNSP-385 ED.02.pdf" />
+    <Content Include="Documentos\ITT-CNSP-527 ED. 01.pdf" />
+    <Content Include="Documentos\ITT-CNSP-539 ED. 01.pdf" />
+    <Content Include="Documentos\ITT_535_CREACIÓN_CORREO_ELECTRÓNICO_PARA_ACCESO_NETLAB.pdf" />
+    <Content Include="Documentos\ITT_536_CORRECTO_LLENADO_FORMULARIO_ACCESO_NETLAB.pdf" />
+    <Content Include="Documentos\ITT_537_REGISTRO_Y_ACTUALIZACIÓN_DE_USUARIOS_SISTEMA_NETLAB.pdf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\NetLab.pubxml" />
+    <None Include="Properties\PublishProfiles\NetLabPublish.pubxml" />
+    <Content Include="Scripts\bower.json" />
+    <None Include="Properties\PublishProfiles\Netlabv2.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\chosen.ajaxaddition.jquery.js" />
+    <Content Include="Scripts\chosen.jquery.min.js" />
+    <Content Include="Scripts\chosen.proto.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.js" />
+    <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap4.js" />
+    <Content Include="Scripts\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\dataTables.foundation.js" />
+    <Content Include="Scripts\dataTables.foundation.min.js" />
+    <Content Include="Scripts\dataTables.jqueryui.js" />
+    <Content Include="Scripts\dataTables.jqueryui.min.js" />
+    <Content Include="Scripts\datatables.js" />
+    <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\dataTables.semanticui.js" />
+    <Content Include="Scripts\dataTables.semanticui.min.js" />
+    <Content Include="Scripts\datepicker-es.js" />
+    <Content Include="Scripts\dpLoading-2.x-min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-2.1.3.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.alerts\images\help.gif" />
+    <Content Include="Scripts\jquery.alerts\images\important.gif" />
+    <Content Include="Scripts\jquery.alerts\images\info.gif" />
+    <Content Include="Scripts\jquery.alerts\images\title.gif" />
+    <Content Include="Scripts\jquery.alerts\jquery.alerts.css" />
+    <Content Include="Scripts\jquery.alerts\jquery.alerts.js" />
+    <Content Include="Scripts\jquery.autocomplete.multiselect.js" />
+    <Content Include="Scripts\jquery.dialogOptions.js" />
+    <Content Include="Scripts\jquery.plugin.min.js" />
+    <Content Include="Scripts\jquery.sumoselect.min.js" />
+    <Content Include="Scripts\jquery.timeentry.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\JsExcel\cpexcel.js" />
+    <Content Include="Scripts\JsExcel\jszip.js" />
+    <Content Include="Scripts\JsExcel\shim.js" />
+    <Content Include="Scripts\JsExcel\xlsx.core.min.js" />
+    <Content Include="Scripts\JsExcel\xlsx.js" />
+    <Content Include="Scripts\JsExcel\xlsxworker.js" />
+    <Content Include="Scripts\JsPDF\AcroForm.js" />
+    <Content Include="Scripts\JsPDF\basic.js" />
+    <Content Include="Scripts\JsPDF\circles.js" />
+    <Content Include="Scripts\JsPDF\d3.js" />
+    <Content Include="Scripts\JsPDF\editor.js" />
+    <Content Include="Scripts\JsPDF\faker.min.js" />
+    <Content Include="Scripts\JsPDF\font-faces.js" />
+    <Content Include="Scripts\JsPDF\font-size.js" />
+    <Content Include="Scripts\JsPDF\from-html.js" />
+    <Content Include="Scripts\JsPDF\grids-responsive-min.css" />
+    <Content Include="Scripts\JsPDF\html2canvas.js" />
+    <Content Include="Scripts\JsPDF\images.js" />
+    <Content Include="Scripts\JsPDF\jquery-git.js" />
+    <Content Include="Scripts\JsPDF\jspdf.debug.js" />
+    <Content Include="Scripts\JsPDF\jspdf.min.js" />
+    <Content Include="Scripts\JsPDF\jspdf.plugin.autotable.js" />
+    <Content Include="Scripts\JsPDF\jspdf.plugin.autotable.min.js" />
+    <Content Include="Scripts\JsPDF\jspdf.plugin.autotable.src.js" />
+    <Content Include="Scripts\JsPDF\kitchen-sink.js" />
+    <Content Include="Scripts\JsPDF\landscape.js" />
+    <Content Include="Scripts\JsPDF\lines.js" />
+    <Content Include="Scripts\JsPDF\moment.js" />
+    <Content Include="Scripts\JsPDF\pure-min.css" />
+    <Content Include="Scripts\JsPDF\rectangles.js" />
+    <Content Include="Scripts\JsPDF\require.js" />
+    <Content Include="Scripts\JsPDF\string-splitting.js" />
+    <Content Include="Scripts\JsPDF\test_harness.js" />
+    <Content Include="Scripts\JsPDF\text-colors.js" />
+    <Content Include="Scripts\JsPDF\theme-ambiance.js" />
+    <Content Include="Scripts\JsPDF\triangles.js" />
+    <Content Include="Scripts\JsPDF\two-page.js" />
+    <Content Include="Scripts\JsPDF\user-input.js" />
+    <Content Include="Scripts\master.js" />
+    <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\multiple-select.js" />
+    <Content Include="Scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="Scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="Scripts\MvcFoolproofValidation.min.js" />
+    <Content Include="Scripts\App\PEED\ConfiguracionEval.js" />
+    <Content Include="Scripts\PrintArea.js" />
+    <Content Include="Scripts\printThis.js" />
+    <Content Include="Scripts\App\ReportePDF.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\telerik\cultures\kendo.culture.es-PE.min.js" />
+    <Content Include="Scripts\telerik\kendo.all.min.js" />
+    <Content Include="Scripts\telerik\messages\kendo.messages.es-ES.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Views\CuentaUsuario\SeguimientoEstadoSolicitud.cshtml" />
+    <Content Include="Views\MuestrasOdkCollect\Index.cshtml" />
+    <Content Include="Views\ProcesoDesatendido\RegistroPacientes.cshtml" />
+    <Content Include="Views\ProtocoloLaboratorio\Protocolo.cshtml" />
+    <Content Include="Views\RecepcionMuestraKobo\Index.cshtml" />
+    <Content Include="Views\ReporteResultados\PrintFooter.html" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Muestra\GenerarCodigo.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Examen\Index.cshtml" />
+    <Content Include="Views\Examen\_NuevoExamen.cshtml" />
+    <Content Include="Views\Examen\_EditarExamen.cshtml" />
+    <Content Include="Views\Muestra\MostrarCodigo.cshtml" />
+    <Content Include="Views\OrdenMuestra\BusquedaMuestraRecepcionar.cshtml" />
+    <Content Include="Views\Enfermedad\EnfermedadExamen.cshtml" />
+    <Content Include="Views\Analito\AnalitoExamen.cshtml" />
+    <Content Include="Views\Enfermedad\_AgregarEnfermedad.cshtml" />
+    <Content Include="Views\Usuario\Index.cshtml" />
+    <Content Include="Views\Usuario\_PartialAgregarUsuario.cshtml" />
+    <Content Include="Views\Usuario\_PartialEditarUsuario.cshtml" />
+    <Content Include="Views\Home\EnConstruccion.cshtml" />
+    <Content Include="Views\Animal\Agregar.cshtml" />
+    <Content Include="Views\Shared\_Departamento.cshtml" />
+    <Content Include="Views\Shared\_Provincia.cshtml" />
+    <Content Include="Views\Shared\_Distrito.cshtml" />
+    <Content Include="Views\TipoMuestra\Index.cshtml" />
+    <Content Include="Views\TipoMuestra\_EditarTipoMuestra.cshtml" />
+    <Content Include="Views\TipoMuestra\_NuevoTipoMuestra.cshtml" />
+    <Content Include="Views\Presentacion\Index.cshtml" />
+    <Content Include="Views\Presentacion\_NuevoPresentacion.cshtml" />
+    <Content Include="Views\Presentacion\_EditarPresentacion.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregaDatoClinicoTabla.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarAnalito.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarCmbExamen.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarCmbMaterial.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarCmbTipoMuestra.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarDatoClinicoCombo.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarDatoClinicoTexto.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarExamenTabla.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarTblDatoClinico.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarTblMaterial.cshtml" />
+    <Content Include="Views\BancoSangre\_AgregarTblExamen.cshtml" />
+    <Content Include="Views\BancoSangre\_PartialAgregarMateriales.cshtml" />
+    <Content Include="Views\BancoSangre\_PartialDatosExamenes.cshtml" />
+    <Content Include="Views\BancoSangre\_PartialDatosNoEditable.cshtml" />
+    <Content Include="Views\BancoSangre\Agregar.cshtml" />
+    <Content Include="Views\BancoSangre\Guardar.cshtml" />
+    <Content Include="Views\BancoSangre\SeleccionarEnfermedad.cshtml" />
+    <Content Include="Views\BancoSangre\Vieww.cshtml" />
+    <Content Include="Views\OrdenMuestra\RecepcionarMuestra.cshtml" />
+    <Content Include="Views\OrdenMuestra\ReferenciarMuestra.cshtml" />
+    <Content Include="Views\Orden\_TblDatoClinico.cshtml" />
+    <Content Include="Views\Orden\New.cshtml" />
+    <Content Include="Views\Animal\Index.cshtml" />
+    <Content Include="Views\Animal\_Raza.cshtml" />
+    <Content Include="Views\BancoSangre\_Result.cshtml" />
+    <Content Include="Views\OrdenAnimal\Agregar.cshtml" />
+    <Content Include="Views\Paciente\Index.cshtml" />
+    <Content Include="Views\Paciente\New.cshtml" />
+    <Content Include="Views\BancoSangre\Ver.cshtml" />
+    <Content Include="Views\Usuario\_AgregarRolUsuario.cshtml" />
+    <Content Include="Views\Orden\_Examen.cshtml" />
+    <Content Include="Views\Orden\_FormPopupEnfermedadExamen.cshtml" />
+    <Content Include="Views\Orden\_FormPopupMaterial.cshtml" />
+    <Content Include="Views\Orden\_Material.cshtml" />
+    <Content Include="Views\Orden\_TblExamen.cshtml" />
+    <Content Include="Views\Orden\_TblExamenNoEdit.cshtml" />
+    <Content Include="Views\Orden\_TblMaterial.cshtml" />
+    <Content Include="Views\Orden\_TblMaterialNoEdit.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestra.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraNoEdit.cshtml" />
+    <Content Include="Views\Orden\_TipoMuestra.cshtml" />
+    <Content Include="Views\Animal\Editar.cshtml" />
+    <Content Include="Views\Muestra\ImprimirGenerados.cshtml" />
+    <Content Include="Views\AreaProcesamiento\Index.cshtml" />
+    <Content Include="Views\AreaProcesamiento\_NuevaArea.cshtml" />
+    <Content Include="Views\AreaProcesamiento\_EditarArea.cshtml" />
+    <Content Include="Views\Orden\_TabDatoClinico.cshtml" />
+    <Content Include="Views\Orden\_TabDatoClinicoNoEdit.cshtml" />
+    <Content Include="Views\Orden\_TblDatoClinicoNoEdit.cshtml" />
+    <Content Include="Views\Categoria\Index.cshtml" />
+    <Content Include="Views\Categoria\_Categorias.cshtml" />
+    <Content Include="Views\Categoria\_NuevaCategoria.cshtml" />
+    <Content Include="Views\Categoria\_EditarCategoria.cshtml" />
+    <Content Include="Views\OrdenMuestra\PreviewOrdenMuestra.cshtml" />
+    <Content Include="Views\OrdenMuestra\OrdenMuestraRecepcionada.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\Index.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\IngresarResultados.cshtml" />
+    <Content Include="Views\Orden\Search.cshtml" />
+    <Content Include="Views\Orden\Show.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\ValidarMuestras.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\SeleccionarAP.cshtml" />
+    <Content Include="Views\Datos\Index.cshtml" />
+    <Content Include="Views\Datos\_NuevoDato.cshtml" />
+    <Content Include="Views\AreaProcesamiento\AreaExamen.cshtml" />
+    <Content Include="Scripts\telerik\kendo.all.min.js.map" />
+    <Content Include="Views\Laboratorio\Index.cshtml" />
+    <Content Include="Views\Laboratorio\LaboratorioExamen.cshtml" />
+    <Content Include="Views\Laboratorio\_AgregarExamen.cshtml" />
+    <Content Include="Views\AreaProcesamiento\_AgregarExamen.cshtml" />
+    <Content Include="Views\Plantilla\Index.cshtml" />
+    <Content Include="Views\Datos\_EditarDato.cshtml" />
+    <Content Include="Views\Analito\_AgregarAnalito.cshtml" />
+    <Content Include="Views\Orden\_EnfermedadExamen.cshtml" />
+    <Content Include="Views\Plantilla\_NuevaPlantilla.cshtml" />
+    <Content Include="Views\Plantilla\_EditarPlantilla.cshtml" />
+    <Content Include="Views\Establecimiento\EstablecimientoPlantilla.cshtml" />
+    <Content Include="Views\Establecimiento\_AgregarEstablecimiento.cshtml" />
+    <Content Include="Views\Plantilla\MuestraPlantilla.cshtml" />
+    <Content Include="Views\ValidacionResultados\Index.cshtml" />
+    <Content Include="Views\ValidacionResultados\ValidarResultados.cshtml" />
+    <Content Include="Views\Plantilla\_NuevaMuestra.cshtml" />
+    <Content Include="Views\Plantilla\_Examen.cshtml" />
+    <Content Include="Views\Plantilla\_Muestra.cshtml" />
+    <Content Include="Views\Plantilla\_Material.cshtml" />
+    <Content Include="Views\OrdenMuestra\_Examen.cshtml" />
+    <Content Include="Views\OrdenMuestra\EditarReferencias.cshtml" />
+    <Content Include="Views\Orden\_TblMaterialReferenciar.cshtml" />
+    <Content Include="Views\LiberacionResultados\Index.cshtml" />
+    <Content Include="Views\LiberacionResultados\LiberarResultados.cshtml" />
+    <Content Include="Views\ValidacionResultados\Update.cshtml" />
+    <Content Include="Views\LiberacionResultados\Update.cshtml" />
+    <Content Include="Views\Laboratorio\_EditarLaboratorio.cshtml" />
+    <Content Include="Views\CriterioRechazo\Index.cshtml" />
+    <Content Include="Views\CriterioRechazo\_NuevoCriterio.cshtml" />
+    <Content Include="Views\CriterioRechazo\_EditarCriterio.cshtml" />
+    <Content Include="Views\Usuario\_AgregarAreaProcesamiento.cshtml" />
+    <Content Include="Views\Paciente\ListaValidar.cshtml" />
+    <Content Include="Views\Paciente\Validar.cshtml" />
+    <Content Include="Views\Orden\_TblMultiple.cshtml" />
+    <Content Include="Views\Usuario\_PartialDatosUsuario.cshtml" />
+    <Content Include="Views\Shared\SessionTimeout.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\Blank.cshtml" />
+    <Content Include="Views\TipoMuestra\TipoMuestraCriterioRechazo.cshtml" />
+    <Content Include="Views\TipoMuestra\_AgregarCriterio.cshtml" />
+    <Content Include="Views\Presentacion\AgregarTipoMuestra.cshtml" />
+    <Content Include="Views\Presentacion\PresentacionTipoMuestra.cshtml" />
+    <Content Include="Views\Orden\_TblMultipleRecepcionar.cshtml" />
+    <Content Include="Views\Rol\Index.cshtml" />
+    <Content Include="Views\Rol\_EditarRol.cshtml" />
+    <Content Include="Views\Rol\_NuevoRol.cshtml" />
+    <Content Include="Views\Rol\_AgregarMenu.cshtml" />
+    <Content Include="Views\Rol\RolMenu.cshtml" />
+    <Content Include="Views\Analito\Index.cshtml" />
+    <Content Include="Views\Analito\_NuevoAnalito.cshtml" />
+    <Content Include="Views\Analito\_EditarAnalito.cshtml" />
+    <Content Include="Views\Analito\AnalitoMetodo.cshtml" />
+    <Content Include="Views\Analito\_NuevoMetodo.cshtml" />
+    <Content Include="Views\Analito\_EditarMetodo.cshtml" />
+    <Content Include="Views\Analito\_NuevaOpcion.cshtml" />
+    <Content Include="Views\Analito\_EditarOpcion.cshtml" />
+    <Content Include="Views\Analito\AnalitoOpcion.cshtml" />
+    <Content Include="Views\Analito\AnalitoValor.cshtml" />
+    <Content Include="Views\Examen\ExamenTipoMuestra.cshtml" />
+    <Content Include="Views\Examen\_AgregarTipoMuestra.cshtml" />
+    <Content Include="Views\ReporteResultados\Index.cshtml" />
+    <Content Include="Views\Analito\_EditarValor.cshtml" />
+    <Content Include="Views\Analito\_NuevoValor.cshtml" />
+    <Content Include="Views\Material\Index.cshtml" />
+    <Content Include="Views\Material\_NuevoMaterial.cshtml" />
+    <Content Include="Views\Material\_Presentacion.cshtml" />
+    <Content Include="Views\Material\_Reactivo.cshtml" />
+    <Content Include="Views\Usuario\UsuarioRol.cshtml" />
+    <Content Include="Views\Usuario\UsuarioAreaProcesamiento.cshtml" />
+    <Content Include="Views\ConsultaResultados\Index.cshtml" />
+    <Content Include="Views\ConsultaResultados\Blank.cshtml" />
+    <Content Include="Views\Shared\_RedesOption.cshtml" />
+    <Content Include="Views\Shared\_MicroRedesOption.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraRecepcionar.cshtml" />
+    <Content Include="Views\Reactivo\Index.cshtml" />
+    <Content Include="Views\Reactivo\NuevoReactivo.cshtml" />
+    <Content Include="Views\Reactivo\EditarReactivo.cshtml" />
+    <Content Include="Views\Reactivo\AgregarPresentacion.cshtml" />
+    <Content Include="Views\Catalogo\DetalleCatalogo.cshtml" />
+    <Content Include="Views\Catalogo\Index.cshtml" />
+    <Content Include="Views\Orden\_FormSeleccionarPlantilla.cshtml" />
+    <Content Include="Views\Datos\ListaDatos.cshtml" />
+    <Content Include="Views\Datos\_NuevaLista.cshtml" />
+    <Content Include="Views\Datos\_EditarLista.cshtml" />
+    <Content Include="Views\Datos\OpcionDato.cshtml" />
+    <Content Include="Views\Datos\_NuevaOpcion.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraNoEditRecepcionar.cshtml" />
+    <Content Include="Views\Orden\_FormPopupCodigoMuestra.cshtml" />
+    <Content Include="Views\Login\OlvidoContrasena.cshtml" />
+    <Content Include="Views\Laboratorio\_EditarExamen.cshtml" />
+    <Content Include="Views\Cuenta\CambiarClave.cshtml" />
+    <Content Include="Views\Reactivo\ReactivoPresentacion.cshtml" />
+    <Content Include="Views\Orden\_TblMaterialRecepcionar.cshtml" />
+    <Content Include="Views\Orden\_NoAgregado.cshtml" />
+    <Content Include="Views\ReporteResultados\Index_Old.cshtml" />
+    <Content Include="Views\ReporteResultados\ResumenPorExamen.cshtml" />
+    <Content Include="Views\ValidacionResultados\DetalleAnalito.cshtml" />
+    <Content Include="Views\OrdenMuestra\BusquedaMuestraReferenciar.cshtml" />
+    <Content Include="Views\Login\SelectLocal.cshtml" />
+    <Content Include="Views\Datos\_EditarOpcion.cshtml" />
+    <Content Include="Views\CatalogoOffline\Index.cshtml" />
+    <Content Include="Views\CatalogoOffline\DetalleCatalogoOffline.cshtml" />
+    <Content Include="Views\Login\NuevaContrasena.cshtml" />
+    <Content Include="Views\ValidacionResultados\ValidarResultadosPendientes.cshtml" />
+    <Content Include="Views\Examen\ExamenMetodo.cshtml" />
+    <Content Include="Views\Examen\_AgregarMetodo.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\RecepcionPendiente.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\MuestrasValidadas.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\DetalleResultadoAnalisis.cshtml" />
+    <Content Include="Views\Usuario\UsuarioEstablecimiento.cshtml" />
+    <Content Include="Views\Disa\Index.cshtml" />
+    <Content Include="Views\MICRORED\Index.cshtml" />
+    <Content Include="Views\Red\Index.cshtml" />
+    <Content Include="Views\DisaMant\Index.cshtml" />
+    <Content Include="Views\DisaMant\_NuevoDisaMant.cshtml" />
+    <Content Include="Views\DisaMant\_EditarDisaMant.cshtml" />
+    <Content Include="Views\Red\_NuevoRedMant.cshtml" />
+    <Content Include="Views\Red\_EditarRedMant.cshtml" />
+    <Content Include="Views\MICRORED\_NuevoMicroRedMant.cshtml" />
+    <Content Include="Views\MICRORED\_Redes.cshtml" />
+    <Content Include="Views\MICRORED\_EditarMicroRedMant.cshtml" />
+    <Content Include="Views\EESS\_AgregarExamen.cshtml" />
+    <Content Include="Views\EESS\_EditarExamen.cshtml" />
+    <Content Include="Views\EESS\_EditarLaboratorio.cshtml" />
+    <Content Include="Views\EESS\Index.cshtml" />
+    <Content Include="Views\EESS\LaboratorioExamen.cshtml" />
+    <Content Include="Views\Material\_EditarMaterial.cshtml" />
+    <Content Include="Views\Laboratorio\_NuevoLaboratorio.cshtml" />
+    <Content Include="Views\EESS\NuevoEESS.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraManual.cshtml" />
+    <Content Include="Views\Orden\_TblMultipleManual.cshtml" />
+    <Content Include="Views\Orden\_FormPopupSolicitante.cshtml" />
+    <Content Include="Views\Orden\_PartialDatosSolicitante.cshtml" />
+    <Content Include="Views\Shared\_Solicitante.cshtml" />
+    <Content Include="Views\Paciente\_Busqueda.cshtml" />
+    <Content Include="Views\Reporte\GetReporte.cshtml" />
+    <Content Include="Views\Reporte\Index.cshtml" />
+    <Content Include="Views\Reporte\ObtencionMuestras.cshtml" />
+    <Content Include="Views\Reporte\_BarChartResult.cshtml" />
+    <Content Include="Views\Reporte\_ChartResult.cshtml" />
+    <Content Include="Views\Reporte\_RadarChartResult.cshtml" />
+    <Content Include="Views\Reporte\_PieChartResult.cshtml" />
+    <Content Include="Views\ValidacionResultados\Blank.cshtml" />
+    <Content Include="Views\ValidacionResultados\IngresarResultadosVerificador.cshtml" />
+    <Content Include="Views\ValidacionResultados\SeleccionarAPVerificador.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraShow.cshtml" />
+    <Content Include="Views\Shared\_ddlDisa.cshtml" />
+    <Content Include="Views\Shared\_ddlEstablecimiento.cshtml" />
+    <Content Include="Views\Shared\_ddlInstitucion.cshtml" />
+    <Content Include="Views\Shared\_ddlMicroRed.cshtml" />
+    <Content Include="Views\Shared\_ddlRed.cshtml" />
+    <Content Include="Views\ValidacionResultados\DetalleResultadoAnalisis.cshtml" />
+    <Content Include="Views\Muestra\ExporttPDF.cshtml" />
+    <Content Include="Views\Muestra\PDFCodigos.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_FormPopupEnfermedadExamen.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_TipoMuestra.cshtml" />
+    <Content Include="Views\OrdenMuestra\_DetalleOrden.cshtml" />
+    <Content Include="Views\OrdenMuestra\BusquedaMuestraRechazar.cshtml" />
+    <Content Include="Views\Analito\_DetalleOpciones.cshtml" />
+    <Content Include="Views\Analito\_AnalitoOpcion.cshtml" />
+    <Content Include="Views\Analito\_DetallesOpciones.cshtml" />
+    <Content Include="Views\Analito\AnalitoOpcion2.cshtml" />
+    <Content Include="Views\ResultadoSemaforo\Index.cshtml" />
+    <Content Include="Views\OrdenMuestra\_DetalleOrdenRechazo.cshtml" />
+    <Content Include="Views\CCSeguimiento\index.cshtml" />
+    <Content Include="Views\CCSeguimiento\_NuevoSeguimiento.cshtml" />
+    <Content Include="Views\CCSeguimiento\_EditarSeguimiento.cshtml" />
+    <Content Include="Views\CCSeguimiento\_NuevoSeguimientoDetalle.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\Index.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\Create.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\Edit.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\ConfigEvalPanel.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\_FormNuevoPanel.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\_FormEditarPanel.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\ConfigEvalPanelMaterial.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\_FormEditarMaterial.cshtml" />
+    <Content Include="Views\ConfiguracionEvalControlCalidad\_FormNuevoMaterial.cshtml" />
+    <Content Include="Views\ResultadoPEEC\_Index.cshtml" />
+    <Content Include="Views\ResultadoPEEC\BusquedaEvaluacion.cshtml" />
+    <Content Include="Views\ResultadoPEEC\ResultadoControlCalidadVd.cshtml" />
+    <Content Include="Views\ResultadoPEEC\_TablaResultadoSuceptibilidad.cshtml" />
+    <Content Include="Views\ResultadoPEEC\_TablaResultadoBaciloscopia.cshtml" />
+    <Content Include="Views\ResultadoPEEC\_TablaResultadoMedioCultivo.cshtml" />
+    <Content Include="Views\ConsultaResultados\ConsultaReporteResultado.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_FormCargaResultadoMasivo.cshtml" />
+    <Content Include="Views\Usuario\UsuarioEnfermedadExamen.cshtml" />
+    <Content Include="Views\Usuario\_AgregarExamen.cshtml" />
+    <Content Include="Views\Paciente\_PacienteNetLabv1.cshtml" />
+    <Content Include="Views\Paciente\_DetallePacienteNetLab1.cshtml" />
+    <Content Include="Views\Paciente\HistorialPacienteNetLab1.cshtml" />
+    <Content Include="Views\Institucion\Index.cshtml" />
+    <Content Include="Views\Institucion\_EditarInstitucion.cshtml" />
+    <Content Include="Views\Institucion\_NuevaInstitucion.cshtml" />
+    <Content Include="Views\Analito\AnalitoInterpretacion.cshtml" />
+    <Content Include="Views\Analito\_NuevaInterpretacion.cshtml" />
+    <Content Include="Views\Orden\SolicitudExamenTropismo.cshtml" />
+    <Content Include="Views\Reporte\_CantResulConsultados.cshtml" />
+    <Content Include="Views\Reporte\_CantResulConsultadosSolicitante.cshtml" />
+    <Content Include="Views\Reporte\_DetalleResulConsultados.cshtml" />
+    <Content Include="Views\Reporte\_DetalleResulConsultadosSolicitante.cshtml" />
+    <Content Include="Views\Reporte\ReporteCantidadBaciloscopia.cshtml" />
+    <Content Include="Views\Solicitante\Index.cshtml" />
+    <Content Include="Views\Solicitante\_FormEditarSolicitante.cshtml" />
+    <Content Include="Views\Solicitante\_FormPopupSolicitante.cshtml" />
+    <Content Include="Views\OrdenMuestra\MuestrasValidadas.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_FormAddPlantillaExamen.cshtml" />
+    <Content Include="Views\Login\Contactar.cshtml" />
+    <Content Include="Views\Orden\_ShowOrden.cshtml" />
+    <Content Include="Views\CuentaUsuario\Index.cshtml" />
+    <Content Include="Views\SolicitudExamen\Index.cshtml" />
+    <Content Include="Views\SolicitudExamen\RegistroSolicitudGenotipificacion.cshtml" />
+    <Content Include="Views\SolicitudExamen\RegistroSolicitudTropismo.cshtml" />
+    <Content Include="Views\SolicitudExamen\SolicitudExamenVih.cshtml" />
+    <Content Include="Views\SolicitudExamen\_Genotipificacion.cshtml" />
+    <Content Include="Views\SolicitudExamen\_Tropismo.cshtml" />
+    <Content Include="Views\Menu\Index.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_RecepcionarMuestra.cshtml" />
+    <Content Include="Views\Analito\_EditarAnalitoInterpretacion.cshtml" />
+    <Content Include="Views\ConsultaResultados\ConsultaExternaResultado.cshtml" />
+    <Content Include="Views\Muestra\ConsultaCodigosMuestra.cshtml" />
+    <Content Include="Views\Orden\_ResultadoVIH.cshtml" />
+    <Content Include="Views\OrdenMuestra\_DetalleOrdenReferencia.cshtml" />
+    <Content Include="Views\Paciente\BusquedaPacienteReferenciado.cshtml" />
+    <Content Include="Views\Paciente\ConsultaHistPaciente.cshtml" />
+    <Content Include="Views\Paciente\_FormAddEstablecimientoReferencia.cshtml" />
+    <Content Include="Views\Reporte\GetReporteBac.cshtml" />
+    <Content Include="Views\OrdenMuestra\_LevantarObservaciones.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\UploadResults.cshtml" />
+    <Content Include="Views\ProcesoDesatendido\Index.cshtml" />
+    <Content Include="Views\Orden\_IngresarResultadoUTM.cshtml" />
+    <Content Include="Views\Usuario\_SolicitudUsuario.cshtml" />
+    <Content Include="Views\Usuario\ImprimirSolicitud.cshtml" />
+    <Content Include="Views\Usuario\ValidarSolicitudUsuario.cshtml" />
+    <Content Include="Views\Indicador\index.cshtml" />
+    <Content Include="Views\Indicador\IndicadorOportunidadRomLab.cshtml" />
+    <Content Include="Views\Indicador\OportunidadPDF.cshtml" />
+    <Content Include="Views\Paciente\PacienteCoronavirus.cshtml" />
+    <Content Include="Views\Paciente\PacienteTbc.cshtml" />
+    <Content Include="Views\Paciente\PacienteVIH.cshtml" />
+    <Content Include="Views\ReporteResultados\ReporteKobos.cshtml" />
+    <Content Include="Views\ConsultaResultados\DatosNominalesCovid.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_MetodoResultadoInterfazMASED.cshtml" />
+    <Content Include="Views\OrdenMuestra\BusquedaMuestrasIngresadas.cshtml" />
+    <Content Include="Views\Orden\ImprimirOrden.cshtml" />
+    <Content Include="Views\Orden\_TabDatoClinicoNoEditIMP.cshtml" />
+    <Content Include="Views\Orden\_TblDatoClinicoNoEditIMP.cshtml" />
+    <Content Include="Views\Orden\_TblExamenNoEditIMP.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraNoEditIMP.cshtml" />
+    <Content Include="Views\Orden\_TblOrdenMuestraNoEditRecepcionarIMP.cshtml" />
+    <Content Include="Views\Shared\_TabDatoClinico.cshtml" />
+    <Content Include="Views\Shared\_TblDatoClinico.cshtml" />
+    <Content Include="Views\Shared\_TblMaterialEdit.cshtml" />
+    <Content Include="Views\Shared\_TblOrdenMuestraManualEdit.cshtml" />
+    <Content Include="Views\Orden\Crear.cshtml" />
+    <Content Include="Views\Orden\_Crear_AgregarExamen.cshtml" />
+    <Content Include="Views\Orden\_Crear_OrdenExamenes.cshtml" />
+    <Content Include="Views\Comun\_Crear_TipoMuestra.cshtml" />
+    <Content Include="Views\Orden\_Crear_DatosClinicos.cshtml" />
+    <Content Include="Views\RecepcionMuestraKobo\_AddVariables.cshtml" />
+    <Content Include="Views\RecepcionMuestraKobo\_FormPopupSolicitante.cshtml" />
+    <Content Include="Views\PreRecepcion\Index.cshtml" />
+    <Content Include="Views\Reporte\GetReporteProductividad.cshtml" />
+    <Content Include="Views\Reporte\ProductividadRomPdf.cshtml" />
+    <Content Include="Views\Reporte\ReporteOportunidadLaboratorio.cshtml" />
+    <Content Include="Views\Reporte\ReporteOportunidadRom.cshtml" />
+    <Content Include="Views\Reporte\ReportePacienteExamen.cshtml" />
+    <Content Include="Views\Reporte\_CantidadResultadosInformados.cshtml" />
+    <Content Include="Views\Reporte\_CoronavirusJefatura.cshtml" />
+    <Content Include="Views\OrdenMuestra\SolicitudSalidaMuestraRom.cshtml" />
+    <Content Include="Views\OrdenMuestra\ExportarSolicitudPDF.cshtml" />
+    <Content Include="Views\OrdenMuestra\RegistroRecepcionMasivaROM.cshtml" />
+    <Content Include="Views\OrdenMuestra\_MuestrasRecepcionadasROM.cshtml" />
+    <Content Include="Views\OrdenMuestra\_MuestrasRecepcionadas_NuevaFila.cshtml" />
+    <Content Include="Views\ResultadosAnalisis\_FormAsignarMetodoProtocolo.cshtml" />
+    <Content Include="Views\Paciente\_ResultadosPRSiscovidPorNrodocumento.cshtml" />
+    <Content Include="Views\Paciente\ConsultaExternaResultadoPaciente.cshtml" />
+    <Content Include="Views\Paciente\ConsultaOrdenResultadoPaciente.cshtml" />
+    <Content Include="Views\Paciente\PacienteCoronavirusExterno.cshtml" />
+    <Content Include="Views\Muestra\_EstadoCodigoMuestra.cshtml" />
+    <Content Include="Views\ConsultaResultados\ConsultaResultadosRecepcionINS.cshtml" />
+    <Content Include="Views\ConsultaResultados\ConsultaEnfermedadResultados.cshtml" />
+    <None Include="_Configs\Web.DEV.config" />
+    <None Include="_Configs\Web.PROD.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Extensions\ClientIp\" />
+    <Folder Include="Views\ActualizaEstado\" />
+    <Folder Include="Views\OrdenNuevo\" />
+    <Folder Include="Views\Recepcion\" />
+    <Folder Include="Views\UbigeoPaciente\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
+      <Project>{f93c55fa-7ff7-4af4-af0b-7c014b286cde}</Project>
+      <Name>BusinessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
+      <Project>{a7c12f64-a37d-468d-a3aa-47bb91d79168}</Project>
+      <Name>DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.DAL\Framework.DAL.csproj">
+      <Project>{91D2FFF9-8031-4C62-9DED-4FF7AC3ACB13}</Project>
+      <Name>Framework.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.WebCommon\Framework.WebCommon.csproj">
+      <Project>{36960b03-0723-4535-b229-d82ae39b04cf}</Project>
+      <Name>Framework.WebCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{2e588952-5389-42e5-8ed8-c42b9e38f6d7}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reniec\Reniec.csproj">
+      <Project>{E58FD391-32B5-4B63-8905-725DD2ED4645}</Project>
+      <Name>Reniec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilitario\Utilitario.csproj">
+      <Project>{663df441-4f38-44f3-865c-cd9bc296c7a4}</Project>
+      <Name>Utilitario</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>58554</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44368/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

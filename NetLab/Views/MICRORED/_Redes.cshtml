@@ -1,0 +1,10 @@
+﻿@*  Descripción: Vista, para mostrar el combo de las Redes.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.RedMant>
+
+@Html.DropDownList("idRed",
+new MultiSelectList(Model, "idRed", "nombrered"),
+new { value = "0", @class = "form-control sizeChosen" })

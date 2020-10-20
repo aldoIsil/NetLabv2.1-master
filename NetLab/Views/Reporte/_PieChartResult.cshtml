@@ -1,0 +1,90 @@
+﻿<br />
+@if (string.IsNullOrEmpty(ViewBag.NoDataMessage))
+{
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5">
+        <!--       Chart.js Canvas Tag -->
+        <canvas id="barChartPorcentaje"></canvas>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-5">
+        <!--       Chart.js Canvas Tag -->
+        <canvas id="barChartNumero"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var canvasPorcentaje = document.getElementById("barChartPorcentaje");
+        var canvasNumero = document.getElementById("barChartNumero");
+        var ctxPorcentaje = canvasPorcentaje.getContext('2d');
+        var ctxNumero = canvasNumero.getContext('2d');
+
+        // Global Options:
+        Chart.defaults.global.defaultFontColor = 'maroon';
+        Chart.defaults.global.defaultFontSize = 16;
+
+        var dataPorcentaje = {
+            labels: @Html.Raw(ViewBag.Labels),//["She returns it ", "She keeps it"],
+            datasets: [
+              {
+                  fill: true,
+                  backgroundColor: [
+                      'darkblue',
+                      'lightgreen'],
+                  data: @Html.Raw(ViewBag.DataPorcentajes),//[5, 95],
+                  // Notice the borderColor
+                  borderColor: ['black', 'white'],
+                  borderWidth: [2, 2]
+              }
+            ]
+        };
+
+        var dataNumero = {
+            labels: @Html.Raw(ViewBag.Labels),//["She returns it ", "She keeps it"],
+            datasets: [
+              {
+                  fill: true,
+                  backgroundColor: [
+                      'darkblue',
+                      'lightgreen'],
+                  data: @Html.Raw(ViewBag.DataNumero),//[5, 95],
+                  // Notice the borderColor
+                  borderColor: ['black', 'white'],
+                  borderWidth: [2, 2]
+              }
+            ]
+        };
+
+        // Notice the rotation from the documentation.
+
+        var options = {
+            //title: {
+            //    display: true,
+            //    text: 'What happens when you lend your favorite t-shirt to a girl ?',
+            //    position: 'top'
+            //},
+            rotation: -0.7 * Math.PI
+        };
+
+        // Chart declaration:
+        var myBarChart = new Chart(ctxPorcentaje, {
+            type: 'pie',
+            data: dataPorcentaje,
+            options: options
+        });
+
+        // Chart declaration:
+        var myBarChart = new Chart(ctxNumero, {
+            type: 'pie',
+            data: dataNumero,
+            options: options
+        });
+    });
+</script>
+}
+else
+{
+    <div>@ViewBag.NoDataMessage</div>
+}

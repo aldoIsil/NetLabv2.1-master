@@ -1,0 +1,124 @@
+﻿@model List<Model.OrdenSolicitante>
+@{
+    ViewBag.Title = "Solicitantes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var solicitante = "";
+}
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+
+<h2 class="text-primary">Solicitantes</h2>
+
+@using (Html.BeginForm("Index", "Solicitante", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.Label("Colegio/Nombre de Solicitante:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+        <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+            @Html.TextBox("solicitante",solicitante, new { @class = "form-control" })
+        </div>
+        @*<input type="submit" id="btnBuscarSolicitantes" value="Buscar" class="btn btn-primary" />*@
+
+        <button class="btn btn-primary" type="submit" id="btnBuscarSolicitantes" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+        
+        @Html.ActionLink("Agregar", "ShowPopupSolicitante", new { }, new { id = "openDialogSolicitante", @class = "btn btn-primary fa fa-plus-square-o" })
+
+        @*<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#AddSolicitante" onclick="AddSolicitante()">
+            Agregar
+        </button>*@
+
+    </div>
+}
+
+@if (Model != null)
+{
+    if (Model.Count > 0)
+    {
+        <table id="dtSolicitante" class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>
+                        Colegiatura
+                    </th>
+                    <th>
+                        Solicitante
+                    </th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CodigoUnico)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombres)
+                    </td>
+                    <td>
+                        @Html.ActionLink(" ", "Edit", new { idSolicitante = item.idSolicitante }, new { id = "editDialog", @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger">No se encontraron resultados</div>
+    }
+}
+
+@*<div class="modal Fullerscreen-modal fade" id="AddSolicitante" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:40%;">
+        <div class="modal-content modal-dialog-centered" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataAddSolicitante" class="modal-body">
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="btnAgregar">Agregar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>*@
+
+
+<div id="dialog-open" style="display: none">
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="divTblMultiple" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Solicitante.js")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*@Scripts.Render("~/Scripts/App/tabladata.js")*@
+}  
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtSolicitante').DataTable({
+                "scrollY": "auto",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+
+</script>

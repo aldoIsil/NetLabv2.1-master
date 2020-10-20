@@ -1,0 +1,87 @@
+﻿@model PagedList.IPagedList<Model.ConfiguracionEvalControlCalidad>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Configuración de Evaluaciones para Control de Calidad</h2>
+
+
+@using (Html.BeginForm("Index", "ConfiguracionEvalControlCalidad", FormMethod.Get))
+{
+    <label>Ingrese Código / Nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+    @Html.ActionLink(" Nuevo", "Create", new { ViewBag.page, ViewBag.search }, new { @class = "btn btn-primary fa fa-plus-square-o" })
+}
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table">
+        <tr>
+            <th  style="display:none">
+                Id
+            </th>
+            <th>
+                Nombre Evaluación
+            </th>
+            <th>
+                EESS Evaluador
+            </th>
+            <th>
+                EESS Evaluado
+            </th>
+            <th>
+                Enfermedad
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>
+                Fecha Registro
+            </th>
+            <th> Usuario Registro</th>
+            <th>Editar</th>
+            <th>Panel/Lote</th>
+        </tr>
+        @foreach (var item in Model)
+    {
+    <tr>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.idConfigEvaluacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstablecimientoEvaluador.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstablecimientoEvaluado.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Enfermedad.nombre)
+        </td>
+        <td>
+            <p style="color:#006f03;">@Html.DisplayFor(modelItem => item.DescEstado)</p>            
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fecharegistro)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UsuarioRegistro)
+        </td>
+        <td>
+            @Html.ActionLink("  Editar", "Edit", new { id = item.idConfigEvaluacion, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+        </td>
+        <td>
+            @Html.ActionLink("  Add", "AddPanel", new { id = item.idConfigEvaluacion, nombre = item.Nombre, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-book editDialog" })
+        </td>
+    </tr>
+    }
+
+    </table>
+}

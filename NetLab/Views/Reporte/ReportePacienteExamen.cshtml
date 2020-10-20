@@ -1,0 +1,402 @@
+﻿@model Model.ReportesDTO.DTOReporteCoronavirus
+@using System.Globalization;
+@{
+    ViewBag.Title = "Reporte Cantidad Pacientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var TipoUsuarioEstablecimiento = ViewBag.TipoUsuarioEstablecimiento;
+}
+<h2>Reporte General Coronavirus</h2>
+
+@using (Html.BeginForm("ReportePacienteExamen", "PacienteCoronavirus", FormMethod.Post))
+{
+    @*<div class="form-group">
+            @Html.Label("Fecha Desde: ", new { @class = "control -label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBox("fechaDesde", DateTime.Now.AddMonths(-1), new { @id = "fechaDesde", @class = "form-control datepickerDesde datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })
+            </div>
+            @Html.Label("Fecha Hasta: ", new { @class = "control -label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBox("fechaHasta", DateTime.Now, new { @id = "fechaHasta", @class = "form-control datepickerHasta datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })
+            </div>
+            <br /><br />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <input id="btnsubmit" type="submit" value="Buscar" class="btn-link" />
+            </div>
+        </div>*@
+}
+<div class="block">
+    @if (TipoUsuarioEstablecimiento == "JEFATURA" || TipoUsuarioEstablecimiento == "SUBJEFAT")
+    {
+        <fieldset class="default">
+            <legend class="default">Pacientes</legend>
+            <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+                @Html.Partial("_CoronavirusJefatura", Model)
+            </div>
+        </fieldset>
+        <br /><br /><br />
+    }
+    else
+    {
+        <fieldset class="default">
+            <legend class="default">Información por Muestras</legend>
+            @*<a href="@(Url.Action("ExportExcelCoronavirusMuestras", "Reporte", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>*@
+            <div style="display: flex;text-align: center; justify-content: center">
+                <table class="table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Total Muestras
+                            </th>
+                            <th>
+                                Total Muestras Pendientes Resultado
+                            </th>
+                            <th>
+                                Total Muestras Ingresadas por Rom
+                            </th>
+                            <th>
+                                Total Muestras Rechazadas por Rom
+                            </th>
+                            <th>
+                                Total Muestras Rechazadas por Lab
+                            </th>
+                            <th>
+                                Total Muestras Pendiente de Verificación
+                            </th>
+                            <th>
+                                Total Muestras Resultado Verificado
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="text-align:center">
+                            <td>
+                                @Html.Raw(Model.LstReporteMuestrasCoronavirus.Count())
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasPendientes)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasIngresadas)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasRechzosRom)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasRechzosLab)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasPendienteVerificacion)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalMuestrasVerificacion)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br /><br />
+            @*<div class="div-row">
+                <table class="table table-responsive table-bordered" id="dtDatosDG">
+                    <thead>
+                        <tr>
+                            <th>
+                                Código Orden
+                            </th>
+                            <th>
+                                Código Muestra
+                            </th>
+                            <th>
+                                Región
+                            </th>
+                            <th>
+                                Establecimiento
+                            </th>
+                            <th>
+                                Paciente
+                            </th>
+                            <th>
+                                Nro Documento
+                            </th>
+                            <th>
+                                Fecha Nac.
+                            </th>
+                            <th>Edad</th>
+                            <th>
+                                Sexo
+                            </th>
+                            <th>
+                                Tipo Muestra
+                            </th>
+                            <th>
+                                Fecha Obtención de Muestra
+                            </th>
+                            <th>
+                                Fecha Recepción Rom
+                            </th>
+                            <th>Fecha Validación Resultado</th>
+                            <th>Fecha Hora Validación Resultado</th>
+                            <th>Resultado</th>
+                            <th>Situación</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.LstReporteMuestrasCoronavirus)
+{
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoOrden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoMuestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EESSDepOrigen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstablecimientoOrigen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombrePaciente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocIdentidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.edad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SexoPaciente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TipoMuestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaColeccion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaRecepcionROM)
+                        </td>
+                        <td>
+                            @{
+                                    string parameterValue = "";
+                                    if (item.FechaValidado.HasValue)
+                                    {
+                                        parameterValue = item.FechaValidado.Value.ToShortDateString().Substring(0, 10);
+                                    }
+                                    if (parameterValue == "01/01/0001")
+                                    {
+                                        parameterValue = "Sin datos";
+                                    }
+                            }
+                            @Html.Raw(parameterValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechHoraValidado2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.convResultado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstatusResultado)
+                        </td>
+                    </tr>
+                                    }
+                </table>
+            </div>*@
+        </fieldset>
+        <br /><br /><br />
+        <fieldset>
+            <legend>
+                Información por Paciente
+            </legend>
+            @*<a href="@(Url.Action("ExportExcelCoronavirusPaciente", "Reporte", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>*@
+
+            <br />
+            <div class="div-row" style="display: flex;text-align: center; justify-content: center">
+                <table class="table" style="width:30%">
+                    <thead>
+                        <tr>
+                            <td>
+                                Total Pacientes
+                            </td>
+                            <td>
+                                Total Pacientes Negativos
+                            </td>
+                            <td>
+                                Total Pacientes Positivos
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.Raw(Model.LstPacienteCoronavirus.Count())
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalPacientesNegativos)
+                            </td>
+                            <td>
+                                @Html.Raw(Model.TotalPacientesPositivos)
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            @*<div class="div-row">
+                <table class="table table-responsive table-bordered" id="dtDatosDGPaciente">
+                    <thead>
+                        <tr>
+                            <th>
+                                Código Orden
+                            </th>
+                            <th>
+                                Código Muestra
+                            </th>
+                            <th>
+                                Región
+                            </th>
+                            <th>
+                                Establecimiento
+                            </th>
+                            <th>
+                                Paciente
+                            </th>
+                            <th>
+                                Nro Documento
+                            </th>
+                            <th>
+                                Fecha Nac.
+                            </th>
+                            <th>Edad</th>
+                            <th>
+                                Sexo
+                            </th>
+                            <th>
+                                Tipo Muestra
+                            </th>
+                            <th>
+                                Fecha Obtención de Muestra
+                            </th>
+                            <th>
+                                Fecha Recepción Rom
+                            </th>
+                            <th>Fecha Validación Resultado</th>
+                            <th>Positivo</th>
+                            <th>Negativo</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.LstPacienteCoronavirus)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoOrden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoMuestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EESSDepOrigen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstablecimientoOrigen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombrePaciente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocIdentidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.edad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SexoPaciente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TipoMuestra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaColeccion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaRecepcionROM)
+                        </td>
+                        <td>
+                            @{
+                                    string parameterValue = item.FechaValidado.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10);
+                            }
+                            @Html.Raw(parameterValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Positivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Negativo)
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </div>*@
+        </fieldset>
+        <br /><br /><br />
+        <fieldset class="default">
+                <legend class="default">Pacientes</legend>
+                <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+                    @Html.Partial("_CoronavirusJefatura", Model)
+                </div>
+            </fieldset>
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtDatosDG').DataTable({
+                "scrollX": true
+            });
+
+            //$('#dtResultadosVerificar').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+
+            $('#dtDatosDGPaciente').DataTable({
+                "scrollX": true
+            });
+
+            //$('#dtResultadosVerificar').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+
+            $('#dtDatosJEF').DataTable({
+                "scrollX": true
+            });
+
+            //$('#dtResultadosVerificar').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+
+            $('#chkDatosPaciente').change(function () {
+                var check = "0";
+                if ($(this).is(":checked")) {
+                    check = "1";
+                }
+                else {
+                    check = "0";
+                }
+                $.ajax(
+                          {
+                              url: URL_BASE + "Reporte/DatochkDatosPaciente?check=" + check,
+                              cache: false,
+                              method: "POST"
+                          });
+            });
+        });
+    </script>
+}

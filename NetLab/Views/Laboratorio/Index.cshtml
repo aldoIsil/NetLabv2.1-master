@@ -1,0 +1,100 @@
+﻿@*  Descripción: Vista, muestra la pantalla para realizar la busqueda de laboratorios.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.Laboratorio>
+
+@{
+    ViewBag.Title = "Lista de Laboratorios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Asignación de Exámenes por EESS / Laboratorios</h2>
+@using (Html.BeginForm("Index", "Laboratorio", FormMethod.Get))
+{
+    <label>Ingrese Código / Nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+}
+<br />
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().CodigoUnico)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Direccion)
+                </th>
+                <th>Estado</th>
+                <th>Ver Examenes</th>
+                @*<th></th>*@
+            </tr>
+        </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.CodigoUnico)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Direccion)
+                    </td>
+
+                    <td class="text-center">
+                        @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+
+                        @if (item.Estado == 1)
+                    {
+                            <p style="color:#006f03;">Activo</p>
+                        }
+                        else
+                        {
+                            <p style="color:rgb(255,0,0);">Inactivo</p>
+                        }
+                    </td>
+                    @*<td class="text-center">
+                            @Html.ActionLink("Editar", "EditarLaboratorio", new {id = item.IdLaboratorio, page = Model.PageNumber, ViewBag.search}, new {@class = "editDialog"})
+                        </td>*@
+
+
+                    <td class="text-center">
+                        @Html.ActionLink(" ", "AgregarExamenes", new { id = item.IdLaboratorio }, new { @class = "btn btn-default btn-block fa fa-folder-open" })
+                    </td>
+                </tr>
+            }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{    //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Laboratorio.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+@Scripts.Render("~/Scripts/App/tabladata.js")
+}

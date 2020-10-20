@@ -1,0 +1,90 @@
+﻿@using NetLab.Helpers;
+@model List<Model.AnalitoOpcionResultado>
+@if (Model != null) { 
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Orden</th>
+            <th>Glosa</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th width="70">Opcion Resultados</th>
+            <th>Editar / Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.ListaDetalles != null)
+        {
+            var Opciones = ViewBag.ListaDetalles;
+        }
+        @foreach (var i in Model)
+        {
+            
+            <tr>
+                <td align="center">
+                    <img src="~/img/001_31.png" style="cursor:pointer" idOpcionParent="@i.IdAnalitoOpcionResultado " />
+                </td>
+                <td align="center">
+                    @i.Orden
+                </td>
+                <td>@i.Glosa</td>
+                <td>@i.TipoRespuesta.Glosa</td>
+               
+                @if (@i.Estado == 1)
+                {
+                    <td>
+                        Activo
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Inactivo
+                    </td>
+                }
+                <td>
+                    @Html.ActionLink(" ", "NuevaOpcion", new { i.IdAnalito, IdOpcionParent = i.IdAnalitoOpcionResultado }, new { id = "openDialog", @class = "btn btn-default btn-block fa fa-clipboard " })
+                    @*<button class="btn btn-default btn-block fa fa-clipboard" id="nvoOpcionResultado" hidden="hidden"></button>*@
+
+                </td>
+
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarOpcion", new { idAnalito = i.IdAnalito, IdAnalitoOpcion = i.IdAnalitoOpcionResultado }, new { @class = "btn btn-default fa fa-pencil-square-o editDialog" })
+                    @Html.ActionLink(" ", "EliminarOpcion", new { idAnalito = i.IdAnalito, IdAnalitoOpcion = i.IdAnalitoOpcionResultado }, new { @class = "btn btn-default fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+            <tr id="fila-@i.IdAnalitoOpcionResultado" style="display:none">
+                <td></td>
+                <td colspan="8">
+                    @Html.Action("DetalleOpciones", new { NewOpcionesList = ViewBag.ListaDetalles, idOpcionParent = i.IdAnalitoOpcionResultado.ToString() })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+}
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AnalitoOpcion.js")
+
+    <script type="text/javascript">
+        $(function () {
+            debugger;
+            $("#orden tbody img").click(function () {
+                var idOpcionParent = $(this).attr("idOpcionParent");
+                var fila = $("#fila-" + idOpcionParent);
+                if (fila.css("display") == "none") {
+                    fila.css("display", "table-row");
+                    $(this).attr("src", "@Url.Content("~/img/remove.png")");
+                } else
+                {
+                    fila.css("display", "none");
+                    $(this).attr("src", "@Url.Content("~/img/001_31.png")");
+                }
+            });
+        });
+    </script>
+
+
+}

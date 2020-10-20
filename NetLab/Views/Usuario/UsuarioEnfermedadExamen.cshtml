@@ -1,0 +1,127 @@
+﻿@using NetLab.Helpers
+@model NetLab.Models.UsuarioEnfermedadExamenViewModels
+
+@{
+    ViewBag.Title = "Registro de Exámen por Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Exámenes para el Usuario:</h2>
+<h2> @Model.Usuario.nombres @Model.Usuario.apellidoPaterno @Model.Usuario.apellidoMaterno  </h2>
+<br />
+<br />
+<fieldset>
+    <legend>
+    </legend>
+    <div class="row">
+        @*@Html.Label("Tipo Usuario:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+        @Html.DropDownList("ddlTipoUsuario", new List<SelectListItem>
+                        {
+                        //new SelectListItem{ Text="Seleccionar", Value = "0" , Selected = true },
+                        new SelectListItem{ Text="Procesamiento", Value = "1"},
+                        new SelectListItem{ Text="Consulta", Value = "2" },
+                        new SelectListItem{ Text="Verificación", Value = "4" },
+                        new SelectListItem{ Text="Mixto", Value = "3" }
+                        }, (string)ViewBag.ddlTipoUsuario, new { @class = "form-control cmbxBusqueda" })
+    </div>*@
+        <p>
+            @Html.ActionLink("+ Agregar Exámenes", "AgregarExamen", new { Model.Usuario.idUsuario },
+                                                                    new { id = "openDialog", @class = "btn btn-primary" })
+        </p>
+    </div>
+</fieldset>
+
+<br />
+@if (Model != null)
+{
+    if (Model.Examenes != null && Model.Examenes.Count > 0)
+    {
+        <table class="table table-responsive" id="mydata">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Examenes.First().descripcion)
+                    </th>
+                    <th>Tipo</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.Examenes)
+            {
+                string tipo = "CONSULTA";
+                if (item.Tipo == 1)
+                {
+                    tipo = "PROCESAMIENTO";
+                }
+                else if (item.Tipo == 2)
+                {
+                    tipo = "VERIFICADOR";
+                }
+                else if (item.Tipo == 3)
+                {
+                    tipo = "PROCES-VERIF";
+                }
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                    
+                    <td class="text-center">@tipo</td>
+                    <td class="text-center" style="width:20px">
+                        @Html.ActionLink(" ", "EliminarExamen", new { item.idExamen, Model.Usuario.idUsuario }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.EmptyTable()
+    }
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/UsuarioExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

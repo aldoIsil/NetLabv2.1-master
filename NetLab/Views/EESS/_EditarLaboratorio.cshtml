@@ -1,0 +1,338 @@
+﻿@model NetLab.Models.LaboratorioViewModels
+@{
+    bool tipo1 = false;
+    bool tipo2 = false;
+    string link = "";
+    string mensaje = "hidden";
+
+    if (ViewBag.tipo == 1)
+    {
+        tipo1 = true;
+    }
+    else
+    {
+        tipo2 = true;
+    }
+
+    if (ViewBag.ocultar == "si")
+    {
+        link = "hidden";
+        mensaje = "";
+    }
+    else
+    {
+        link = "";
+    }
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+@*  Descripción: Vista, muestra la pantalla para editar y grabar informacion de un establecimiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using (Html.BeginForm("EditarLaboratorio", "EESS", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmEditarLaboratorio", enctype = "multipart/form-data", onsubmit = "javascript:return submitValidation();" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Laboratorio.IdLaboratorio)
+    @Html.HiddenFor(model => model.Laboratorio.Estado)
+
+    <div class="form-horizontal">
+        <h2 class="text-primary">Laboratorio</h2>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("Codigo Unico", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @ViewBag.codigoUnico
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.Label("Departamento", new { @class = "control-label col-md-1" })
+                <div class="col-md-7">
+
+                    @Html.Label(Model.Laboratorio.UbigeoLaboratorio.Departamento)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Provincia", new { @class = "control-label col-md-1" })
+                <div class="col-md-7">
+
+                    @Html.Label(Model.Laboratorio.UbigeoLaboratorio.Provincia)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Distrito", new { @class = "control-label col-md-1" })
+                <div class="col-md-7">
+
+                    @Html.Label(Model.Laboratorio.UbigeoLaboratorio.Distrito)
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.Label("Institución", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+
+                @Html.Label(Model.Laboratorio.nombreInstitucion)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("DISA/GER/DIR", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.Label(Model.Laboratorio.nombreDisa)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("RED", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.Label(Model.Laboratorio.nombreRed)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("MicroRed", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.Label(Model.Laboratorio.nombreMicroRED)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Nombre, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Nombre, new { htmlAttributes = new { @class = "form-control", @style = "width:300px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.clasificacion, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.clasificacion, new { htmlAttributes = new { @class = "form-control", @style = "width:400px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.clasificacion, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Direccion, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Direccion, new { htmlAttributes = new { @class = "form-control", @rows = 4, @style = "width:500px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Direccion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Latitud, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Latitud, new { htmlAttributes = new { @class = "form-control", @style = "width:300px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Latitud, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Longitud, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Longitud, new { htmlAttributes = new { @class = "form-control", @style = "width:300px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Longitud, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Website, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Website, new { htmlAttributes = new { @class = "form-control", @style = "width:400px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Website, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.correoElectronico, new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.correoElectronico, new { htmlAttributes = new { @class = "form-control", @style = "width:400px !important" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.correoElectronico, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.Label("Tipo:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.DropDownList("tipo", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Establecimiento", Value = "1" ,Selected=tipo1 },
+                            new SelectListItem{ Text="Laboratorio", Value = "2" , Selected=tipo2  }
+                          }, new { @class = "form-control cmbxBusqueda", @style = "width:200px !important" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.Label("Categoría:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.DropDownList("categoria", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="SIN CATEGORIA", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="I-1", Value = "1" },
+                            new SelectListItem{ Text="I-2", Value = "2" },
+                            new SelectListItem{ Text="I-3", Value = "3" },
+                            new SelectListItem{ Text="I-4", Value = "4" },
+                            new SelectListItem{ Text="II-1", Value = "5" },
+                            new SelectListItem{ Text="II-2", Value = "6" },
+                            new SelectListItem{ Text="II-E", Value = "7" },
+                            new SelectListItem{ Text="III-1", Value = "8" },
+                            new SelectListItem{ Text="III-2", Value = "9" },
+                            new SelectListItem{ Text="III-E", Value = "10" },
+                            new SelectListItem{ Text="I7", Value = "11" },
+                            new SelectListItem{ Text="Referencial", Value = "12" }
+                          }, new { @class = "form-control cmbxBusqueda", @style = "width:200px !important" })
+            </div>
+        </div>
+        @*  Descripción: Se adiciona item Logo Regional.
+            Autor: Marcos Mejia
+            Fecha 19/01/2018 *@
+        <div class="form-group">
+            @Html.Label("LogoRegional", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileLogo">
+                @*@Html.TextBoxFor(model => model.LogoRegional, new { id = "LogoRegional", type = "file" })*@
+                @*@Html.TextBox("LogoRegional", null, new { id = "LogoRegional", type = "file" })*@
+                @if (Model.Laboratorio.LogoRegional != null)
+                {
+                    <input type="file" id="LogoRegional" name="LogoRegional" value="@Model.Laboratorio.LogoRegional" />
+                }
+                else
+                {
+                    <input type="file" id="LogoRegional" name="LogoRegional" />
+                }
+                @*@Html.ValidationMessageFor(model => model.LogoRegional, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Logo Regional actual", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @if (Model.Laboratorio.LogoRegional == null)
+                {
+                    @Html.Label("No presenta")
+                }
+                else
+                {
+                    <div style="height: 100px">
+                        <img src='@Url.Action( "ShowLogoRegional", "Laboratorio", new { id = Model.Laboratorio.IdLaboratorio })' alt="" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Logo", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileLogo">
+                @*@Html.TextBox("Logo", new { id = "Logo", type = "file" })*@
+                @if (Model.Laboratorio.Logo != null)
+                {
+                    <input type="file" id="Logo" name="Logo" value="@Model.Laboratorio.Logo" />
+                }
+                else
+                {
+                    <input type="file" id="Logo" name="Logo" />
+                }
+                @*@Html.ValidationMessageFor(model => model.Logo, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Logo actual", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @if (Model.Laboratorio.Logo == null)
+                {
+                    @Html.Label("No presenta")
+                }
+                else
+                {
+                    <div style="height: 100px">
+                        <img src='@Url.Action( "ShowLogo", "Laboratorio", new { id = Model.Laboratorio.IdLaboratorio })' alt="" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Sello", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileSello">
+                @if (Model.Laboratorio.Sello != null)
+                {
+                    <input type="file" id="Sello" name="Sello" value="@Model.Laboratorio.Sello" />
+                }
+                else
+                {
+                    <input type="file" id="Sello" name="Sello" />
+                }
+                @*@Html.TextBoxFor(model => model.Sello, new { id = "Sello", type = "file" })
+        @Html.ValidationMessageFor(model => model.Sello, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Sello actual", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @if (Model.Laboratorio.Sello == null)
+                {
+                    @Html.Label("No presenta")
+                }
+                else
+                {
+                    <div style="height: 100px">
+                        <img src='@Url.Action( "ShowSello", "Laboratorio", new { id = Model.Laboratorio.IdLaboratorio })' alt="" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.Laboratorio.EstadoCheck, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Laboratorio.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                <input type="submit" value="Guardar" class="btn btn-primary @link" onclick="return validarCampos();" />
+                @Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })
+                <label class="@mensaje" style="color:red;margin-left:15px;"> Los datos se Actualizaron Satisfactoriamente </label>
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+
+</div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Laboratorio.js")
+
+
+    <script type="text/javascript">
+    function validarCampos() {
+        var ok = true;
+        var nombreEstablecimiento = $('#Laboratorio_Nombre').val();
+        if (nombreEstablecimiento == "") {
+            jAlert("Ingrese un nombre de Establecimiento", "Aviso");
+            ok = false;
+        }
+
+        if (ok) {
+            $("#btnCrear").addClass("hidden");
+
+        }
+        
+        return ok;
+    }
+    </script>
+}

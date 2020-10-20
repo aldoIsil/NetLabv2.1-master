@@ -1,0 +1,101 @@
+﻿@*  Descripción: Vista, muestra la pantalla para agregar metodos por examen
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+@model NetLab.Models.ExamenMetodoViewModels
+
+@{
+    ViewBag.Title = "Registro de Métodos por Examen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Métodos para el Examen:</h2>
+<h2> "@Model.Examen.nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Método", "AgregarMetodo", new { Model.Examen.idExamen }, new { id = "openDialog", @class = "btn btn-primary " })
+</p>
+<br />
+@if (Model != null && Model.Metodos.Count > 0)
+{
+    <table class="table" style="width: 600px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Glosa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Orden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Estado)
+            </th>
+            <th>Desactivar</th>
+        </tr>
+
+        @foreach (var item in Model.Metodos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa)
+                </td>
+                <td style="width:50px">
+                    @Html.DisplayFor(modelItem => item.Orden)
+                </td>
+                <td style="width:50px">
+                    @Html.DisplayFor(modelItem => item.EstadoDesc)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @Html.ActionLink(" ", "EliminarMetodo", new { item.IdExamenMetodo, Model.Examen.idExamen, item.Glosa, item.Orden }, new { @class = "btn btn-default btn-block fa fa-power-off confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+</div>
+<input type="hidden" value="@ViewBag.nombresLista" id="mode" />
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/ExamenMetodo.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+
+
+
+}

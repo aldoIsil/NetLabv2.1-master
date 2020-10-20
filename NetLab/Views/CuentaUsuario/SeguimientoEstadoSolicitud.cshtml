@@ -1,0 +1,125 @@
+﻿@model List<Model.SolicitudUsuario>
+
+@{
+    ViewBag.Title = "Seguimiento de Solicitudes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<fieldset class="default">
+    <legend class="default">Seguimiento de Solicitud Virual de Cuentas de Usuario</legend>
+    @using (Html.BeginForm("SeguimientoEstadoSolicitud", "CuentaUsuario", FormMethod.Get))
+    {
+        <div class="form-group">
+            <div>
+                @Html.Label("Tipo de Documento", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Documento", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-3" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("documentoIdentidad", (string)ViewBag.nroDocumento, new { @class = "form-control  numericOnly", autocomplete = "off" })
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+            </div>
+        </div><br /><br />
+    }
+    
+</fieldset>
+<br />
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        <table class="table table-responsive table-bordered" id="dtSolicitud">
+            <thead>
+                <tr>
+                    <th>
+                        Nombre Solicitante
+                    </th>
+                    <th>
+                        Fecha trámite
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th>
+                        Validador 1
+                    </th>
+                    <th>
+                        Validador 2
+                    </th>
+                    <th>
+                        Ver
+                    </th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr style="text-align:center">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.usuario.nombres)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaEnvio)
+                    </td>
+                    <td>
+                        @{
+                            switch (item.estado)
+                            {
+                                case 1:
+                                    <button type="button" class="btn btn-danger">SOLICITUD PENDIENTE</button>
+                                    break;
+                                case 2:
+                                    <button type="button" class="btn btn-success">SOLICITUD APROBADA</button>
+                                    break;
+                                case 3:
+                                    <button type="button" class="btn btn-warning">SOLICITUD RECHAZADA</button>
+                                    break;
+                            }
+                        }
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.validador1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.validador2)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default" onclick="ImprimirSolicitud(@item.idSolicitudUsuario)" target="_blank" >
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                        </button>
+                    </td>
+                </tr>
+                            }
+        </table>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger">No se encontraron Resultados</div>
+                            }
+
+<br /><a class="btn btn-primary col-md-4 col-md-offset-1" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+
+@section Scripts {
+@Scripts.Render("~/Scripts/App/CuentaUsuario.js")
+@Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+<script type="text/javascript">
+    $('#dtSolicitud').DataTable({
+        "scrollY": "600px",
+        "scrollCollapse": true,
+    });
+    $('.dataTables_length').addClass('bs-select');      
+</script>
+}
+

@@ -1,0 +1,89 @@
+﻿@model List<Model.ReportesDTO.ConsultaReporteResultado>
+@{
+    ViewBag.Title = "Consulta Reporte por Solicitante";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model != null)
+{
+    if (Model.Count > 0)
+    {
+        int total = 0;
+        int suma = 0;
+        double porResulCon = 0;
+        double porResulNoCon = 0;
+
+        foreach (var item in Model)
+        {
+            total = @item.totalResultado;
+            suma += item.CantidadConsulta;
+        }
+        porResulCon = (suma * 100) / total;
+        porResulCon = (porResulCon > 100) ? 100 : porResulCon;
+        porResulNoCon = 100 - porResulCon;
+        <h6>TOTAL RESULTADOS EMITIDOS: @total</h6>
+        <h6>TOTAL RESULTADOS CONSULTADOS: @suma</h6>
+        <h6>PORCENTAJE RESULTADOS CONSULTADOS: @porResulCon%</h6>
+        <h6>PORCENTAJE RESULTADOS NO CONSULTADOS: @porResulNoCon%</h6>
+        <br />
+            <table id="dtsolicitante">
+                <thead>
+                    <tr>
+                        <th>Nombre de Solicitante</th>
+                        <th>Cantidad Consultas</th>
+                        <th>Establecimiento</th>
+                        <th>Enfermedad</th>
+                        <th>Examen</th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Usuario)
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(modelItem => item.CantidadConsulta)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Establecimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Enfermedad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Examen)
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input id="btnsubmit" type="button" onclick="BuscaDatos(2,13)" value="Ver Detalle" class="btn-link" />
+                </div>
+            </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">No se encontraron resultados</div>
+    }
+}
+<div style="clear:both;"></div><br />
+<div id="chartdivid2">
+
+</div>
+
+    @section Scripts {
+
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dtsolicitante').DataTable({
+                    "destroy": true,
+                    "scrollY": "auto",
+                    "scrollX": "auto",
+                    "scrollCollapse": true,
+                });
+                $('.dataTables_length').addClass('bs-select');
+            });
+        </script>
+    }

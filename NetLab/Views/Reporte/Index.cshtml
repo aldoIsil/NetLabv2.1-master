@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+<h2>Listado</h2>
+
+@*@Html.ActionLink("Reporte 01: Oportunidad de Obtención de Muestras", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.OportunidadObtencionMuestras).ToString() }, new { }) <br />
+        @Html.ActionLink("Reporte 02: Oportunidad de Envío de Muestras", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.OportunidadEnvioMuestras).ToString() }) <br />
+        <a href="/Reporte/GetMuestras/2">Reporte 02: Oportunidad de Envío de Muestras</a><br/>
+    @Html.RouteLink("Reporte 03: Oportunidad de Análisis de Muestras", new { action="GetMuestras", tipoReporte = ((int)Enums.TipoReporte.OportunidadAnalisisMuestras).ToString() },new { }) <br />
+    @Html.ActionLink("Reporte 04: Porcentaje de Resultados Emitidos", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.PorcentajeResultadosEmitidos).ToString() }, new { })<br />
+    @Html.ActionLink("Reporte 05: Motivos de Rechazo de la Muestra en ROM", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.MotivoRechazoROM).ToString() }, new { })<br />
+    @Html.ActionLink("Reporte 06: Motivos de Rechazo de la Muestra en Laboratorio", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.MotivoRechazoLaboratorio).ToString() }, new { })<br />
+    @Html.ActionLink("Reporte 07: Nro y Porcentaje Muestras Rechazadas - Nivel Regional", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.NroPorcentajeMuestrasRechazadasEnROM).ToString() }, new { })<br />
+    @Html.ActionLink("Reporte 08: Nro y Porcentaje Muestras Rechazadas - Nivel Nacional", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.NroPorcentajeMuestrasRechazadasEnROM).ToString() }, new { })<br />
+    @Html.ActionLink("Reporte 09: Nro y Porcentaje Resultados Rechazados Por Verificador", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.NroPorcentajeResultadosRechazadosPorVerificador).ToString() }, new { })<br />*@
+@Html.ActionLink("Reporte 10: Número de Resultados Corregidos Después de Publicación", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.NroResultadosCorregidosDespuesPublicacion).ToString() }, new { })<br />
+@Html.ActionLink("Reporte 11: Número de Muestras Procesadas de Baciloscopia y Cultivo", "GetIndicadorBCS", new { tipoReporte = ((int)Enums.TipoReporte.NroMuestrasProcesadasBaciloscopia).ToString() }, new { })<br />
+@Html.ActionLink("Reporte 12: Cantidad de Reportes de Resultados Consultados", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.CantidadReporteResultadoConsultado).ToString() }, new { })<br />
+@Html.ActionLink("Reporte 13: Cantidad de Reportes de Resultados Consultados por Solicitante", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.CantidadReporteResultadoConsultadoPorSolicitante).ToString() }, new { })<br />
+@Html.ActionLink("Reporte 14: Cantidad de Reportes de Resultados Informados", "GetMuestras", new { tipoReporte = ((int)Enums.TipoReporte.CantidadReporteResultadoInformados).ToString() }, new { })<br />
+@Html.ActionLink("Reporte 15: Reporte de Productividad", "GetReporteProductividad")<br />
+@Html.ActionLink("Reporte 16: Reporte de Oportunidad de envío de muestras del ROM", "ReporteOportunidadRom")<br />
+@Html.ActionLink("Reporte 17: Reporte de Oportunidad de Laboratorios", "ReporteOportunidadLaboratorio")<br />
+
+@section Scripts {
+
+@Scripts.Render("~/Scripts/App/tabladata.js")
+
+@Scripts.Render("~/Scripts/datatables.js")
+
+
+}

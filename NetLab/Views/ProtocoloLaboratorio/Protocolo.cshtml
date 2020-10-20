@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Model.Protocolo>
+
+@{
+    ViewBag.Title = "Protocolo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Protocolo</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.nroProtocolo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.codigoMuestra)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaExtraccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.equipo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.loteMarca)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.limpieza)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaRegistro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.idUsuario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.idEstablecimiento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nroSecuencia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.estadoMuestra)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.nroProtocolo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.codigoMuestra)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaExtraccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.equipo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.loteMarca)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.limpieza)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaRegistro)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.idUsuario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.idEstablecimiento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nroSecuencia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.estadoMuestra)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

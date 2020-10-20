@@ -1,0 +1,63 @@
+﻿@*  Descripción: Vista, registra la presentacion para un reactivo 
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Presentacion>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarPresentacion", new { ViewBag.idReactivo }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    @*<div>
+        <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+        <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+
+    </div>*@
+
+     <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+}
+<br />
+
+@using (Html.BeginForm("AgregarPresentacion", "Reactivo", new { ViewBag.idReactivo}, FormMethod.Post, new { @id = "formAgregarPresentacion" }))
+{
+    @Html.AntiForgeryToken()
+
+    <table id="TableTipoPresentacion" class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width:15px">
+                    <input type="checkbox" name="presentaciones" value="@item.idPresentacion" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.glosa)
+                </td>
+            </tr>
+        }
+    </table>
+
+    <label id="btnGuardarPresentacion" class="btn btn-primary">Grabar</label>
+
+    <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />
+
+    @*<input type="Submit" value="Guardar" class="btn-link" onclick="ExisteElementoSeleccionadoPresentacion();" />*@
+
+    @*<div>
+        <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+        <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+
+    </div>*@
+
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarPresentacion", new { page, ViewBag.search, ViewBag.idReactivo }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+
+
+

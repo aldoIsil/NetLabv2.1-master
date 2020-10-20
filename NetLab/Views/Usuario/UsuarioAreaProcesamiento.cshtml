@@ -1,0 +1,97 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la seleccion y registro de las areas de procesamiento para un usuario.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+
+@model NetLab.Models.UsuarioAreaProcesamientoViewModels
+
+@{
+    ViewBag.Title = "Registro de Area de Procesamiento por Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Áreas de Procesamiento para el Usuario: </h2>
+<h2>@Model.Usuario.nombres @Model.Usuario.apellidoPaterno @Model.Usuario.apellidoMaterno  </h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Área de Procesamiento", "AgregarAreaProcesamiento", new { Model.Usuario.idUsuario }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null)
+{
+    if (Model.Areas != null && Model.Areas.Count > 0)
+    {
+        <table class="table" style="width: 600px">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Areas.First().Nombre)
+                </th>
+                <th>Eliminar</th>
+            </tr>
+
+            @foreach (var item in Model.Areas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td class="text-center" style="width:20px">
+                        @Html.ActionLink(" ", "EliminarAreaProcesamiento", new { item.IdAreaProcesamiento, Model.Usuario.idUsuario }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.EmptyTable()
+    }
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+
+
+
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/UsuarioAreaProcesamiento.js")
+}

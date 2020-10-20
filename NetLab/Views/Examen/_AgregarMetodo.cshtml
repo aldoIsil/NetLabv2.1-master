@@ -1,0 +1,63 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el registro de un metodo por exmanen.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.ExamenMetodo
+
+<br />
+@using (Html.BeginForm("GuardarMetodo", "Examen", FormMethod.Post, new { id = "frmAgregarMetodo" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IdExamen)
+
+    <div class="form-horizontal">
+        <br />
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Glosa, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(model => model.Glosa, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Glosa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Orden, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(model => model.Orden, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Orden, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<button id="btnGuardarMetodo" class="btn btn-primary">Grabar</button>*@
+
+                <button id="btnGuardarMetodo" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Grabar</button>
+
+
+
+
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+                @*<input type="submit" value="Guardar" class="btn-link" />*@
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+        $.validator.unobtrusive.parse("#frmAgregarMetodo");
+    });
+
+
+</script>
+

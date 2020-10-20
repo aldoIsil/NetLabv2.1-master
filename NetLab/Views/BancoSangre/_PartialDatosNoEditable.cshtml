@@ -1,0 +1,54 @@
+﻿@*  Descripción: Vista, para mostrar toda la informcion registrada en modo NO EDITABLE.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model Model.Orden
+
+<script type="text/javascript">
+
+   
+    $(document).ready(function () {
+        $("#codigoDepartamentoActual").change(function () {
+            var codigoDepartamento = $("#codigoDepartamentoActual").val();
+            $("#dvProvinciasActual").load('@(Url.Action("GetProvinciasPorDepartamentoActual" ,"Paciente",null, Request.Url.Scheme))?codigoDepartamento=' + codigoDepartamento);
+
+            var codigoDepartamento = $("#codigoDepartamentoActual").val();
+            var codigoProvincia = $("#codigoProvinciaActual").val();
+            $("#dvDistritosActual").load('@(Url.Action("GetDistritosPorProvinciaActual" ,"Paciente",null, Request.Url.Scheme))?codigoDepartamento=' + codigoDepartamento + '&codigoProvincia=' + codigoProvincia);
+
+        });
+    });
+
+</script> 
+
+<table>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Paciente.TipoDocumento)</td>
+        <td></td>
+        <td>@Html.DisplayNameFor(model => model.Paciente.NroDocumento)</td>
+        <td>@Html.TextBox("nroDocumento", Model.Paciente.NroDocumento)
+            <input type="button" id="buscarPaciente" class="buscarPaciente" value="Buscar" />
+        </td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Paciente.ApellidoPaterno)</td>
+        <td>@Html.DisplayFor(model => model.Paciente.ApellidoPaterno, Model.Paciente.ApellidoPaterno)
+            @Html.Hidden("apellidoPaterno", Model.Paciente.ApellidoPaterno)</td>
+
+        <td>@Html.DisplayNameFor(model => model.Paciente.ApellidoMaterno)</td>
+        <td>
+            @Html.DisplayFor(model => model.Paciente.ApellidoMaterno, Model.Paciente.ApellidoMaterno)
+            @Html.Hidden("apellidoMaterno", Model.Paciente.ApellidoMaterno)
+        </td>
+    </tr>
+
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Paciente.Nombres)</td>
+        <td colspan="3">
+            @Html.DisplayFor(model => model.Paciente.Nombres, Model.Paciente.Nombres)
+            @Html.Hidden("nombres", Model.Paciente.Nombres)
+        </td>
+    </tr>
+  
+</table>

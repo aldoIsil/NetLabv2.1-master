@@ -1,0 +1,695 @@
+﻿@*  Descripción: Vista, muestra la pantalla para realizar la busqueda de ordenes con resultados para ser verificados.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.ValidaResult>
+@using System.Globalization
+@using Model.Enums
+@using NetLab.Helpers;
+
+@{
+
+
+    @*Alexander Buchelli - inicio - fecha 24/08/17 - se quitaron estilos propios para redimensionar columnas con las clases bootstrap*@
+
+
+
+    ViewBag.Title = "Validacion de Resultados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var checkedFRegistro = true;
+    var checkedFColeccion = false;
+
+    if (ViewBag.esFechaRegistro == 1)
+    {
+        checkedFRegistro = true;
+    }
+    if (ViewBag.esFechaRegistro == 2)
+    {
+        checkedFColeccion = true;
+    }
+
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+
+@using (Html.BeginForm("Index", "ValidacionResultados", FormMethod.Post))
+{
+    <fieldset class="default">
+        <legend class="default">Busqueda para la Verificación de Resultados:</legend>
+        <div id="dvBusquedaUsuario2">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3 divWidth">
+                        <div class="input-group radioButtonWidthReg">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaRegistro", "-1", checkedFRegistro)
+                            </span>
+                            <label type="text" class="form-control radioButtonWidth">No Considerar Rango de Fechas</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-1">
+
+                    </div>
+                    <div class="col-sm-2 divWidth">
+                        <div class="input-group radioButtonWidthReg">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaRegistro", "1", checkedFRegistro)
+                            </span>
+                            <label for="esFechaRegistro" type="text" class="form-control radioButtonWidth">Fecha de Solicitud de la Orden  </label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-1">
+
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="input-group radioButtonWidthColec">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaRegistro", "2", checkedFColeccion, new { @id = "esFechaColeccion" })
+                            </span>
+                            <label for="esFechaColeccion" type="text" class="form-control radioButtonWidth">Fecha de Obtención de la Muestra</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Desde: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual de fecha*@
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = "form-control datepickerDesde datePickerWidth", autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Hasta: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual de fecha*@
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = "form-control datepickerHasta datePickerWidth", autocomplete = "off" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Tipo Orden:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.DropDownList("tipoOrden", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="Personas", Value = "1" }
+                            //new SelectListItem{ Text="Animales", Value = "2" },
+                            //new SelectListItem{ Text="Banco Sangre/Cepas", Value = "3" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    @Html.Label("Doc de Identidad:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("N° Oficio/Código Documento:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    @Html.Label("Código Orden/Código Muestra:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Examen:", new { @class = "control-label col-md-2" })
+                <div class="ui-autocomplete1 col-xs-12 col-sm-8 col-md-7 col-lg-7">
+                    @Html.TextBox("ExamenFiltro", (string)ViewBag.ExamenFiltro, new { @class = "form-control" })
+                    @Html.Hidden("hdnExamen", (string)ViewBag.idExamenFiltro)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Estado:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    @Html.DropDownList("estadoResultado", new List<SelectListItem>
+                      {
+                        new SelectListItem{ Text="-------------------Todos-------------------", Value = "0" },
+                        new SelectListItem{ Text="Resultado por verificar", Value = "10", Selected = true },
+                        new SelectListItem{ Text="Resultado informado", Value = "11" }
+                      }, (string)ViewBag.estadoResultado, new { @class = "form-control cmbxBusqueda" })
+                </div>
+
+                <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                    <br />
+                    <button class="btn btn-primary" id="btnBuscar" type="submit" value="Buscar" onclick="return FechaValidaBusqueda('datepickerDesde', 'datepickerHasta');">
+                        <span class="glyphicon glyphicon-search"></span> Buscar
+                    </button>
+                    <button class="btn btn-primary" id="btnValidacionMasiva" value="Validacion"> <span class="fa fa-list-ol"></span> Validacion Masiva</button>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+
+@if (ViewBag.ExamenesByUsuario != null)
+{
+    if (ViewBag.IsSearch)
+    {
+        if (Model != null && Model.Any())
+        {
+            if (ViewBag.MostrarMensaje)
+            {
+                <span>*Su búsqueda tiene @ViewBag.TotalRegistros resultados. Para visualizar todos los resultados descargue el archivo excel en el siguiente enlace.</span>
+                <br />
+            }
+            <a href="@(Url.Action("ExportarExcel", "ValidacionResultados", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Excel</a>
+            <br />
+            <table class="table table-responsive table-bordered" id="dtResultadosVerificar">
+                <thead>
+                    <tr>
+                        <th>
+                            Ficha
+                        </th>
+                        <th>Estado</th>
+                        @*<th>*@
+                        @*<input type='checkbox' name="chkAll" id="chkAll" />*@
+                        @*</th>*@
+                        <th>
+                            Conforme/No Conforme
+                        </th>
+                        <th>
+                            Comentario Validación
+                        </th>
+                        <th>
+                            @*Fecha de Solicitud*@Fecha Obtención de Muestra
+                        </th>
+                        <th>
+                            Código de Orden
+                        </th>
+                        <th>
+                            Código de Muestra - Código Lineal
+                        </th>
+                        <th>
+                            Exámen
+                        </th>
+                        <th>
+                            Descripción
+                        </th>
+                        <th>Resultado</th>
+                        <th>
+                            EESS/LAB Origen
+                        </th>
+                        <th>
+                            Documento Referencia
+                        </th>
+                        <th>
+                            Documento Identidad
+                        </th>
+                        <th>
+                            Paciente
+                        </th>
+                        <th>
+                            Fecha Nacimiento
+                        </th>
+                        <th>
+                            Historial Paciente
+                        </th>
+                        <th>solicitud de cambio</th>
+                        <th>Nuevo Exámen</th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    var hiddenIngresar = "";
+                    var hiddenValidacion = "";
+                    var genero = item.genero == 1 ? "Masculino" : "Femenino";
+
+                    <tr>
+                        <td>
+                            <a href="#" data-file="@item.codigoMuestra" class="lnkForm ficha">
+                                <img src="~/img/imgPdf.gif" />
+                            </a>
+                            <a href="@(Url.Action("VerArchivo", "ResultadosAnalisis", new { file = item.codigoMuestra }))" class="@("lnkForm DescargarFicha" + item.codigoMuestra)" target="_blank" style="display:none;"></a>
+                        </td>
+                        @*Sotero Bustamante - inicio - fecha 21/10/17 - se cambio el orden de los botones, el de ResultadoInformado ira antes de Nuevo/EditarResultado*@
+                        <td>
+                            @if (item.EXISTE_PENDIENTE == 1)
+                            {
+                                <input type="hidden" name="PorValidar" value="0" id="PorValidar" />
+                                <button type="button" class="btn btn-danger"
+                                        onclick="ValidarResultadosClick('@item.idOrden','@item.idOrdenExamen','@TipoValidacionResultado.PorValidar')"
+                                        data-toggle="modal" data-target="#ValidarResultados" data-id="@item.idOrden" data-tipoValidacion="0">
+                                    Resultado por Verificar
+                                </button>
+                            }
+                            @if (item.EXISTE_VALIDADO == 1)
+                            {
+                                <button type="button" class="btn btn-info" onclick="ImprimirResultadosClick('@item.idOrden','@item.idOrdenExamen','@TipoValidacionResultado.Validado')" data-toggle="modal" data-target="#ImprimirResultados" data-id="@item.idOrden" data-tipoValidacion="0">
+                                    Resultado informado
+                                </button>
+                            }
+                        </td>
+                        <td>
+                            @if (item.EXISTE_PENDIENTE == 1)
+                            {
+                                <div>
+                                    <div class="input-group radioButtonWidthReg">
+                                        <span class="input-group-addon">
+                                            <input type="radio" value='@item.idOrdenExamen' name='@item.idOrdenExamen' id="rbConformeMasivo">
+                                        </span>
+                                        <label type="text" class="form-control radioButtonWidth">Conforme</label>
+                                    </div>
+                                </div>
+                                <br />
+                                <div>
+                                    <div class="input-group radioButtonWidthReg">
+                                        <span class="input-group-addon">
+                                            <input type="radio" value='@item.idOrdenExamen' name='@item.idOrdenExamen' id="rbNoConformeMasivo">
+                                        </span>
+                                        <label type="text" class="form-control radioButtonWidth">No es Conforme</label>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Conforme)
+                            }
+                        </td>
+                        <td>
+                            @if (item.EXISTE_PENDIENTE == 1)
+                            {
+                                <textarea class="comentario" id="txtComentario @item.idOrdenExamen" style="width: 223px; height: 76px;" rows="4" cols="24"></textarea>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Comentarios)
+                            }
+
+                        </td>
+                        <td>
+                            @*@item.fechaSolicitud.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)*@
+                            @item.fechaColeccion.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CodigoOrden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoMuestra) - @Html.DisplayFor(modelItem => item.NomLab)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreExamen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExamenComun)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Resultado)</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Establecimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nroOficio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.tipoDocumento) @Html.DisplayFor(modelItem => item.nroDocumento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.paciente)
+                        </td>
+                        <td>
+                            @item.fechaNacimiento.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="HPacienteClick('@item.nroDocumento')" data-toggle="modal" data-target="#myModal" data-NroDocumento="@item.nroDocumento">
+                                Hist. Paciente
+                            </button>
+                        </td>
+
+                        <td>
+                            @if (item.EXISTE_VALIDADO == 1 && item.SOLICITA_INGRESO == 0)
+                            {
+                                @*@Html.ActionLink("Solicita Cambio de Resultado", "SolicitaAUVerificador", new { id = item.idOrdenExamen, estatusSol = 1 }, new { @class = "btn btn-warning confirmDialog", id = item.idOrden })*@
+                                <button type="button" class="btn btn-warning" onclick="SolicitarLiberacionResultado('@item.idOrdenExamen')">
+                                    Solicita Cambio de Resultado
+                                </button>
+                            }
+
+                            @if (item.EXISTE_VALIDADO == 1 && item.SOLICITA_INGRESO == 1)
+                            {
+
+                                <a href="#" class="btn btn-danger" onclick="SolicitudPendiente();">Autorizacion Pendiente</a>
+                            }
+
+                            @if (item.EXISTE_VALIDADO == 1 && item.SOLICITA_INGRESO == 2)
+                            {
+                                @Html.ActionLink("Nuevo/Editar Resultado", "SeleccionarAPVerificador", new { id = item.idOrdenExamen }, new { @class = "btn btn-success btn-block ingresarResultados", id = "lnkIR_" + item.idOrden, item.idOrden, style = hiddenIngresar })
+                            }
+                        </td>
+                        <td>
+                            @if (item.EXISTE_VALIDADO == 1)
+                            {
+                                @Html.ActionLink("Agregar Examen", "ShowPopupNuevoEnfermedadExamen", "Orden", new { id = item.idOrden }, new { @class = "btn btn-default btn-sm btnShowPopupEnfermedadExamen", id = item.idOrden })
+
+                                <input type="hidden" id="idPage" value="Validador" />
+                                <input type="hidden" id="idProyecto" value="@item.idProyecto" />
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            @Html.EmptyTable()
+        }
+    }
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+<!-- The Modal -->
+<div class="modal fade" data-spy="scroll" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:100%;">
+        <div class="modal-content modal-dialog-centered" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">NetLab - Instituto Nacional de Salud</h3>
+            </div>
+
+            <!-- Modal body -->
+            <div id="Dato" class="modal-body">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal Fullerscreen-modal fade" id="ValidarResultados" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-dialog-centered" role="document">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">NetLab - Instituto Nacional de Salud</h3>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DatoValidarResultados" class="modal-body">
+
+            </div>
+            <br />
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal Fullerscreen-modal fade" id="ImprimirResultados" tabindex="-1" role="dialog" aria-hidden="true">
+    @*style="overflow-x: auto; display: block;"*@
+    <div class="modal-dialog">
+        <div class="modal-content modal-dialog-centered" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">NetLab - Instituto Nacional de Salud</h3>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DatoImprimirResultados" class="modal-body">
+
+            </div>
+            <br />
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-edit" style="display: none">
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿Desea enviar una solicitud para corregir el informe de resultado?
+    </p>
+</div>
+<div id="dialog-open" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/PopupAgregarExamen.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/ValidacionResultados.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/ValidacionResultadosPendientes.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.min.js")
+    @*@Scripts.Render("~/Scripts/JsPDF/jquery-git.js")*@
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.min.js")
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.debug.js")
+    @Scripts.Render("~/Scripts/JsPDF/faker.min.js")
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.min.js")
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.plugin.autotable.js")
+    @Scripts.Render("~/Scripts/JsPDF/jspdf.plugin.autotable.src.js")
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtResultadosVerificar').DataTable({
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                "iDisplayLength": 50,
+                "scrollY": false,
+                "scrollX": true
+            });
+
+            //$('#dtResultadosVerificar').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+        function HPacienteVerificadorClick(NroDocumento) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: URL_BASE + "Paciente/ShowHistoriaClinicaPaciente",
+                data: { page: 1, NroDocumento: NroDocumento },
+                success: function (result) {
+                    $('#DatoPaciente').html(result);
+                    $('#dtPacienteBusqueda').DataTable({
+                        "scrollY": "100%",
+                        "scrollX": "100%",
+                        "scrollCollapse": true
+                    });
+                    $('.dataTables_length').addClass('bs-select');
+                }
+            });
+        }
+        function ValidarResultadosClick(id, idordenexamen, tipoValidacion) {
+            //alert('1');
+            //alert(id);
+            //alert(tipoValidacion);
+            //alert($('#PorValidar').val());
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: URL_BASE + "ValidacionResultados/ValidarResultados",
+                data: { id: id, idOrdenExamen: idordenexamen, tipoValidacion: $('#PorValidar').val() },
+                success: function (result) {
+                    $('#DatoValidarResultados').html(result);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest);
+                }
+            });
+        }
+        function ImprimirResultadosClick(id, idordenexamen, tipoValidacion) {
+            //alert('1');
+            //alert(id);
+            //alert(tipoValidacion);
+            //alert($('#PorValidar').val());
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: URL_BASE + "ValidacionResultados/ValidarResultados",
+                data: { id: id, idOrdenExamen: idordenexamen, tipoValidacion: "1" },
+                success: function (result) {
+                    $('#DatoImprimirResultados').html(result);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest);
+                }
+            });
+        }
+    </script>
+}
+<style type="text/css" media="all">
+    .Fullerscreen-modal .modal-dialog {
+        margin: 0;
+        margin-right: auto;
+        margin-left: auto;
+        width: 100%;
+    }
+
+    .cmbxBusqueda {
+        width: 230px !important;
+    }
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    .lnkForm img {
+        height: 26px;
+    }
+    /*.form-group {
+         margin-bottom: 6px;
+     }*/
+
+    .radioButtonWidthReg {
+        width: 250px !important;
+    }
+
+    .radioButtonWidthColec {
+        width: 275px !important;
+    }
+
+    .divWidth {
+        width: 195px !important;
+    }
+
+    .divWidth1 {
+        width: 100px !important;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .rowExamen, .rowExamen1, .rowExamen2, .rowExamen3 {
+        background-color: #67a8d4;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .rowExamen1 {
+        width: 100px;
+    }
+
+    .rowExamen2 {
+        width: 250px;
+    }
+
+    .rowExamen3 {
+        width: 70px;
+    }
+
+    h4.center {
+        text-align: center !i;
+    }
+
+    . es {
+        posit ive;
+        margin: 0 lin -eight wid h: 960p o padding text- ter;
+        enExamen;
+
+    {
+        d font-siz: 1 px;
+        magi -;
+    }
+
+    #tbOrdenE OrdenExa en t rder: 1px soli pa;
+    }
+
+
+
+    sultados {
+        d font-sie: 4px;
+        ar i;
+    }
+
+    #blResu lResulta os t rder: 1px o 3px;
+    }
+
+    l {
+        wi th: 100%;
+        text- lign: center;
+    }
+
+
+    #lnkRegis r gistra Result # izarResultados, C {
+    }
+
+    echazo {
+        w;
+    }
+
+    . umoSelect {
+        w d;
+    }
+
+
+    .S > pper > .op i max- :
+    }
+
+    . s height 20px .ms-choi e margin top: -3p .locke T background-col r: #C5C5 .ingresad T bac gro nd-color: #
+    }
+
+    .t tleExamen {
+        width: 4 % !important;
+        max-width: 40% impo display: inl n ve tical-align;
+    }
+
+    .ti leMuestra {
+        width: 3 % !important;
+        max-width: 30% impo display: in i v rtical-alig;
+    }
+
+    .r gthMetodo {
+        width: 2 % !important m 28% !important;
+        i e-block !imprtant;
+        al-ali n: op;
+    }
+
+    gthMetodo ele t {
+        0% !impo tant;
+        max-w ! rtant;
+        display: inline-block !important;
+    }
+</style>
+
+@*Alexander Buchelli - fin*@

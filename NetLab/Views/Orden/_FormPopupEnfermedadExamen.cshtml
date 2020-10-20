@@ -1,0 +1,324 @@
+﻿@* Descripción: Popup para agregar enfermedad, laboratorio destino, Tipo de Muestra y Material
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+@Html.AntiForgeryToken()
+<div>
+    <div>
+        @if (ViewBag.tipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+        {
+            <!--
+            <div id="radioRecepcionReferenciacion" class="divRow">
+                <div style="float: left">
+                    <label class="labelPopup">&nbsp;</label>
+                </div>
+                <div style="float: left; width: 100px">
+                    <input type="radio" name="radioRecepcion" checked="checked" value="0"/>
+                    <label>Recepción</label>
+                </div>
+                <div style="float: left; width: 100px">
+                    <input type="radio" name="radioRecepcion" value="1" />
+                    <label>Referencia</label>
+                </div>
+            </div>-->
+            @Html.Hidden("radioRecepcion", "0");
+        }
+        else
+        {
+            <!--Se indica como si fuera una recepcion-->
+            @Html.Hidden("radioRecepcion", "0");
+        }
+
+        <!--Enfermedad-->
+        <div class="divRow">
+            <div style="float: left">
+                @Html.LabelFor(model => model.enfermedad, htmlAttributes: new { @class = "labelPopup" })
+            </div>
+            <div style="float: left; width: 300px">
+                <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                    <option value=""></option>
+                    @if (ViewBag.valueEnfermedadPreSeleccionada != null)
+                    {
+                        <option value=@ViewBag.valueEnfermedadPreSeleccionada>@ViewBag.textoEnfermedadPreSeleccionada</option>
+                    }
+                </select>
+                @if (ViewBag.valueEnfermedadPreSeleccionada != null)
+                {
+                    <script type="text/javascript">
+                        $("#idEnfermedad").val(@ViewBag.valueEnfermedadPreSeleccionada).trigger("liszt:updated");
+                    </script>
+                }
+
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+
+        <div class="divRow">
+            <div style="float: left">
+                @Html.Label("Laboratorio destino:", "EESS/LAB destino:", new { @class = "labelPopup" })
+            </div>
+            <div style="float: left; width: 300px">
+                @Html.TextBox("CodigoUnicoDestino", (string)ViewBag.textoLaboratorioPreSeleccionada, new { @class = "form-control" })
+                @Html.Hidden("idEstablecimientoDestino", (string)ViewBag.valueLaboratorioPreSeleccionada)
+            </div>
+            <div style="float: left">
+                <textarea disabled rows="3" id="NombreEESSDestino" style="margin: 0px -140.99px 0px 0px; width: 441px; height: 58px; resize:none;Font-size:13px;" draggable="false">@ViewBag.direccionLaboratorio
+                </textarea>
+            </div>
+        </div>
+
+        <!--Laboratorio-->
+        <div class="divRow" style="display:none">
+            <div style="float: left">
+                @Html.Label("Laboratorio destino:", "EESS/LAB destino:", new { @class = "labelPopup" })
+            </div>
+            <div style="float: left; width: 300px">
+                <select class="sizeChosen form-control input-sm " id="idLaboratorio" name="idLaboratorio">
+                    <option value=""></option>
+                    @if (ViewBag.valueLaboratorioPreSeleccionada != null)
+                    {
+                        <option value=@ViewBag.valueLaboratorioPreSeleccionada>@ViewBag.textoLaboratorioPreSeleccionada</option>
+                    }
+                </select>
+                @if (ViewBag.valueLaboratorioPreSeleccionada != null)
+                {
+                    <script type="text/javascript">
+                        $("#idLaboratorio").val(@ViewBag.valueLaboratorioPreSeleccionada).trigger("liszt:updated");
+                    </script>
+                }
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+
+
+        <!--Examen-->
+        <div class="divRow">
+            <div style="clear: both; float: left">
+                @Html.Label("Examen:", htmlAttributes: new { @class = "labelPopup" })
+            </div>
+            <div id="dvPopupExamen" style="float: left; width: 300px">
+                <select id="idExamen" name="idExamen" class="sizeChosen form-control input-sm">
+                    <option value=""></option>
+
+                    @if (ViewBag.valueExamenPreSeleccionada != null)
+                    {
+                        <option value=@ViewBag.valueExamenPreSeleccionada>@ViewBag.textoExamenPreSeleccionada</option>
+                    }
+                </select>
+                @if (ViewBag.valueExamenPreSeleccionada != null)
+                {
+                    <script type="text/javascript">
+                        $("#idExamen").val('@ViewBag.valueExamenPreSeleccionada').trigger("chosen:updated");
+                        $.ajax(
+                          {
+                              url: URL_BASE + "Orden/GetTiposMuestraByIdExamen?idExamen=@ViewBag.valueExamenPreSeleccionada",
+                              cache: false,
+                              method: "GET"
+                          }).done(function (msg) {
+                              $("#dvPopupTipoMuestra").html(msg);
+                              // $("#idTipoMuestra").chosen({ placeholder_text_single: "Seleccione el Tipo de Muestra", no_results_text: "No existen coincidencias" });
+                              $("#idTipoMuestra").val(@ViewBag.idTipoMuestra).trigger("chosen:updated");
+                          }
+                          );
+                    </script>
+                }
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+        <!--Tipo Muestra-->
+        <div class="divRow">
+            <div style="clear: both; float: left">
+                @Html.Label("Tipo de Muestra:", htmlAttributes: new { @class = "labelPopup" })
+            </div>
+            <div id="dvPopupTipoMuestra" style="float: left; width: 300px">
+                @Html.Partial("_TipoMuestra", new List<Model.TipoMuestra>())
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+        <!--Fecha Hora Coleccion-->
+        <div class="divRow">
+            <div style="clear: both; float: left">
+                @Html.Label("Fecha/Hora de Obtención:", htmlAttributes: new { @class = "labelPopup", onkeydown = "return false;" })
+            </div>
+            <div style="float: left">
+                @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                <input id="fechaColeccionPopup" placeholder="dd/mm/yyyy" class="datepickerTelerik dateOnly form-control formFecha" autocomplete="off" />
+            </div>
+            @*<div class="obligatorio">
+                <span>*</span>*@
+
+            <div style="float: left; margin-left: 5px">
+                <input id="horaColeccionPopup" placeholder="hh:mm" class="timepicker form-control formFecha" />
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+    </div>
+    <!--Material-->
+    @*JRCR-REQ01*@
+    @Html.Hidden("idMaterial", 0)
+    <div class="divRow" style="display:none;">
+        @*<div style="clear: both; float: left">
+                @Html.Label("Material:", htmlAttributes: new { @class = "labelPopup" })
+            </div>*@
+        <div id="dvPopupMaterial" style="float: left; width: 300px">
+            @*@Html.Partial("_Material", new List<Model.Material>())*@
+        </div>
+        @*<div class="obligatorio">
+                <span>*</span>
+            </div>*@
+    </div>
+    <!--Volumen Muestra Colectada-->
+    @*JRCR-REQ01*@
+    @Html.Hidden("volumenPopup", 1)
+    @Html.Hidden("volumenNoPrecisaPopup", false)
+    @*<div class="divRow">
+            <div style="clear: both; float: left">
+                @Html.Label("Volumen Muestra Colectada:", htmlAttributes: new { @class = "labelPopup" })
+            </div>
+            <div style="float: left">
+                <input id="volumenPopup" class="formFecha" name="volumenPopup" type="number" value="1" min="0.10" max="100" step="0.10" />
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div style="float: left; margin-left: 5px">
+                <input type="checkbox" name="volumenNoPrecisaPopup" id="volumenNoPrecisaPopup" />
+                <label for="volumenNoPrecisaPopup">No Precisa</label>
+            </div>
+        </div>*@
+    <!--Cantidad-->
+    @*JRCR-REQ01*@
+    @Html.Hidden("cantidadPopup", 1)
+    @Html.Hidden("tipoMaterialPopup", 1)
+    @*<div class="divRow">
+            <div style="clear: both; float: left">
+                @Html.Label("Cantidad:", htmlAttributes: new { @class = "labelPopup" })
+            </div>
+            <div style="float: left">
+                <input id="cantidadPopup" class="formFecha" name="cantidadPopup" type="number" value="1" min="1" max="100" step="1" />
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div style="float: left; margin-left: 5px">
+                <select id="tipoMaterialPopup" name="tipoMaterialPopup" style="width:150px;">
+                    <option value="1" selected="selected">Muestra Primaria</option>
+                    <option value="2">Alícuota</option>
+                </select>
+            </div>
+        </div>*@
+    <!--Fecha hora envio-->
+    @*<div class="invisible divRow">
+        <div style="clear: both; float: left">
+            @Html.Label("Fecha/Hora de Envío:", htmlAttributes: new { @class = "labelPopup" })
+        </div>
+        <div style="float: left">*@
+    @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+    @*<input id="fechaEnvioPopup" placeholder="dd/mm/yyyy" class="datepickerTelerik form-control formFecha" autocomplete="off" />
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div style="float: left; margin-left: 5px">
+                <input id="horaEnvioPopup" placeholder="hh:mm" class="timepicker form-control formFecha" />
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>*@
+    @*Alexander Buchelli - inicio - fecha 24/08/17 - se cambiaron los enlaces por botones*@
+    <div id="validacionexamenpacientedivid" class="alert alert-danger" role="alert" style="display:none;">
+        <strong>Inválido!</strong> El paciente ya cuenta con este examen.
+    </div>
+    <div id="validacionexamenpacientevih" class="alert alert-danger" role="alert" style="display:none;">
+        <strong>Inválido!</strong> El paciente no cuenta con una solicitud para este Examen.
+    </div>
+    <div class="divRow">
+        <div style="clear: both; float: left" class="labelPopup">&nbsp;</div>
+        <div class="controlPopup" style="float: left">
+            <label id="btnAgregarExamen" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-ok "></span> Agregar</label>
+            @* <label id="btnAgregarExamen" class="btn-link text-center">Agregar</label>*@
+        </div>
+        <div style="float: left">
+            <label onclick="$('#dialog-open').dialog('close');" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-remove"></span> Cancelar</label>
+            @*<label onclick="$('#dialog-open').dialog('close');" class="btn-link text-center">Cancelar</label>*@
+        </div>
+
+    </div>
+    @*<div style="float: right">
+            <a class="btn btn-default btn-sm text-center" href="@Url.Action("Index", "Catalogo")"
+               type="submit"
+               id="showCatalogo"
+               style="color: blue"
+               target="_blank"><span class="glyphicon glyphicon-book"> Ver Catálogo</span></a>
+        </div>*@
+</div>
+
+
+
+<style type="text/css">
+    .labelPopup {
+        font-size: 12px;
+        width: 140px;
+        text-align: left;
+    }
+
+
+
+    .controlPopup {
+        font-size: 12px;
+        width: 90px;
+        text-align: left;
+    }
+
+    .divRow {
+        clear: both;
+        height: 38px;
+    }
+
+    .formFecha {
+        width: 120px;
+    }
+
+    .formHora {
+        width: 40px;
+    }
+
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        float: left;
+        width: 300px;
+    }
+
+    #CodigoUnicoDestino.ui-autocomplete-loading {
+        background-image: url('../../img/loading.gif');
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+</style>
+
+
+@*Alexander Buchelli - fin*@
+
+<script type="text/javascript">
+    $(function () {
+        SetDateOnly();
+    });
+</script>

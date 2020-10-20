@@ -1,0 +1,227 @@
+﻿@model  NetLab.Models.SolicitanteViewModels
+
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<input type="hidden" id="hdnIdSolicitante" name="hdnIdSolicitante" value="@Model.Solicitante.idSolicitante" />
+<div class="form-group">
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("DNI:", new { @class = "label-width" })
+            <div class="control-width" style="display:flex">
+                @Html.EditorFor(model => model.Solicitante.Dni, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly", @id = "Dni" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.Dni, "", new { @class = "text-danger" })
+            </div>
+            <div class="label-width3"></div>
+            @Html.Label("Código Profesional:", new { @class = "label-width2" })
+            <div class="control-width2" style="display:flex">
+                @Html.EditorFor(model => model.Solicitante.CodigoUnico, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly", @id = "CodigoUnico" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.CodigoUnico, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("Apellido Paterno:", new { @class = "label-width" })
+            <div class="control-width" style="display: flex">
+                @Html.EditorFor(model => model.Solicitante.apellidoPaterno, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly", @id = "apellidoPaterno" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.apellidoPaterno, "", new { @class = "text-danger" })
+            </div>
+            <div class="label-width3"></div>
+            @Html.Label("Apellido Materno:", new { @class = "label-width2" })
+            <div class="control-width2" style="display: flex">
+                @Html.EditorFor(model => model.Solicitante.apellidoMaterno, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", @id = "apellidoMaterno" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.apellidoMaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("Nombres:", new { @class = "label-width" })
+            <div class="control-width" style="display: flex">
+                @Html.EditorFor(model => model.Solicitante.Nombres, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", @id = "Nombres" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.Nombres, "", new { @class = "text-danger" })
+            </div>
+            <div class="label-width3"></div>
+            @Html.Label("Correo:", new { @class = "label-width2" })
+            <div class="control-width2" style="display:flex">
+                @Html.EditorFor(model => model.Solicitante.correo, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", @id = "correo" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.correo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("Profesión:", new { @class = "label-width" })
+            <div class="control-width" style="display:flex">
+                @*@Html.DropDownList("profesion", , new { @class = "form-control cmbTipo", id = "cmbProfesion", name = "cmbProfesion" })*@
+                @Html.DropDownListFor(model => model.Solicitante.idProfesion, Model.Profesion.SelectList, new { @class = "form-control cmbTipo", id = "cmbProfesion", name = "cmbProfesion" })
+                @*@Html.DropDownList("profesion", new List<SelectListItem>
+                    {
+                      new SelectListItem{ Text="No precisa", Value = "0"},
+                      new SelectListItem{ Text="Médico", Value = "1" },
+                      new SelectListItem{ Text="Obstetra", Value = "2" },
+                      new SelectListItem{ Text="Biólogo", Value = "3" },
+                      new SelectListItem{ Text="Estadistico", Value = "4" },
+                      new SelectListItem{ Text="Tecnico en Laboratorio", Value = "5" },
+                      new SelectListItem{ Text="Enfermero", Value = "6" }
+                    }, new { @class = "form-control cmbTipo" })*@
+            </div>
+            <div class="label-width3"></div>
+            @Html.Label("Telefono:", new { @class = "label-width2" })
+            <div class="control-width2" style="display:flex">
+                @Html.EditorFor(model => model.Solicitante.telefonoContacto, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", @id = "telefonoContacto" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.telefonoContacto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("Centro de Trabajo Actual:", new { @class = "label-width" })
+            <div class="control-widthLong" style="display:flex">
+                @Html.TextBox("CodigoUnico", "", new { @class = "form-control" })
+                @Html.Hidden("hddDato", (string)ViewBag.CodigoUnico)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="div-rowSol">
+            @Html.Label("Centro de Trabajo:", new { @class = "label-width" })
+            <div class="control-widthLong" style="display:flex">
+                @Html.LabelForModel(Model.Solicitante.Establecimiento)
+            </div>
+            <div style="display:none">
+                @Html.EditorFor(model => model.Solicitante.idEstablecimiento, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly", id = "idEstablecimiento" } })
+            </div>
+        </div>
+    </div>
+    @*<div class="form-group">
+            <div class="div-rowSol">
+                @Html.Label("Centro de Trabajo:", new { @class = "label-width" })
+                <div class="control-widthLong" style="display:flex">
+                    @Html.TextBox("CodigoUnico", "", new { @class = "form-control" })
+                    @Html.Hidden("hddDato", (string)ViewBag.CodigoUnico)
+                </div>
+            </div>
+        </div>*@
+
+
+
+    <hr />
+    <div class="divRow" style="align-content:center">
+        <div style="clear: both; float: left; width:200px;" class="labelPopup">&nbsp;</div>
+        <div class="controlPopup" style="float: left">
+            <label id="btnEditSolicitante" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-ok "></span> Actualizar</label>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Solicitante.js")
+}
+
+    <style type="text/css" media="all">
+        .labelPopup {
+            font-size: 10px;
+            width: 150px;
+            text-align: left;
+        }
+
+        .cmbDatos {
+            width: 200px !important;
+        }
+
+        .txtDatos {
+            width: 200px !important;
+        }
+
+        .cmbTipo {
+            width: 200px !important;
+        }
+
+        .controlPopup {
+            font-size: 10px;
+            width: 140px;
+            text-align: left;
+        }
+
+        .div-rowSol {
+            display: flex;
+            padding-left: 10px;
+            height: 25px;
+            width: 680px;
+        }
+        /*width: 780px;*/
+        .control-width3 {
+            width: 160px;
+            display: flex;
+        }
+
+        .label-width3 {
+            padding-left: 10px;
+            text-align: left;
+            width: 30px;
+        }
+
+        .div-rowBTN {
+            display: flex;
+            padding-left: 10px;
+            height: 25px;
+            width: 750px;
+        }
+
+        .label-width {
+            text-align: left;
+            width: 140px;
+        }
+
+        .label-width2 {
+            padding-left: 0px;
+            text-align: left;
+            width: 120px;
+        }
+
+        .label-width3 {
+            padding-left: 10px;
+            text-align: left;
+            width: 80px;
+        }
+
+        .control-widthEL {
+            width: 100px;
+        }
+
+        .control-width {
+            width: 130px;
+            display: flex;
+        }
+
+        .control-width2 {
+            width: 140px;
+            display: flex;
+        }
+
+        .control-widthLong {
+            width: 470px;
+            display: flex;
+        }
+
+        .control-width3 {
+            width: 140px;
+            display: flex;
+        }
+
+        .widthBtn1 {
+            width: 90px;
+        }
+
+        .widthBtn2 {
+            width: 210px;
+        }
+
+        /*#tabs {
+        width: 780px;
+        height: 280px !important;
+    }*/
+</style>

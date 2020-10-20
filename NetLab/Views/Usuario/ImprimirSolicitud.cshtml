@@ -1,0 +1,247 @@
+﻿@model Model.SolicitudUsuario
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <div id="header" class="block"> 
+        <table style="width:1000px; margin-bottom:20px;" border="1" >
+            <tr>
+                <td rowspan="3" width="150px;"><img src="~/img/logo ins.jpg" alt="" width="75" height="75" /></td>
+                <td align="center">FORMULARIO</td>
+                <td>FOR-</td>
+            </tr>
+            <tr>
+                <td rowspan="2" align="center">SOLICITUD DE ACCESO AL MÓDULO DIAGNÓSTICO DEL SISTEMA DE INFORMACIÓN DE LABORATORIOS NETLABv2</td>
+                <td align="center">Edición N°1</td>
+            </tr>
+            <tr>
+                <td width="150px;" align="center">Pág.1 de 2</td>
+            </tr>
+        </table>
+    </div>
+    <div class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td width="200px;"><span>SECTOR</span></td>
+                <td width="400px;">SALUD</td>
+                <td width="200px;"><span>SUB SECTOR</span></td>
+                <td width="200px;">@Model.nombreInstitucion</td>
+            </tr>
+            <tr>
+                <td width="200px;">DIRESA /GERESA / DISA/ DIRIS</td>
+                <td colspan="3">@Model.nombreDisa</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>RED / UBG DE SALUD</span></td>
+                <td width="400px;">@Model.nombreRed</td>
+                <td width="200px;"><span>Es cabeza de Red</span></td>
+                <td width="200px;">SI-NO</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>MICRORED DE SALUD</span></td>
+                <td width="400px;">@Model.nombreMicroRed</td>
+                <td width="200px;"><span>Es cabeza de M.Red</span></td>
+                <td width="200px;">SI-NO</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>IPRESS / LABORATORIO NAC. /REG. /ÁREA /OTRO</span></td>
+                <td width="400px;">@Model.Establecimiento</td>
+                <td width="200px;"><span>CÓDIGO RENIPRESS:</span></td>
+                <td width="200px;">@Model.Renipress</td>
+            </tr>
+        </table>
+    </div>
+    <div class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td rowspan="2" width="200px;"><span>USUARIO SOLICITANTE</span></td>
+                <td rowspan="2" width="400px;">@Model.usuario.nombres</td>
+                <td width="200px;"><span>SOLICITUD N°</span></td>
+                <td width="200px;"></td>
+            </tr>
+            <tr>
+                <td width="200px;">TIPO SOLICITUD</td>
+                <td colspan="3">NUEVO-RENOVACION</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>DOCUMENTO DE IDENTIDAD</span></td>
+                <td width="400px;">@Model.usuario.tipoDoc</td>
+                <td width="200px;"><span>N° DE DOC</span></td>
+                <td width="200px;">@Model.usuario.documentoIdentidad</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>PROFESIÓN Y CARGO</span></td>
+                <td width="400px;">@Model.usuario.cargo</td>
+                <td width="200px;"><span>CONDICIÓN LABORAL</span></td>
+                <td width="200px;">@Model.usuario.condicionLaboral</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>N° DE COLEGIATURA</span></td>
+                <td width="400px;">@Model.usuario.codigoColegio</td>
+                <td width="200px;"><span>SIGLAS COLEG</span></td>
+                <td width="200px;"></td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>COMPONENTE:</span></td>
+                <td colspan="3" width="800px;">@Model.usuario.componenteUsuario</td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>SOLICITUD DE ACCESO A EXAMEN DE LAB.</span></td>
+                <td width="400px;">
+                @foreach (var item in Model.examen)
+                {
+                    <span>@Html.Raw(item.nombre)</span><br />
+                }
+                </td>
+                <td width="200px;"><span>ACCESO A LA ENFERMEDAD DE</span></td>
+                <td width="200px;"></td>
+            </tr>
+            <tr>
+                <td width="200px;"><span>CORREO ELECTRÓNICO “netlab”</span></td>
+                <td width="400px;">@Model.usuario.correo</td>
+                <td width="200px;"><span>TELÉFONO DEL USUARIO (móvil)</span></td>
+                <td width="200px;">@Model.usuario.telefono</td>
+            </tr>
+            <tr>
+                <td colspan="3" width="800px;"><span>¿ES USTED QUIEN ORDENA QUE EL PACIENTE SE REALICE UN EXAMEN DE LABORATORIO? (solicitante):</span></td>
+                <td width="200px;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="800px;"><span>¿ES USTED MÉDICO CONSULTOR OFICIAL DE TUBERCULOSIS U OTRA ETIOLOGÍA?</span></td>
+                <td width="200px;"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td width="200px;"><span>Solicito usuario y contraseña para acceso al NETLABv2</span></td>
+                <td colspan="3" width="800px;">
+                    @foreach (var item in Model.rol)
+                    {
+                        <span>@Html.Raw(item.nombre)</span><br />
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td colspan="2" rowspan="2" width="500px;"><span>Firma del solicitante</span></td>
+                <td colspan="2" width="500px;">Lugar: Jesus Maria, 1400</td>
+            </tr>
+            <tr>
+                <td colspan="2" width="500px;">Fecha: @Model.fechaEnvio</td>
+            </tr>
+        </table>
+    </div>
+    <div class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td colspan="2" width="500px;"><span>Responsable del EESS/ Institución; Dirección u Oficina General que autoriza el acceso:</span></td>
+                <td colspan="2" width="500px;"><span>Firma y Sello:</span></td>
+            </tr>
+            <tr>
+                <td colspan="2" width="500px;">Cargo:</td>
+            </tr>
+        </table>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <div id="header" class="block">
+        <table style="width:1000px; margin-bottom:20px;" border="1">
+            <tr>
+                <td rowspan="3" width="150px;"><img src="~/img/logo ins.jpg" alt="" width="75" height="75" /></td>
+                <td align="center">FORMULARIO</td>
+                <td>FOR-</td>
+            </tr>
+            <tr>
+                <td rowspan="2" align="center">SOLICITUD DE ACCESO AL MÓDULO DIAGNÓSTICO DEL SISTEMA DE INFORMACIÓN DE LABORATORIOS NETLABv2</td>
+                <td align="center">Edición N°1</td>
+            </tr>
+            <tr>
+                <td width="150px;" align="center">Pág.2 de 2</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="block">
+
+            <center><span><b>ACUERDO DE CONFIDENCIALIDAD</b></span></center>
+            <br />
+            <center><span>Al recibir el acceso al SIL NETLABv2, me comprometo a:</span></center>
+            <br />
+            <span>1. No divulgar datos personales, incluyendo sensibles provenientes del NETLABv2 a personas no autorizadas o ajenas a los procesos.</span>
+            <br />
+            <span>2. No otorgar datos o información considerada como confidencial o restringida proveniente del NETLABv2, apersonas no autorizadas y ajenas a los procesos.</span>
+            <br />
+            <span>3. No permitir, ni facilitar el acceso al sistema de información NETLABv2 a personas no autorizadas o ajenas al proceso.</span>
+            <br />
+            <span>
+                4. No utilizar el sistema de información NETLABv2 para otras actividades que no estén directamente relacionadas con las funciones asignadas en el Manual de Organización y
+                Funciones de la unidad orgánica, institución o establecimiento de salud en donde presto mis servicios.
+            </span>
+            <br />
+            <span>
+                5. No utilizar datos, ni información a la que tengo acceso a través del sistema de información NETLABv2, sin
+                autorización; para la realización de investigaciones, en el ámbito nacional o internacional, a título personal o de
+                terceros, bajo pena de recibir las sanciones establecidas por la Autoridad Nacional de Protección de
+                Datos Personales conforme a la Ley y a su reglamento.
+            </span>
+            <br />
+            <span>
+                6. No utilizar datos, ni información a la que tenga acceso mediante el uso del sistema de información NETLABv2, sin
+                autorización, para realizar publicaciones en revistas científicas a nivel nacional o internacional a título personal o
+                de terceros, bajo pena de recibir las sanciones establecidas por la Autoridad Nacional de Protección de Datos
+                Personales conforme a la Ley y a su reglamento.
+            </span>
+            <br />
+            <span>
+                7. Proteger cuidadosamente mi usuario y contraseña que me han sido asignadas, no compartiéndola bajo ninguna
+                circunstancia, y evitar que esté a la vista de otros
+            </span>
+            <br />
+            <span>
+                8. Registrar y reportar con prontitud a mi jefe inmediato cualquier incidencia que pueda comprometer la seguridad
+                del sistema de información NETLABv2.
+            </span>
+            <br />
+            <span>
+                9. Informar al administrador del NETLABv2 cuando existe cambio de funciones en el puesto, cambio de laboratorio
+                dentro de la misma institución o cuando ya no se labora en la institución o establecimiento de salud a través del
+                cual se solicitó el acceso al NETLABv2.
+            </span>
+            <br />
+            <span>
+                10. Aceptar que ante cualquier violación a mis compromisos, me sea impuesta la sanción correspondiente según la
+                infracción cometida.
+            </span>
+            <br /><br /><br /><br /><br /><br /><br />
+
+        <span><b>Fecha::</b>@Model.fechaEnvio</span><br />
+        <span><b>NOMBRE:</b>@Model.usuario.nombres</span><br />
+        <span><b>DNI:</b>@Model.usuario.documentoIdentidad</span>
+        
+</div>
+</body>
+</html>
+
+<style type="text/css">
+    #header {
+        position: relative;
+        top: 0px;
+        left: 0px;
+    }
+
+    .page-breaker {
+        display: block;
+        clear: both;
+        page-break-after: always;
+    }
+</style>

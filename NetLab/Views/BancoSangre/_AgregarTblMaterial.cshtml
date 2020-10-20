@@ -1,0 +1,35 @@
+﻿@*  Descripción: Vista, muestra y carga los Materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.ViewData.MaterialVd>
+
+
+<table class="table" width="80" >
+    <tr>
+        <th>Material</th>
+        <th>Volumen</th>
+        <th>Cantidad</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.textoCmbMaterial)
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.material.idMaterial )>
+                    @Html.TextBox("ordenGrabado","", new { @class = "form-control", placeholder = "Ingrese Volumen" })
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.material.idMaterial)>
+                    @Html.TextBox("cantidad", "", new { @class = "form-control", placeholder = "Ingrese Cantidad" })
+                </td>
+            </tr>
+        }
+    }
+
+</table>

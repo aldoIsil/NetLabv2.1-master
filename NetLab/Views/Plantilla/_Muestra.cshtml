@@ -1,0 +1,20 @@
+﻿@*  Descripción: Vista, muestra el combo de TipoMuestra en el mantenimiento de plantillas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.TipoMuestra>
+
+@Html.DropDownList(
+    "IdTipoMuestra",
+    new SelectList(Model, "idTipoMuestra", "nombre"),
+    new
+    {
+        @id = "idTipoMuestra",
+        data_val = "true",
+        data_val_required = "Debe seleccionar el tipo de muestra",
+        @class = "form-control input-sm",
+        @data_url = @Url.Action("GetMaterialByTiposMuestra"),
+        @data_loading_image = @Url.Content("~/Content/images/loading.gif")
+    })
+@Html.ValidationMessage("IdTipoMuestra", new { @class = "msj-error" })

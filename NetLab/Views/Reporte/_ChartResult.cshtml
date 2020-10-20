@@ -1,0 +1,307 @@
+﻿@using Model.ReportesDTO
+@using Newtonsoft.Json
+@model List<ReportResponse>
+@{
+    List<ReportResponse> obj = (List<ReportResponse>)Model;
+    string muestrasS = "[]";
+    if (obj.Any())
+    {
+        muestrasS = JsonConvert.SerializeObject(obj.Select(s => s.EESSDias));
+    }
+
+    List<ReporteResult> result = ViewBag.ReporteResult;
+    int enfermedadid = ViewBag.Enfermedad;
+    //string chartTitle = string.Format("Resultados - Obtención de Muestras - {0}", enfermedadid == 1 ? "Tuberculosis" : "VIH");
+    string chartTitle = "Resultados - Obtención de Muestras";
+}
+<h2>Resultado</h2>
+@*<div id="box_plot"></div>*@
+@*<div id="charttable"> 
+    <table width="200px" border="1">
+        <tr>
+            <td>Indicador</td>
+            <td>X</td>
+            <td>Min</td>
+            <td>Max</td>
+        </tr>
+        @foreach (var item in (List<ReporteTableValues>)ViewBag.DatosTabla)
+        {
+            <tr>
+                <td></td>
+                <td>@item.Median</td>
+                <td>@item.Min</td>
+                <td>@item.Max</td>
+            </tr>
+        }
+    </table>
+</div>*@
+<div id="myDiv"></div>
+@*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>*@
+
+@*<script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawBoxPlot);
+
+        function drawBoxPlot() {
+            var muestras =
+            //debugger;
+            //var array = [
+            //  ['a', 100, 90, 104, 120],
+            //  ['b', 120, 113, 124, 140],
+            //  ['c', 130, 117, 133, 139],
+            //  ['d', 90, 88, 92, 95],
+            //  ['e', 70, 74, 63, 72],
+            //  ['f', 21, 28, 34, 40],
+            //  ['g', 80, 77, 85, 90],
+            //  ['h', 100, 90, 110, 110]
+            //];
+
+            //var array = muestras;
+            var array = [];
+            for (var i = 0; i < muestras.length; i++) {
+                var arrayobj = [];
+                arrayobj.push(muestras[i][0]);
+                for (var j = 1; j < muestras[i].length; j++) {
+                    arrayobj.push(parseInt(muestras[i][j]));
+                }
+                //var item = muestras[i].map(function(v){return parseInt(v)});
+                //array.push(item);
+                array.push(arrayobj);
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'x');
+            //for (var i = 0; i < array[0].length-1; i++) {
+            //    data.addColumn('number', 'series'+i);
+            //}
+            data.addColumn('number', ' ');
+            data.addColumn('number', ' ');
+            data.addColumn('number', ' ');
+            data.addColumn('number', ' ');
+            //data.addColumn('number', 'series4');
+            //data.addColumn('number', 'series5');
+            //data.addColumn('number', 'series6');
+
+            data.addColumn({ id: 'max', type: 'number', role: 'interval' });
+            data.addColumn({ id: 'min', type: 'number', role: 'interval' });
+            data.addColumn({ id: 'firstQuartile', type: 'number', role: 'interval' });
+            data.addColumn({ id: 'median', type: 'number', role: 'interval' });
+            data.addColumn({ id: 'thirdQuartile', type: 'number', role: 'interval' });
+            data.addRows(getBoxPlotValues(array, array.length));
+
+            /**
+             * Takes an array of input data and returns an
+             * array of the input data with the box plot
+             * interval data appended to each row.
+             */
+            function getBoxPlotValues(array, count) {
+                for (var i = 0; i < array.length; i++) {
+
+                    var arr = array[i].slice(1).sort(function (a, b) {
+                        return a - b;
+                    });
+
+                    var max = arr[arr.length - 1];
+                    var min = arr[0];
+                    var median = getMedian(arr);
+
+                    // First Quartile is the median from lowest to overall median.
+                    var firstQuartile = getMedian(arr.slice(0, 4));
+
+                    // Third Quartile is the median from the overall median to the highest.
+                    var thirdQuartile = getMedian(arr.slice(3));
+
+                    //array[i][5] = max;
+                    //array[i][6] = min
+                    //array[i][7] = firstQuartile;
+                    //array[i][8] = median;
+                    //array[i][9] = thirdQuartile;
+
+
+                    //count = array[i].length;
+                    //array[i][count] = max;
+                    //array[i][count+1] = min
+                    //array[i][count+2] = isNaN(firstQuartile) ? 0 : firstQuartile;
+                    //array[i][count+3] = isNaN(median) ? 0 : median;
+                    //array[i][count+4] = isNaN(thirdQuartile) ? 0 : thirdQuartile;
+
+                    array[i][5] = max;
+                    array[i][6] = min
+                    array[i][7] = isNaN(firstQuartile) ? 0 : firstQuartile;
+                    array[i][8] = isNaN(median) ? 0 : median;
+                    array[i][9] = isNaN(thirdQuartile) ? 0 : thirdQuartile;
+
+                    for (var j = 1; j < array[i].length; j++) {
+                        array[i][j] = (isNaN(array[i][j]) || array[i][j] == undefined) ? 0 : parseInt(array[i][j]);
+                    }
+                }
+
+                //console.log("array after");
+                console.log(array);
+                return array;
+            }
+
+            /*
+             * Takes an array and returns
+             * the median value.
+             */
+            function getMedian(array) {
+                var length = array.length;
+
+                /* If the array is an even length the
+                 * median is the average of the two
+                 * middle-most values. Otherwise the
+                 * median is the middle-most value.
+                 */
+                if (length % 2 === 0) {
+                    var midUpper = length / 2;
+                    var midLower = midUpper - 1;
+
+                    return (array[midUpper] + array[midLower]) / 2;
+                } else {
+                    return array[Math.floor(length / 2)];
+                }
+            }
+
+            var options = {
+                title: '@Html.Raw(chartTitle)',//'Resultados - Obtención de Muestras - Tuberculosis',
+                height: 400,
+                legend: { position: 'none' },
+                hAxis: {
+                    gridlines: { color: '#fff' }
+                },
+                vAxis:{
+                    ticks: [0, 5, 10, 15, 20, 25, 30, 35]
+                },
+                lineWidth: 0,
+                series: [{ 'color': '#D3362D' }],
+                intervals: {
+                    barWidth: 1,
+                    boxWidth: 1,
+                    lineWidth: 2,
+                    style: 'boxes'
+                },
+                interval: {
+                    max: {
+                        style: 'bars',
+                        fillOpacity: 1,
+                        color: '#777'
+                    },
+                    min: {
+                        style: 'bars',
+                        fillOpacity: 1,
+                        color: '#777'
+                    }
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('box_plot'));
+            chart.draw(data, options);
+        }
+
+    </script>*@
+
+<script type="text/javascript">
+    //$(function () {
+    function getBoxPlotValues(array, count) {
+        for (var i = 0; i < array.length; i++) {
+
+            var arr = array[i].slice(1).sort(function (a, b) {
+                return a - b;
+            });
+
+            var max = arr[arr.length - 1];
+            var min = arr[0];
+            var median = getMedian(arr);
+
+            // First Quartile is the median from lowest to overall median.
+            var firstQuartile = getMedian(arr.slice(0, 4));
+
+            // Third Quartile is the median from the overall median to the highest.
+            var thirdQuartile = getMedian(arr.slice(3));
+
+            //array[i][5] = max;
+            //array[i][6] = min
+            //array[i][7] = firstQuartile;
+            //array[i][8] = median;
+            //array[i][9] = thirdQuartile;
+
+            array[i][5] = max;
+            array[i][6] = min
+            array[i][7] = isNaN(firstQuartile) ? 0 : firstQuartile;
+            array[i][8] = isNaN(median) ? 0 : median;
+            array[i][9] = isNaN(thirdQuartile) ? 0 : thirdQuartile;
+
+            for (var j = 1; j < array[i].length; j++) {
+                array[i][j] = (isNaN(array[i][j]) || array[i][j] == undefined) ? 0 : parseInt(array[i][j]);
+            }
+        }
+
+        return array;
+    }
+
+    function getMedian(array) {
+        var length = array.length;
+
+        /* If the array is an even length the
+         * median is the average of the two
+         * middle-most values. Otherwise the
+         * median is the middle-most value.
+         */
+        if (length % 2 === 0) {
+            var midUpper = length / 2;
+            var midLower = midUpper - 1;
+
+            return (array[midUpper] + array[midLower]) / 2;
+        } else {
+            return array[Math.floor(length / 2)];
+        }
+    }
+
+    var muestras = @Html.Raw(muestrasS);
+    
+
+    //var array = muestras;
+    var array = [];
+    var listaArray = [];
+    for (var i = 0; i < muestras.length; i++) {
+        //debugger;
+        var arrayobj = [];
+        //arrayobj.push(muestras[i][0]);
+        for (var j = 1; j < muestras[i].length; j++) {
+            arrayobj.push(parseInt(muestras[i][j]));
+        }
+
+        //debugger;
+        //var length = arrayobj.length;
+        //for (var i = 0; i < (length-5); i++) {
+        //    arrayobj.push(0);
+        //}
+
+        //listaArray.push(arrayobj);
+        var traceName = muestras[i][0];
+        var test = {
+            y: arrayobj,
+            type:'box'
+        };
+        //debugger;
+        //window['a']
+        array.push(test);
+    }
+
+    var tableRows = '';
+    //for (var i = 0; i < listaArray.length; i++) {
+    //    debugger;
+    //    for(var j = 0 ; j<listaArray[i].length; j++){
+    //        //for(var j = 0 ; j<5; j++){
+    //        var ijobjt = listaArray[i][j];
+    //        tableRows = tableRows + '<td>'+ ijobjt == undefined? 0 : ijobjt+'</td>';
+    //    }
+
+    //    tableRows = tableRows+'</tr>';
+    //}
+    
+    //$("#charttable").html(tableRows);
+    Plotly.newPlot('myDiv', array);
+    //});
+</script>

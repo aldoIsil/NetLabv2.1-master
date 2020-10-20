@@ -1,0 +1,295 @@
+﻿/*Alexander Buchelli - inicio - fecha 23/08/17 - cambio de tamaño de fuentes y encabezados*/
+
+
+
+body {
+    padding-top: 90px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-top: 20px;
+    padding-left: 1px;
+    padding-right: 15px;
+    min-height: 790px;
+}
+
+/*
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+
+/*
+.body-content {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    min-height: 400px;
+}
+
+
+*/
+
+
+
+
+
+
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+/*.dl-horizontal dt {
+    white-space: normal;
+}*/
+
+/* Set width on the form input elements since they're 100% wide by default */
+input{
+    font-size: 13px;
+    
+}
+select{
+    font-size: 13px;
+    
+}
+span{
+    font-size: 13px;
+    
+}
+label{
+    font-size: 13px;
+    
+}
+/*
+input,
+select,
+span,
+
+*/
+
+/*textarea {
+    max-width: 280px;
+}*/
+
+footer {
+    padding-left: 30px;
+
+}
+
+.msj-error {
+    font-size: 14px;
+    color: red;
+    /*font-weight: bold;*/
+}
+
+.welMsg {
+    font-weight: bold;
+    color: rgb(37, 96, 197);
+}
+
+.msg-ok {
+    color: rgb(72, 176, 103);
+    font-weight: bold;
+}
+
+.msg-error {
+    color: rgb(225, 45, 45);
+    font-weight: bold;
+}
+
+/*tabla de opciones rom procesamiento verificacion*/
+
+fieldset.default {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 auto !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+    max-width: 100%;
+}
+
+fieldset.mediumSize {
+    max-width: 700px !important;
+}
+
+/*letra de titulo de subventanas en pantallas de recepción, procesamiento, verificación*/
+legend.default {
+    font-size: 1.3em !important;
+    color:#0a406d;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+}
+
+/*
+
+legend.default {
+    font-size: 1.1em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+}*/
+
+legend.defaultSmall {
+    font-size: 0.9em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+}
+
+h2.centered {
+    text-align: justify;
+}
+
+.divObservacion {
+    padding-left: 25px;
+}
+
+.divObservacion textarea {
+    max-width: 300px !important;
+    width: 300px !important;
+}
+
+.allWidth {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.timeEntry-control{
+    display: none !important;
+}
+
+ select.input-sm {
+    font-size: 13px;
+    padding: 2px 4px;
+    height: 27px;
+}
+
+.form-control{
+    font-size: 13px;
+    padding: 2px 4px;
+    height: 27px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+
+    line-height: 1;
+    padding: 4px;
+    font-size: 13px;
+    border: 1px solid black;
+}
+
+.table th {
+    background-color: #026eb7;
+    border-collapse: collapse;
+    border: 1px solid black;
+    text-align: center;
+    color: white;
+}
+
+.table .trth {
+    background-color: #026eb7;
+    border-collapse: collapse;
+    border: 1px solid black;
+    text-align: center;
+    color: white;
+}
+
+.table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.table tr {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.ui-widget {
+    font-size: 14px;
+}
+
+.chosen-container {
+    font-size: 13px !important;
+}
+
+
+/*
+.ui-widget {
+    font-size: 9px;
+}
+
+.chosen-container {
+    font-size: 9px !important;
+}
+*/
+.chosen-container .chosen-results li{
+    padding: 3px 5px !important;
+}
+
+input[type="checkbox"].form-control {
+    height: 16px;
+}
+
+.btn-link {
+    font-size: 14px !important;
+}
+
+/*Alexander Buchelli- FIN*/
+
+/*JRCR*/
+.minwidth200 {
+    min-width: 200px;
+}
+
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(/img/carga.gif) 50% 50% no-repeat rgb(249,249,249);
+    opacity: 1;
+}
+.field-validation-error {
+    color: Red;
+}
+
+.obligatorio {
+    color: Red;
+}
+
+.ui-autocomplete1 {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#CodigoUnicoOrigen.ui-autocomplete-loading {
+    background-image: url('../../img/loading.gif');
+    background-position: right center;
+    background-repeat: no-repeat;
+}

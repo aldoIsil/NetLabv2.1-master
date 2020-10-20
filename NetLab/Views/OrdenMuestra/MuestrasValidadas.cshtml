@@ -1,0 +1,301 @@
+﻿@*  Descripción: Vista, Permite mostrar un popup con informacion de Muestras recepcionadas y validadas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using System.Globalization
+@model Model.ViewData.OrdenIngresarResultadoVd
+@{
+    var k = 0;
+}
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Proyecto</label><br />
+            <span>@Model.nombreProyecto</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>EESS/LAB de Origen</label><br />
+            <span>@Model.nombreEstablecimiento</span>
+        </div>
+    </div>
+    <!--Establecimiento-->
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Fecha de Solicitud</label><br />
+            <span>@Model.fechaRegistro.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)</span>
+        </div>
+    </div>
+</div>
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Tipo - Nro. Documento</label><br />
+            <span>@Model.tipoDocumento @Model.nroDocumento</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Nombres y Apellidos Paciente</label><br />
+            <span>@Model.nombrePaciente</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Edad</label><br />
+            <span>@Model.edadPaciente</span>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("MuestrasValidadas", "ResultadosAnalisis", FormMethod.Post, new { @id = "formMuestrasValidadas" }))
+{
+    <table id="tblResultados">
+        <thead>
+            <tr>
+                <th width="100px">Enfermedad</th>
+                <th>Tipo de Muestra</th>
+                <th>Examen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.ordenInfoListnew)
+            {
+            <tr>
+                <td>
+                    @item.nombreEnfermedad
+                </td>
+                <td>
+                    @item.nombreTipoMuestra
+                </td>
+
+                <td>
+                    @item.nombreExamen
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <table id="tblResultados">
+        <thead>
+            <tr>
+                <th width="100px">Código Muestra</th>
+                <th>Tipo de Muestra</th>
+                <th>Fecha-Hora Obtención</th>
+                <th>Fecha-Hora Recepción ROM</th>
+                <th>Fecha-Hora Recepción LAB</th>
+                @*<th style="visibility: hidden;">Materiales</th>*@
+                <th width="60px">Conforme</th>
+                <th width="370px">Motivos de  Rechazo</th>
+                <th width="370px">Observacion Rechazo</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in @Model.muestrasValidar)
+            {
+                k++;
+                var nombre = "ost_" + k;
+            <tr>
+                <td>
+                    @item.codificacion
+                </td>
+                <td>
+                    @item.tipoMuestra
+                </td>
+
+                <td>
+                    @item.fechaHoraColeccion
+                </td>
+                <td>
+                    @item.fechaHoraRecepcionROM
+                </td>
+                <td>
+                    @item.fechaHoraRecepcionLAB
+                </td>
+
+                @*<td  style="visibility:hidden;">
+                        @item.presentacion @item.reactivo @item.volumen ml
+                        <input type="hidden" name="codigoMuestra[]" value="@item.idOrdenMuestraRecepcion" />
+                    </td>*@
+                <td>
+                    @item.muestraConforme
+                    <input type="hidden" name="codigoMuestra[]" value="@item.idOrdenMuestraRecepcion" />
+                </td>
+                <td>
+                    @item.criteriosRechazo
+                </td>
+                <td>
+                    @item.observacionrechazo
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <div id="divFechaRecepcion" class="hidden">
+        Fecha y Hora de Validación: <label id="fechaRecepcion">@Model.fechaRecepcion</label>
+    </div>
+    <br />
+    <div class="linksForm">
+      @*@Html.ActionLink("Ver Orden", "ShowEditRom", "Orden", new { idOrden =  @Model.idOrden }, new { @class = "editDialog btn btn-default fa fa-external-link ", id =  @Model.idOrden })
+    <label id="EditarOrden" class="btn btn-default btn-md"><span class="fa fa-edit"></span> Editar Orden</label>*@
+    </div>
+}
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-hidden" style="visibility: hidden">
+</div>
+
+@section Scripts {
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Search.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/jquery.alerts/jquery.alerts.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+}
+
+
+<style type="text/css" media="all">
+    .cmbxBusqueda {
+        width: 230px !important;
+    }
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    /*.form-group {
+            margin-bottom: 6px;
+        }*/
+
+    .radioButtonWidthReg {
+        width: 250px !important;
+    }
+
+    .radioButtonWidthColec {
+        width: 275px !important;
+    }
+
+    .divWidth {
+        width: 260px !important;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .rowExamen {
+        background-color: #67a8d4;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    h4.center {
+        text-align: center !important;
+    }
+
+    .headerRegRes {
+        width: 270px !important;
+        padding: 0 10px;
+        text-align: center;
+    }
+
+    #tblOrdenExamen {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+        #tblOrdenExamen th, #tblOrdenExamen td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    #tblResultados {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+        #tblResultados th, #tblResultados td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    .linksForm {
+        width: 100%;
+        text-align: center;
+    }
+
+    #lnkRegistrar, #lnkRegistrarResultados, #lnkFinalizarResultados, #CerrarPopUp {
+        width: 100px;
+    }
+
+    .criterioRechazo {
+        width: 100%;
+    }
+
+    .SumoSelect {
+        width: 100%;
+    }
+
+
+        .SumoSelect > .optWrapper > .options {
+            max-height: 145px;
+        }
+
+    .ms-choice {
+        height: 20px;
+    }
+
+        .ms-choice span {
+            margin-top: -3px;
+        }
+
+    .lockedTR {
+        background-color: #808080;
+    }
+
+    .ingresadoTR {
+        background-color: #EEEEEE;
+    }
+
+    .titleExamen {
+        width: 40% !important;
+        max-width: 40% !important;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .titleMuestra {
+        width: 30% !important;
+        max-width: 30% !important;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .rigthMetodo {
+        width: 28% !important;
+        max-width: 28% !important;
+        display: inline-block !important;
+        vertical-align: top;
+    }
+
+    .rigthMetodo select {
+        width: 80% !important;
+        max-width: 80% !important;
+        display: inline-block !important;
+    }
+</style>

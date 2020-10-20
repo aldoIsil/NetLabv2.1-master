@@ -1,0 +1,116 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la validacion de un paciente con la RENIEC.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Paciente
+
+<div class="form-horizontal" style="width: 540px" >
+    <fieldset>
+
+        @if (Model == null)
+        {
+            <h4>Los datos del paciente no se actualizaron porque no hay conexión con RENIEC en este momento</h4>
+        }
+        else
+        {
+            <h4>Los datos del paciente se actualizaron correctamente</h4>
+
+                <div >
+                    <div style="float: left">
+                        @Html.LabelFor(model => model.ApellidoPaterno, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.ApellidoPaterno)</span>
+                    </div>
+                    <div style="float: left">
+                        @Html.LabelFor(model => model.ApellidoMaterno, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.ApellidoMaterno)</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="clear: both; float: left">
+                        @Html.LabelFor(model => model.Nombres, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div  style="float: left">
+                        <span>@Html.Raw((String)Model.Nombres)</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="clear: both; float: left">
+                        @Html.LabelFor(model => model.UbigeoReniec.Departamento, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.UbigeoReniec.Departamento)</span>
+                    </div>
+                    <div style="float: left">
+                        @Html.LabelFor(model => model.UbigeoReniec.Provincia, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.UbigeoReniec.Provincia)</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="clear: both; float: left">
+                        @Html.LabelFor(model => model.UbigeoReniec.Distrito, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.UbigeoReniec.Distrito)</span>
+                    </div>
+                    <div style="float: left">
+                        @Html.LabelFor(model => model.DireccionReniec, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span>@Html.Raw((String)Model.DireccionReniec)</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="clear: both; float: left">
+                        @Html.LabelFor(model => model.Genero, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span> @Html.Raw(Model.Genero == 1 ? "Masculino" : "Femenino")</span>
+                    </div>
+                    <div style="float: left">
+                        @Html.LabelFor(model => model.FechaNacimiento, htmlAttributes: new { @class = "labelPopup" })
+                    </div>
+                    <div class="controlPopup" style="float: left">
+                        <span> @Html.Raw(Model.FechaNacimiento.Value.ToString("dd/MM/yyyy"))</span>
+                    </div>
+                </div>
+
+        }
+
+        <div>
+            <div style="clear: both; float: left" class="labelPopup">&nbsp;</div>
+            <div class="controlPopup" style="float: left">
+                <label id="btnAceptar" onclick="$('#dialog-open').dialog('close'); $('#btnBuscar').trigger('click');" class="btn-link">Aceptar</label>
+            </div>
+        </div>
+</fieldset>
+
+
+
+</div>
+
+<style type="text/css">
+
+     .labelPopup {
+        font-size: 10px;
+        width: 100px;
+        text-align: left;
+    }
+
+     .controlPopup {
+        font-size: 10px;
+        width: 140px;
+        text-align: left;
+    }
+
+</style>

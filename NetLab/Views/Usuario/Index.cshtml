@@ -1,0 +1,236 @@
+﻿@*  Descripción: Vista, muestra la pantalla para dar mantenimiento a los usuarios del sistema.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Usuario>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Mantenimiento de Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*Alexander Buchelli - inicio - fecha 24/08/17 - se quitaron estilos propios para redimensionar columnas con las clases bootstrap*@
+
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+
+@if (TempData["mensaje"] != null)
+{
+    <script>
+        alert('@(TempData["mensaje"])');
+    </script>
+}
+
+<h2 class="text-primary">Búsqueda y Registro de Usuarios</h2>
+<br />
+@using (Html.BeginForm("Index", "Usuario", FormMethod.Get, new { @id = "formBusquedaUsuario" }))
+{
+    <div id="dvBusquedaUsuario">
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Login:", new { @class = "control-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                    @Html.TextBox("login", (string)ViewBag.login, new { @id = "loginBusqueda", @class = "form-control cmbxBusqueda" })
+                </div>
+                @Html.Label("DNI:", new { @class = " control-labelcol-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                    @Html.TextBox("dni", (string)ViewBag.dni, new { @id = "dniBusqueda", @class = "form-control cmbxBusqueda", @maxlength = 8, onkeypress = "return isNumberKey(event)" })
+
+
+                    <br />
+                </div>
+
+
+                @Html.Label("Nombres:", new { @class = "control-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                    @Html.TextBox("nombres", (string)ViewBag.nombres, new { @id = "nombresBusqueda", @class = "form-control cmbxBusqueda" })
+
+
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Apellido Paterno:", new { @class = "control-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                    @Html.TextBox("apellidoPaterno", (string)ViewBag.apellidoPaterno, new { @id = "apellidoPaternoBusqueda", @class = "form-control cmbxBusqueda" })
+                </div>
+                @Html.Label("Apellido Materno:", new { @class = "control-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4">
+                    @Html.TextBox("apellidoMaterno", (string)ViewBag.apellidoMaterno, new { @id = "apellidoMaternoBusqueda", @class = "form-control cmbxBusqueda" })
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                    <br />
+
+                    @*<input type="submit" id="btnBuscarUsuario" value="Buscar" class="btn-primary" />*@
+
+                    <button class="btn btn-primary" id="btnBuscarUsuario" value="Buscar" type="submit"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+                    @Html.ActionLink("+ Nuevo Usuario", "MostrarAgregarUsuario", "Usuario", null, new { @id = "openDialog", @class = "btn btn-primary" })
+
+
+
+
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.TotalItemCount > 0)
+            {
+    <table class="table">
+        <tr>
+            <th>
+                Login
+            </th>
+            <th>
+                Apellido Paterno
+            </th>
+            <th>
+                Apellido Materno
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Iniciales
+            </th>
+            <th>
+                RNE
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>Roles</th>
+            <th>Áreas</th>
+            <th>Exámenes</th>
+            <th>EESS/LAB</th>
+            <th>Editar</th>
+            <th>Resetear</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.login)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.apellidoPaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.apellidoMaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.iniciales)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RNE)
+                </td>
+                <td class="center">
+                    @*@(item.estado == 1 ? Html.Label("Activo") : Html.Label("Inactivo"))*@
+
+
+
+                    @if (item.estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+
+
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Roles", new { id = item.idUsuario }, new { @class = "btn btn-default btn-block fa fa-list-alt", @title = "Asignación de Roles" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "AreasProcesamiento", new { id = item.idUsuario }, new { @class = "btn btn-default btn-block fa fa-sitemap", @title = "Asignación de Áreas de Procesamiento" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Examenes", new { id = item.idUsuario }, new { @class = "btn btn-default btn-block fa fa-flask", @title = "Asignación de Exámenes" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Establecimientos", new { item.idUsuario }, new { @class = "btn btn-default btn-block fa fa-hospital-o", @title = "Asignación de EESS/LAB" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "EditarUsuario", new { id = item.idUsuario, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog", @title = "Editar Usuarios" })
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "ResetearUsuario", new
+               {
+                   id = item.idUsuario,
+                   page = Model.PageNumber,
+                   //ViewBag.login,
+                   //ViewBag.nombres,
+                   //ViewBag.apellidoMaterno,
+                   //ViewBag.apellidoPaterno,
+                   //ViewBag.dni,
+                   item.login,item.nombres,item.apellidoMaterno,item.apellidoPaterno, item.documentoIdentidad,item.correo
+                   /* }, new { @class = "resetDialog", @title = "Resetear Contraseña" })*/
+
+               }, new { @class = "btn btn-default btn-block fa fa-repeat resetDialog", @title = "Resetear Contraseña" })
+                </td>
+            </tr>
+        }
+    </table>
+
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+@if (Model != null)
+            {
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))
+
+}
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-reset" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de resetear la contraseña ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/NetLab.js?updated=1")
+    @Scripts.Render("~/Scripts/App/Usuario.js?updated=01")
+
+@Scripts.Render("~/Scripts/App/UsuarioExamen.js?updated=01")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}
+
+
+
+@*Alexander Buchelli - fin*@

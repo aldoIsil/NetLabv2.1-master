@@ -1,0 +1,61 @@
+﻿@*  Descripción: Vista que permite registrar una nueva disa.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model Model.DisaMant
+
+
+@using (Html.BeginForm("NuevoDisaMant", "DisaMant", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "formAgregarDisaMant" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+
+            @Html.Label("CODIGO", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.IdDISA, new { htmlAttributes = new { @class = "form-control", @type = "number", @style = "width:50px !important;" } })
+                @Html.ValidationMessageFor(model => model.IdDISA, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("NOMBRE", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.NombreDISA, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.NombreDISA, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Crear" id="btnCrear" class="btn btn-primary" @*onclick="return ValidaCampoRequerido();"*@
+
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+                <button type="submit" value="Crear" class="btn btn-primary" id="btnCrear"><span class="fa fa-check-square"></span> Crear</button>
+
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

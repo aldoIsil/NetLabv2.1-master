@@ -1,0 +1,444 @@
+﻿@model Model.SolicitudUsuario
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<fieldset class="default">
+    <legend class="default">Solicitud de Creación/Renovación de Cuentas de Usuario</legend>
+    @Html.ValidationSummary()
+    <div class="form-group">
+        
+        <div class="form-group">
+            <div>
+                @Html.Label("Tipo de Documento", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Documento", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-3" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("nroDocumento", "", new { @class = "form-control  numericOnly", autocomplete = "off" })
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                <button type="button" class="btn btn-default" id="btnBuscarValidar"><span class="glyphicon .glyphicon-plus-sign">Buscar</span></button>
+            </div>
+        </div><br /><br />
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Nombres", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBox("nombre", "", new { @class = "form-control" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+                <label class="control-label col-md-1">Apellido Paterno</label>
+                <div class="col-md-2">
+                    @Html.TextBox("apellidoPaterno", "", new { @class = "form-control" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+                <label class="control-label col-md-1">Apellido  Materno</label>
+                <div class="col-md-2">
+                    @Html.TextBox("apellidoMaterno", "", new { @class = "form-control" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                @Html.Label("Tipo de Solicitud", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.DropDownList("idtipoSolicitud", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Seleccione", Value = "0" ,Selected = true},
+                            new SelectListItem{ Text="Nuevo Usuario", Value = "1" },
+                            new SelectListItem{ Text="Renovación Usuario", Value = "2" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            <div id="tipoSol" style="display:none">
+                @Html.Label("Nombre Login", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                   @Html.TextBox("login", "", new { @class = "form-control lettersOnly" })
+                </div>
+            </div>
+
+        </div><br /><br /><br />
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Cargo:", new { @class = "control-label col-md-1" })
+                <div class="col-md-4">
+                    @Html.TextBox("cargo", "", new { @class = "form-control" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+                @Html.Label("Condición Laboral", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBox("condicion", "", new { @class = "form-control" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div>
+                    @Html.Label("Profesión", new { @class = "-label col-xs-6 col-sm-3 col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.DropDownList("profesion", (List<SelectListItem>)ViewBag.profesionList, new { @class = "form-control input-sm" })
+                </div>
+                @Html.Label("Colegiatura #", new { @class = "control-label col-md-1" })
+                <div class="col-md-1">
+                    @Html.TextBox("colegiatura", "", new { @class = "form-control  numericOnly" })
+                </div>
+                @Html.Label("Siglas Colegio", new { @class = "control-label col-md-1" })
+                <div class="col-md-1">
+                    @Html.TextBox("siglas", "", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Correo", new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBox("correo", "netlab.", new { @class = "form-control" })
+                    <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#idHepl">
+                        <span class="glyphicon glyphicon-info-sign"> Ayuda</span>
+                    </button>
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+               
+                @Html.Label("Celular", new { @class = "control-label col-md-1" })
+                <div class="col-md-1">
+                    @Html.TextBox("celular", "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.usuario.telefono, "", new { @class = "text-danger" })
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <label for="selTipo" class="col-xs-12 col-sm-8 col-md-3 col-lg-1">EESS/LAB</label>
+                <div class="col-md-4">
+                    @Html.TextBox("CodigoUnico", (string)ViewBag.textoLaboratorioPreSeleccionada, new { @class = "form-control" })
+                    @Html.Hidden("idEstablecimiento", (string)ViewBag.valueLaboratorioPreSeleccionada)
+                </div>
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+                <div class="row">
+                    @Html.Label("Tipo EESS: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-1" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-2">
+                        @Html.DropDownList("tipoEst", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="NINGUNO", Value = "0" ,Selected = true},
+                            new SelectListItem{ Text="CABEZA RED", Value = "1" },
+                            new SelectListItem{ Text="CABEZA MICRORED", Value = "2" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                </div>
+            </div>
+        </div><br />
+
+        <div class="form-group">
+            <span>SUBIR FORMULARIO</span>
+            @*<input type="file" id="fileInput" name="fileUser" accept="application/pdf, .jpg, .png">*@
+            <input type="file" id="files" name="files" accept="application/pdf, .jpg, .png"/>
+            <br />
+            <textarea id="base64" rows="1" style="display:none"></textarea>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.Label("COMPONENTE AL QUE PERTENECE", new { @class = "control-label col-md-2" })
+            <div class="row">
+                <div class="col-md-1">
+                    <input class="componente" name="componente" type="radio" value="1" />
+                    <span>LABORATORIO</span>
+                </div>
+                <div class="col-md-1">
+                    <input class="componente" name="componente" type="radio" value="2" />
+                    <span>ESTRATEGIA</span>
+                </div>
+                <div class="col-md-1">
+                    <input class="componente" name="componente" type="radio" value="3" />
+                    <span>EPIDEMIOLOGIA</span>
+                </div>
+                <div class="col-md-2">
+                    <input class="componente" name="componente" type="radio" value="4" />
+                    <span>GESTOR DE SALUD</span>
+                </div>
+            </div>
+        </div><br />
+        <div class="form-group">
+            <div class="row">
+                <span>¿ES USTED QUIEN ORDENA QUE EL PACIENTE SE REALICE UN EXAMEN DE LABORATORIO? (solicitante)</span>
+                <input type="checkbox" class="custom-control-input" id="solicitante" value="1">
+            </div>
+            <div class="row">
+                <span>¿ES USTED MÉDICO CONSULTOR OFICIAL DE TUBERCULOSIS U OTRA ETIOLOGÍA?</span>
+                <input type="checkbox" class="custom-control-input" id="consultor" value="1">
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.Label("OPCION DE PERFIL", new { @class = "control-label col-md-2" })
+            <div class="row">
+                <div class="col-md-6">
+                    @{
+                        for (int i = 0; i < Model.rol.Count() - 1; i++)
+                        {
+                            <div class="col-md-5">
+                                <span>@Html.Raw(Model.rol[i].descripcion)</span>
+                            </div>
+                            <div id="rol" class="col-md-1">
+                                <input type="checkbox" name="rol" class="custom-control-input" id="@Model.rol[i].idRol">
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="form-group">
+            <div id="ExamenProcesamiento">
+                @Html.Label("EXAMENES QUE PROCESAN", new { @class = "control-label col-md-2" })
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">
+                    Agregar
+                </button>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <table id="dtExamen" style="display:none">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">CODIGO</th>
+                                    <th style="text-align:center">ENFERMEDAD</th>
+                                    <th style="text-align:center">EXAMEN</th>
+                                    <th style="text-align:center">TIPO</th>
+                                    <th style="text-align:center">ELIMINAR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbExamen"></tbody>
+                        </table>
+                    </div>
+                </div>    
+            </div>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="form-group">
+            @Html.Label("Responsable EESS:", new { @class = "control-label col-md-1" })
+            <div class="col-md-4">
+                @Html.TextBox("UserJefe", "", new { @class = "form-control" })
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+            @Html.Label("Cargo Responsable:", new { @class = "control-label col-md-1" })
+            <div class="col-md-4">
+                @Html.TextBox("cargoJf", "", new { @class = "form-control" })
+            </div>
+            <div class="obligatorio">
+                <span>*</span>
+            </div>
+        </div>
+        
+        
+        <br /><br />
+        <div class="form-group">
+            <h4 style="text-align:center"><b>ACUERDO DE CONFIDENCIALIDAD</b></h4>
+            <b>
+                Al recibir el acceso al SIL NETLABv2, me comprometo a:
+                <br />
+                1. No divulgar datos personales, incluyendo sensibles provenientes del NETLABv2 a personas no autorizadas o
+                ajenas a los procesos.
+                <br />
+                2. No otorgar datos o información considerada como confidencial o restringida proveniente del NETLABv2, a
+                personas no autorizadas y ajenas a los procesos.
+                <br />
+                3. No permitir, ni facilitar el acceso al sistema de información NETLABv2 a personas no autorizadas o ajenas al
+                proceso.
+                <br />
+                4. No utilizar el sistema de información NETLABv2 para otras actividades que no estén directamente relacionadas
+                con las funciones asignadas en el Manual de Organización y Funciones de la unidad orgánica, institución o
+                establecimiento de salud en donde presto mis servicios.
+                <br />
+                5. No utilizar datos, ni información a la que tengo acceso a través del sistema de información NETLABv2, sin
+                autorización; para la realización de investigaciones, en el ámbito nacional o internacional, a título personal o de
+                terceros, bajo pena de recibir las sanciones establecidas por la Autoridad Nacional de Protección de
+                Datos Personales conforme a la Ley y a su reglamento.
+                <br />
+                6. No utilizar datos, ni información a la que tenga acceso mediante el uso del sistema de información NETLABv2, sin
+                autorización, para realizar publicaciones en revistas científicas a nivel nacional o internacional a título personal o
+                de terceros, bajo pena de recibir las sanciones establecidas por la Autoridad Nacional de Protección de Datos
+                Personales conforme a la Ley y a su reglamento.
+                <br />
+                7. Proteger cuidadosamente mi usuario y contraseña que me han sido asignadas, no compartiéndola bajo ninguna
+                circunstancia, y evitar que esté a la vista de otros.
+                <br />
+                8. Registrar y reportar con prontitud a mi jefe inmediato cualquier incidencia que pueda comprometer la seguridad
+                del sistema de información NETLABv2.
+                <br />
+                9. Informar al administrador del NETLABv2 cuando existe cambio de funciones en el puesto, cambio de laboratorio
+                dentro de la misma institución o cuando ya no se labora en la institución o establecimiento de salud a través del
+                cual se solicitó el acceso al NETLABv2.
+                <br />
+                10. Aceptar que ante cualquier violación a mis compromisos, me sea impuesta la sanción correspondiente según la
+                infracción cometida.
+            </b>
+        </div>
+        <br />
+        <div class="form-group">
+            <span>Acepto haber leído el acuedo de confidencialidad</span>
+            <input type="checkbox" class="custom-control-input" id="idAcepta" value="1">
+        </div>
+        <center>
+            <button type="button" class="btn btn-primary col-md-4 col-md-offset-1" id="btnGuardar"><span class="fa fa-floppy-o "></span> Guardar</button>
+            <a class="btn btn-primary col-md-4 col-md-offset-1" href="javascript:window.history.back();">&laquo; Retroceder</a>
+        </center>
+
+
+    </div>
+</fieldset>
+
+<!-- The Modal -->
+<div class="modal Adapterscreen-modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:30%;">
+        <div class="modal-content modal-dialog-centered" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enfermedad - Examen</h4>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="col-md-2 control-label">Enfermedad:</label>
+                <div class="col-md-6">
+                    <select id="selEnfermedad" name="selEnfermedad" class="form-control">
+                        <option value="0">Seleccione una Enfermedad</option>
+                        @foreach (var item in Model.enfermedad)
+                        {
+                            <option value="@item.idEnfermedad">@item.nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <label class="col-md-2 control-label">Examen:</label>
+            <div class="form-group">
+                <div id="dvPopupExamen1" class="modal-body">
+
+                </div>
+
+            </div>
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="btnAgregar">Agregar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal Adapterscreen-modal fade" id="idHepl" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" style="width:30%;">
+        <div class="modal-content modal-dialog-centered" role="document">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Correo Netlab</h4>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="col-md-6 control-label">Nombre: Jose Luis Perez Perez</label><br /><br />
+                <label class="col-md-4 control-label">EESS: Manuel Barreto</label>
+                <label class="col-md-4 control-label">Renipress: 00006104</label>
+                <label class="col-md-6 control-label">Correo: netlab.jlpp1.00006104@gmail.com</label>
+            </div>
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@Scripts.Render("~/Scripts/App/CuentaUsuario.js")
+@Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <script type="text/javascript">
+        $("#CodigoUnico").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: URL_BASE + "CuentaUsuario/GetEstablecimientos?prefix=" + request.term,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Nombre, value: item.IdEstablecimiento };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                $("#idEstablecimiento").val(i.item.value);
+                $("#CodigoUnico").val(i.item.label);
+            },
+            minLength: 2
+        });
+        $("#CodigoUnico").click(function () {
+            $("#idEstablecimiento").val("");
+            $("#CodigoUnico").val("");
+        });
+
+
+    </script>
+}
+
+<style type="text/css" media="all">
+    .dvPopupExamen1 {
+        clear: both; 
+        overflow: hidden; 
+        height: 1%;
+    }
+
+    .obligatorio {
+        float: left;
+    }
+
+   .obligatorio span {
+         color: red;
+         margin-left: 4px;
+         font-size: 12px;
+         font-weight: bold;
+   }
+
+}
+</style>

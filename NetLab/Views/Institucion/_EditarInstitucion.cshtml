@@ -1,0 +1,56 @@
+﻿@model Model.Institucion
+
+@using (Html.BeginForm("EditarInstitucion", "Institucion", new { }, FormMethod.Post, new { @id = "formEditarInstitucion" }))
+{
+    @*@Html.AntiForgeryToken()*@
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("NOMBRE", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.nombreInstitucion, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.nombreInstitucion, "", new { @class = "text-danger" })
+            </div>
+            <input type="hidden" value="@Model.codigoInstitucion" id="codigoInstitucion" />
+        </div>
+
+        <div class="form-group">
+            @Html.Label("DESCRIPCION", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @if (Model.estado == 1)
+                {
+                    @Html.CheckBox("chkActivoRol", true)
+                }
+                else
+                {
+                    @Html.CheckBox("chkActivoRol", false)
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                <label id="btnGuardar" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-ok "></span> Actualizar</label>
+            </div>
+            <div style="padding-left:30px;">
+                @Html.ActionLink("Retroceder", "Index", new { })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

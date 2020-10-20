@@ -1,0 +1,69 @@
+﻿@model List<Model.ReportesDTO.ConsultaReporteResultado>
+@{
+    ViewBag.Title = "Consulta Reporte Detallado por Solicitante";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model != null)
+{
+    if (Model.Count > 0)
+    {
+        <a href="@(Url.Action("ExportExcel", "Reporte", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>
+        <br />
+        <table id="dtDetsolicitante">
+            <thead>
+                <tr>
+                    <th>Nombre de Solicitante</th>
+                    <th>Establecimiento</th>
+                    <th>Enfermedad</th>
+                    <th>Examen</th>
+                    <th>Informe N°</th>
+                    <th>Fecha y Hora Verificación</th>
+                    <th>Fecha y Hora Consulta</th>
+                    <th>Horas Retraso Consulta Resultado</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Establecimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Enfermedad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Examen)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.NumeroInforme)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaVerificacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaImpresion)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.HorasRetraso)
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtDetsolicitante').DataTable({
+                "destroy": true,
+                "scrollY": "auto",
+                "scrollX": "auto",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+</script>
+}

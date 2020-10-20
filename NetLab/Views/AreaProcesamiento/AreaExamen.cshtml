@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, muestra la pantalla para agregar nuevos examenes a las Areas de Procesamiento
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.AreaExamenViewModels
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Registro de Examenes por Area de Procesamiento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Exámenes para el Área de Procesamiento :</h2>
+<h2>"@Model.AreaProcesamiento.Nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Examenes", "AgregarExamen", new { Model.AreaProcesamiento.IdAreaProcesamiento }, new { id = "openDialog", @class = "btn btn-primary " })
+
+</p>
+<br />
+@if (Model != null && Model.Examenes.Count > 0)
+{
+
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Examenes.First().nombre)
+                </th>
+                <th> Eliminar</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.Examenes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @Html.ActionLink(" ", "EliminarExamen", new { IdExamen = item.idExamen, Model.AreaProcesamiento.IdAreaProcesamiento }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AreaExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

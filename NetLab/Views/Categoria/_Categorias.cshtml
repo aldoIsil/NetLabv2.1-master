@@ -1,0 +1,96 @@
+﻿@*  Descripción: Vista, muestra la pantalla para mostrar la busqueda y agregar una SubCategoria
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.DatoClinico.CategoriaListaViewModels
+@using NetLab.Helpers
+
+<div class="form-group">
+    @Html.Label("Categoría Padre:", new { @class = "control-label col-md-2" })
+    <div class="col-md-4">
+        @(string.IsNullOrEmpty(Model.NombrePadre) ? Html.Label("No presenta") : Html.DisplayFor(model => model.NombrePadre))
+    </div>
+</div>
+<br />
+<hr />
+<br />
+<p>
+    @Html.ActionLink("+ Nueva Categoría", "NuevaCategoria", new { idEnfermedad = Model.IdEnfermedad, idCategoriaPadre = Model.IdCategoriaPadre, nombrePadre = Model.NombrePadre }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model?.Categoria != null && Model.Categoria.Count > 0)
+{
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria.First().Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria.First().Descripcion)
+            </th>
+            <th class="text-center">
+                Sub-Categoría
+            </th>
+            <th class="text-center">Datos</th>
+            <th>Editar/Eliminar</th>
+        </tr>
+
+        @foreach (var item in Model.Categoria)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td class="text-center">
+                    @Ajax.ActionLink("Ir", "GetCategorias",
+                        new
+                        {
+                            idEnfermedad = Model.IdEnfermedad,
+                            nombreEnfermedad = Model.NombreEnfermedad,
+                            idCategoriaPadre = (int?)item.IdCategoriaDato,
+                            nombrePadre = item.Nombre,
+                            fromUrl = Request.RawUrl
+                        }
+                        ,
+                        new AjaxOptions
+                        {
+                            UpdateTargetId = "dvCategorias",
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "GET"
+                        })
+                </td>
+                <td class="text-center" style="white-space: nowrap">
+                    @Html.ActionLink("Ingresar Datos", "Index", "Datos", new { idCategoria = item.IdCategoriaDato, idEnfermedad = Model.IdEnfermedad, nombreEnfermedad = Model.NombreEnfermedad, nombreCategoria = item.Nombre }, null)
+                </td>
+                <td class="text-center" style="white-space: nowrap">
+                    @Html.ActionLink(" ", "EditarCategoria", new { id = item.IdCategoriaDato, idEnfermedad = Model.IdEnfermedad, idCategoriaPadre = Model.IdCategoriaPadre }, new { @class = "editDialog btn btn-default fa fa-pencil-square-o" }) |
+                    @Html.ActionLink(" ", "EliminarCategoria", new { id = item.IdCategoriaDato, idEnfermedad = Model.IdEnfermedad, fromUrl = Request.RawUrl }, new { @class = "confirmDialog btn btn-default fa fa-trash" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+@if (Model.IdCategoriaPadre != null)
+{
+    @Ajax.ActionLink("Retroceder", "GetCategoriaActual",
+    new
+    {
+        fromUrl = Model.FromUrl
+    }
+    ,
+    new AjaxOptions
+    {
+        UpdateTargetId = "dvCategorias",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET"
+    })
+}

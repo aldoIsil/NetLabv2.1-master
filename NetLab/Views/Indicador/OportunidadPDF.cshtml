@@ -1,0 +1,327 @@
+﻿@model List<Model.ViewData.OportunidadResultado>
+@{
+    Layout = null;
+    ViewBag.Dataset = Model;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Oportunidad Resultados INS</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/resultados.css" />
+</head>
+<body class="MarcaAgua">
+    <div id="reporte" style="text-align: center">
+        <div id="header" class="block">
+            <div class="block" style="border: 1px solid #000000;border-radius: 10px 10px 10px 10px;margin-bottom:20px;width:100%;">
+                <div class="column-left">
+                    <img src="~/img/Membrete.png" class="LogoRegional" />
+                </div>
+            </div>
+            <br />
+            <br />
+            <div>
+                <span style="padding-left:10px;padding-right:10px; font-size:large;text-transform:uppercase;text-align:center">INDICADOR DE OPORTUNIDAD - PORCENTAJE DE DIAGNOSTICO EJECUTADO OPORTUNAMENTE</span>                
+            </div>
+            <br />
+            <div>
+                <span style="padding-left:10px;padding-right:10px; font-size:large;text-transform:uppercase">@ViewBag.Examen</span>
+            </div>
+            <br />
+        </div>
+        <br />
+        <br />
+        <br />
+        <div class="block">
+            <table>
+                <tr style="background-color: lightgray">
+                    <th>
+                        Oportunidad del Mes
+                    </th>
+                    <th>
+                        Muestras Registradas con Resultado Verificado
+                    </th>
+                    <th>
+                        Tiempo Caltalogo
+                    </th>
+                    <th>
+                        Muestras dentro del Tiempo en Catalogo
+                    </th>
+                    <th>
+                        Oportunidad (%)
+                    </th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.total)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.tiempoCatalogo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nroOportuno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.porcOportunidad)
+                    </td>
+                </tr>
+                }
+            </table>
+        </div> <br />
+        <br />
+        <br />
+        <div class="block">
+            <div class="column2-leftIndicador" style="margin-top: 25px !important;">
+                <div class="row">
+                    <canvas id="myChart"></canvas>
+                    <script>
+                        Function.prototype.bind = Function.prototype.bind || function (thisp) {
+                            var fn = this;
+                            return function () {
+                                return fn.apply(thisp, arguments);
+                            };
+                        };
+                        var super$setLineDash = CanvasRenderingContext2D.prototype.setLineDash;
+                        CanvasRenderingContext2D.prototype.setLineDash = function override$setLineDash(segments) {
+                            if (segments.length === 0) {
+                                return;
+                            }
+                            super$setLineDash.bind(this)(segments);
+                        };
+                        window.chartColors = {
+                            red: 'rgb(255, 99, 132)',
+                            orange: 'rgb(255, 159, 64)',
+                            yellow: 'rgb(255, 205, 86)',
+                            green: 'rgb(75, 192, 192)',
+                            blue: 'rgb(54, 162, 235)',
+                            purple: 'rgb(153, 102, 255)',
+                            grey: 'rgb(201, 203, 207)'
+                        };
+                        var Lista = @Html.Raw(Json.Encode(@ViewBag.Dataset));
+
+                        var labels = Lista.map(function (e) {
+                            return e.mes;
+                        });
+
+                        var values = Lista.map(function (e) {
+                            return e.porcOportunidad;
+                        });
+
+                        var chartPluginLineaHorizontal = {
+                            afterDraw: function(chartobj) {
+                                if (chartobj.options.lines) {
+                                    var ctx = chartobj.chart.ctx;
+                                    for (var idx = 0; idx < chartobj.options.lines.length; idx++) {
+                                        var line = chartobj.options.lines[idx];
+                                        line.iniCoord = [0,0];
+                                        line.endCoord = [0,0];
+                                        line.color = line.color ? line.color : "red";
+                                        line.label = line.label ? line.label : "";
+                                        if (line.type == "horizontal" && line.y) {
+                                            line.iniCoord[1] = line.endCoord[1] = chartobj.scales["y-axis-0"].getPixelForValue(line.y);
+                                            line.endCoord[0] = chartobj.chart.width;
+                                        } else if (line.type == "vertical" && line.x) {
+                                            line.iniCoord[0] = line.endCoord[0] = chartobj.scales["x-axis-0"].getPixelForValue(line.x);
+                                            line.endCoord[1] = chartobj.chart.height;
+                                        }
+                                        ctx.beginPath();
+                                        ctx.moveTo(line.iniCoord[0], line.iniCoord[1]);
+                                        ctx.lineTo(line.endCoord[0], line.endCoord[1]);
+                                        ctx.strokeStyle = line.color;
+                                        ctx.stroke();
+                                        ctx.fillStyle = line.color;
+                                        ctx.fillText(line.label, line.iniCoord[0] + 3, line.iniCoord[1] + 3);
+                                    }
+                                }
+                            }
+                        }
+                        Chart.pluginService.register(chartPluginLineaHorizontal);
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Oportunidad de Resultado",
+                                    data: values,
+                                    borderColor: window.chartColors.orange,
+                                    backgroundColor: window.chartColors.orange,
+                                    borderWidth: 1}],fill: true,
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        gridLines: {
+                                            display: false,
+                                            color: "black"
+                                        },
+                                        ticks: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            min: 0,
+                                            stepSize: 20,
+                                            suggestedMin: 50,
+                                            suggestedMax: 100
+                                        },
+                                        scaleLabel: {
+                                        display: true,
+                                        labelString: 'Porcentaje Oportunidad de Resultado'
+                                },
+                                    }]},
+                                lines: [
+                                  {
+                                      type: "horizontal",
+                                      y: 95,
+                                      color: "red",
+                                      label: "meta"
+                                  }]
+                            }
+                        });
+                    </script>
+                </div>
+            </div><br />
+<br /><br />
+<br />
+            <div class="column2-rightIndicador" style="margin-top: 25px !important;">
+                <div class="row">
+                    <span style="padding-left:10px;padding-right:10px; font-size:small;text-transform:uppercase;text-align:center">LEYENDA:</span>  
+                    <table>
+                        <tr style="background-color: lightgray">
+                            <th>
+                                Mes
+                            </th>
+                            <th>
+                                Oportunidad (%)
+                            </th>
+                            <th>
+                                Meta
+                            </th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.mes)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.porcOportunidad)
+                                </td>
+                                <td>90</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="block" style="border: 1px solid #000000;height:60px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+            <div style="text-align:left; padding-left:10px;padding-right:10px;font-size:small;text-transform:uppercase;">Formula: N° de infromes de resultados remitidos oportunamente a los laboratorios * 100 / N° total de muestras remitidas al CNSP por mes.</div>
+        </div>
+        <br />
+        @*<div class="block" style="border: 1px solid #000000;height:60px;border-radius: 10px 10px 10px 10px;text-align:left;padding-left:10px;">
+                <div style="text-align:left; padding-left:10px;padding-right:10px;">Base NETLABV2 Descarga actualizada al mes de.</div>
+            </div>*@
+    </div>
+</body>
+</html>
+<style type="text/css">
+    table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+        margin: 0 0 1em 0;
+        caption-side: top;
+    }
+
+    caption, td, th {
+        padding: 0.3em;
+    }
+
+    th, td {
+        border-bottom: 1px solid #999;
+        width: 25%;
+    }
+
+    caption {
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .LogoRegional {
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+    }
+
+    .column-left {
+        height: 100px;
+        line-height: 100px;
+        margin-left: 0px;
+    }
+
+    .column-right {
+        height: 100px;
+        line-height: 100px;
+    }
+
+    .LogoInstitucional {
+        width: 30%;
+        height: auto;
+        vertical-align: middle;
+    }
+
+    #fechaReporte {
+        position: fixed;
+        top: 330mm;
+        height: auto;
+        width: auto;
+        text-align: right;
+    }
+
+    #reporte {
+        width: 100%;
+        height: 325mm;
+        /*border: 1px solid #000000;*/
+        margin: auto auto auto auto;
+    }
+
+    #header {
+        position: relative;
+        top: 0px;
+        left: 0px;
+    }
+
+    .column2-leftIndicador {
+        float: left;
+        width: 70%;
+    }
+
+    .column2-rightIndicador {
+        float: right;
+        width: 25%;
+    }
+
+    .page-breaker {
+        display: block;
+        clear: both;
+        page-break-after: always;
+    }
+
+    .MarcaAgua {
+        background-image: url('../../img/Marcadeagua.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+</style>

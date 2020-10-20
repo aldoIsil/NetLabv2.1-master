@@ -1,0 +1,27 @@
+﻿@* Descripción: Vista para mostrar informacion de los datos clinicos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Enfermedad>
+<ul id="listaEnfermedad">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            String idLi = "link-" + item.idEnfermedad;
+            String hrefLi = "#tabs-" + item.idEnfermedad;
+            <li><a id=@Html.Raw(idLi) href=@Html.Raw(hrefLi)> @Html.Raw(item.nombre) </a></li>
+        }
+    }
+</ul>
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        String idDiv = "tabs-" + item.idEnfermedad;
+        <div id=@Html.Raw(idDiv)>
+            @Html.Partial("_TblDatoClinico", (Model.Enfermedad)item)
+        </div>
+    }
+}

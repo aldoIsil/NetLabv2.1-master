@@ -1,0 +1,123 @@
+﻿@*  Descripción: Vista, Edita datos de opciones del analitos
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.AnalitoValorViewModels
+@using (Html.BeginForm("EditarValor", "Analito", new {idAnalito = Model.Valor.idAnalito, idAnalitoValor = Model.Valor.idAnalitoValorNormal }, FormMethod.Post, new { id = "frmEditarValor" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Componente</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group range-group">
+            @Html.LabelFor(model => model.Valor.orden, new { @class = "control-label col-md-3" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Valor.orden, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isNumberKey(event)" } })
+                @Html.ValidationMessageFor(model => model.Valor.orden, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (Model.Analito.Tipo == 3)
+        {
+            string selectedValor = "";
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.grupoGenero, new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    <select name="Valor.glosa" id="Valor_glosa" class="form-control">
+                        @foreach (Model.AnalitoOpcionResultado opcion in Model.Opciones)
+                        {
+                            selectedValor = "";
+                            if (opcion.Glosa == Model.Valor.glosa) { selectedValor = "selected"; }
+                            <option value="@opcion.Glosa" @selectedValor>@opcion.Glosa</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+
+        @if (Model.Analito.Tipo == 1)
+        {
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.grupoGenero, new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => model.Valor.grupoGenero, Model.Generos.SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.glosa, new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Valor.glosa, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Valor.glosa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.edadInferior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.edadInferior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isNumberKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.edadInferior, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.LabelFor(model => model.Valor.edadSuperior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.edadSuperior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isNumberKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.edadSuperior, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.valorInferior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.valorInferior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isDecimalKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.valorInferior, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.LabelFor(model => model.Valor.valorSuperior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.valorSuperior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isDecimalKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.valorSuperior, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group range-group">
+                @Html.LabelFor(model => model.Valor.valorAlarmaInferior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.valorAlarmaInferior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isDecimalKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.valorAlarmaInferior, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.LabelFor(model => model.Valor.valorAlarmaSuperior, new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Valor.valorAlarmaSuperior, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isDecimalKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.Valor.valorAlarmaSuperior, "", new { @class = "text-danger" })
+                </div>
+            </div>    
+        }
+
+        <div class="form-group">
+            <label class="control-label col-md-3">Estado:</label>
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Valor.Estado, (List<SelectListItem>)ViewBag.estados, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-5">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @Html.ActionLink("Volver a la lista", "AnalitoValor", new { id = Model.Valor.idAnalito })
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarValor");
+</script>

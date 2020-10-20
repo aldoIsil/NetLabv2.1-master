@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/Content/font-awesome.css">
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />   
+    <title>@ViewBag.Title - NetLab 2.0</title>
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssHeader")
+    @Styles.Render("~/Content/telerik/css")   
+    @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+    
+    <script>
+        var URL_BASE = '@Url.Content("~")';
+    </script>
+
+    <style>
+        body {
+            background: url(/img/Marcadeagua.png);
+            /*version nocturna   background-color:rgba(0, 0, 0, 0.5);*/
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .background {
+            -moz-opacity: 0.6;
+            /* Mozilla */
+            opacity: 0.9;
+        }
+
+        .Adapterscreen-modal .modal-dialog {
+            margin: 0;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 200px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-x {
+            display: block;
+        }
+
+        @@media only screen and (max-width: 1400px) {
+            /* For mobile phones: */
+            .topmenu img, .toproot img {
+                height: 50px !important;
+            }
+
+            .hidepanels {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body ondragstart="return false;" ondrop="return false;">
+    <nav class="navbar navbar-inverse navbar-fixed-top super_bar" role="navigation">
+        <ul id="menuBar" class="topmenu">
+            @if (ViewBag.isLogin != null && ViewBag.isLogin)
+            {
+<li class="topmenu"><a href="~/" class="menuBarItem"><span><img src="~/img/001_01.png" alt=""></span></a></li>
+ foreach (var item in ViewBag.permisos)
+{
+    var iconoMenu = item.icon;
+    if (iconoMenu.Equals("")) { iconoMenu = "default.png"; }
+<li class="toproot">
+    <a class="menuBarItem"><span><name>@item.nombre</name> <img src="~/img/iconos_menu/@iconoMenu" alt=""></span></a>
+    <div class="submenu onecolumn">
+        <div class="column onecol">
+            <ul>
+                @foreach (var itemHijo in item.hijos)
+                {
+                    var icono = itemHijo.icon;
+                    var url = itemHijo.URL;
+
+                    if (icono.Equals("")) { icono = "default.png"; }
+                    if (!(url.Equals("#") || url.Equals("")))
+                    {
+                        var actions = url.Split('/');
+                        url = Url.Action(actions[2], actions[1]);
+                    }
+<li>
+    <a href="@url"><img src="~/img/iconos_menu/@icono" alt="">@itemHijo.nombre</a>
+    @if (itemHijo.hijos != null && itemHijo.hijos.Count > 0)
+    {
+<img class="icoOpenMenuRight" src="~/img/openMenuRight.png" alt="" />
+                            <div class="submenu onecolumn">
+                                <div class="column onecol">
+                                    <ul>
+                                        @foreach (var itemNieto in itemHijo.hijos)
+                                        {
+                                            var iconoNieto = itemNieto.icon;
+                                            var urlNieto = itemNieto.URL;
+
+                                            if (iconoNieto.Equals("")) { iconoNieto = "default.png"; }
+                                            if (urlNieto.Equals("#") || urlNieto.Equals("")) { urlNieto = Url.Action("EnConstruccion", "Home"); }
+                                            else
+                                            {
+                                                var actionsN = urlNieto.Split('/');
+                                                if (actionsN.Length > 3)
+                                                {
+                                                    urlNieto = Url.Action(actionsN[2], actionsN[1], new { param1 = actionsN[3] });
+                                                }
+                                                else
+                                                {
+                                                    urlNieto = Url.Action(actionsN[2], actionsN[1]);
+                                                }
+
+                                            }
+            <li>
+                <a href="@urlNieto"><img src="~/img/iconos_menu/@iconoNieto" alt="">@itemNieto.nombre</a>
+            </li>
+}
+                                    </ul>
+                                </div>
+                            </div>}
+</li>
+}
+            </ul>
+        </div>
+    </div>
+</li>
+ }
+
+<li class="toproot rigthMenuItem">
+    <a href="#" class="menuBarItem">
+        <img src="~/img/user.png" class="userIcon" alt="">
+    </a>
+    <div class="submenu useroptions">
+        <div class="column onecol">
+            <ul>
+                <li><a href="@Url.Action("CambiarClave", "Cuenta")"><span class="fa fa-key fa-2x" aria-hidden="true"></span>Cambiar Contraseña</a></li>
+                <li><a href="@Url.Action("SelectLocal", "Login")"><span class="fa fa-hospital-o fa-2x" aria-hidden="true"></span>Cambiar de Establecimiento</a></li>
+                @*<li><a href="#">Ver Notificaciones</a></li>*@
+                <li><a href="@Url.Action("Logout", "Login")"><span class="fa fa-sign-out fa-2x" aria-hidden="true"></span>Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+</li>
+                <li class="toproot nombreusuario">
+                    <span class="nombre">@ViewBag.nombreUsuario</span>
+                    <span>@ViewBag.nombreLocal</span>
+                    <input id="nombreLocal" name="nombreLocal" type="hidden" value="@ViewBag.nombreLocal">
+                </li>
+                                <li class="toproot rigthMenuItem firstMenuHide">
+                                </li>
+ }
+                            else
+                            {
+                <li class="topmenu"><img src="~/img/INS_Web_2.png" alt="" style="height: 60px;"></li>
+                                <li class="toproot rigthMenuItem">
+                                    <img src="~/img/logo2.png" alt="" style="height: 60px;float:left">
+                                </li>
+}
+        </ul>
+    </nav>
+    <div class="container body-content">
+        <div id="UserMessage">
+            @if (TempData["UserMessage"] != null)
+            {
+<h4 class="msj-error">@TempData["UserMessage"]</h4>}
+        </div>
+        @RenderBody()
+    </div>
+
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - NetLab 2.0</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery-local")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery-ui")
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    @Scripts.Render("~/bundles/jquery-unobtrusive-ajax")
+    @Scripts.Render("~/bundles/jquery-chosen")
+    @Scripts.Render("~/bundles/jquery-timeentry")
+    @Scripts.Render("~/bundles/jquery-datepicker")
+    @Scripts.Render("~/bundles/multiple-select")
+    @Scripts.Render("~/bundles/telerik")
+    @Scripts.Render("~/bundles/setup")
+
+    @*notificaciones bootstrap*@
+    @Scripts.Render("~/Scripts/bootstrap-notify.js")
+
+    @*ADAPTIVE MODAL*@
+    @Scripts.Render("~/Scripts/jquery.dialogOptions.js")
+
+    @*Alexander Buchelli - inicio - fecha 7/02/18 - DATA TABLES*@
+    @Scripts.Render("~/Scripts/datatables.js")
+    @RenderSection("scripts", false)
+    <script type="text/javascript">
+                //$(window).load(function() {
+                //    $(".loader").fadeOut("slow");
+                //});
+    </script>
+
+</body>
+</html>
+<script type="text/javascript">
+    ////Bloquea el clic derecho
+    //window.oncontextmenu = function () {
+    //    return false;
+    //}
+
+    // //Bloquea el F12 - Chrome, Firefox e IE
+    //$(document).keydown(function (event) {
+    //    if (event.keyCode == 123) { // Prevent F12
+    //        return false;
+    //    }
+    //});
+</script> 

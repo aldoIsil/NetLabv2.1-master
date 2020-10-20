@@ -1,0 +1,308 @@
+﻿@*  Descripción: Vista, realiza la referenciacion y ejecut la transaccion para cambiar de estado a recepcionado.
+    Permite agregar alicuotas a otros Laboratorios
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+@using (Html.BeginForm("ReferenciarMuestras", "OrdenMuestra", new { id = Model.idOrden, Model.codigoOrden, idLab = Model.idLaboratorioRecepcion }, FormMethod.Post, new { id = "formReferenciarMuestra" }))
+{
+    <h4 align="center">Orden de Análisis N° @Model.codigoOrden</h4>
+    <input type="hidden" id="Paciente_Genero" value=@Model.genero />
+    <input type="hidden" id="idLabSelec" name="idLabSelec" value=@Model.idLaboratorioRecepcion />
+
+    <h3 style="font-weight:bold" aria-expanded="false" aria-selected="false">Examenes</h3>
+    <div>
+        <table name="tblDatosRecepcion" class="table">
+            <thead>
+            <th>Enfermedad</th>
+            <th>Tipo Muestra</th>
+            <th>Examen</th>
+            </thead>
+            @if (Model != null)
+                {
+                <tbody>
+                    @foreach (var item in Model.ordenInfoList)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.nombreEnfermedad)</td>
+                            <td>@Html.DisplayFor(modelItem => item.nombreTipoMuestra)</td>
+                            <td>@Html.DisplayFor(modelItem => item.nombreExamen)</td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+    </div>
+
+    @*<h3 style="font-weight:bold">Materiales</h3>*@
+        <div>
+            <table name="tblDatosRecepcion" class="table">
+                <thead>
+                <th>Tipo Muestra</th>
+                @*<th>Presentacion</th>*@
+                <th align="center">Cantidad</th>
+                @*<th>Reactivo</th>*@
+                </thead>
+                @if (Model != null && Model.ordenMaterialVdList != null)
+                {
+                    <tbody>
+                        @foreach (var item in Model.ordenMaterialVdList)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</td>
+                                @*<td>@Html.DisplayFor(modelItem => item.presentacionNombre)</td>*@
+                                <td align="center">@Html.DisplayFor(modelItem => item.cantidad)</td>
+                                @*<td>@Html.DisplayFor(modelItem => item.reactivoNombre)</td>*@
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        <h3 style="font-weight:bold">Muestras</h3>
+        <div id="divDatosReferencia" aria-expanded="true" aria-selected="true" >
+
+         
+
+            @if (Model != null && Model.ordenMaterialList != null)
+            {
+                int i = 0;
+                int j = 0;
+                string nombre;
+                string chkNombre;
+                string lblPresentacion;
+                string cmbLab;
+                string lblCodMuestra;
+                string lnkAgregar;
+                string txtFecha;
+                string txtHora;
+                string chkDerivar;
+                string cantRow;
+                string TipoMuestra;/*JuanMuga*/
+
+                foreach (var item in Model.ordenMaterialList)
+                {
+                    i++;
+                    j = 0;
+                    if (item.ordenMuestraRecepcionList != null && item.ordenMuestraRecepcionList.Count() > 0)
+                    {
+                        <h3 style="font-weight:bold" class="text-muted">@Html.DisplayFor(modelItem => item.tipoMuestraNombre)</h3>
+                        <hr>
+                        <table id="tblDatosReferencia" class="table tblDatosReferencia">
+                            <thead>
+                            <th href="#" data-toggle="tooltip" title="Referir muestras de un Laboratorio a otro Laboratorio o al ROM del INS">Referir</th>
+                            <th>Item</th>
+                            <th hidden="hidden">Id</th>
+                            <th></th>
+                            <th>Código de Muestra</th>
+                            @*@*<th>Tipo</th>*@<!--muestra primaria: 1 / alicuota: 2-->
+                            <th>Laboratorio</th>
+                            <th>Examen</th>
+                            <th>Alicuotas</th>
+                            <th>Fecha Envío</th>
+                            <th>Hora Envío</th>
+                            @if (Model.ClasificacionEstablecimiento == "LAB INS.")
+                            {
+                                <th>Derivar</th>
+                            }
+                            else
+                            {
+                                <th></th>
+                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item1 in item.ordenMuestraRecepcionList)
+                                {
+                                    j++;
+                                    nombre = "est_" + i.ToString() + "_" + j.ToString();
+
+                                    chkNombre = "chkNom_" + item1.idOrdenMuestraRecepcion;
+                                    lblPresentacion = "lblPre_" + item1.idOrdenMuestraRecepcion;
+                                    cmbLab = "cmbLab_" + item1.idOrdenMuestraRecepcion;
+                                    lblCodMuestra = "lblCodMuestra_" + item1.idOrdenMuestraRecepcion;
+                                    lnkAgregar = "lnkAdd_" + item1.idOrdenMuestraRecepcion;
+                                    txtFecha = "txtFec_" + item1.idOrdenMuestraRecepcion;
+                                    txtHora = "txtHor_" + item1.idOrdenMuestraRecepcion;
+                                    chkDerivar = "chkDer_" + item1.idOrdenMuestraRecepcion;
+                                    cantRow = "canRow_" + item1.idOrdenMuestraRecepcion;
+                                    TipoMuestra = "lblTipoMuestra_" + item1.idOrdenMuestraRecepcion; /*JuanMuga*/
+
+                                    <tr>
+                                        <td class="text-center">
+                                            <input type="hidden" id=@cantRow value="0" />
+                                            <input type="checkbox" name=@Html.Raw(chkNombre) class="chkReferenciar" />
+                                        </td>
+                                        <td>@Html.Label(item1.presentacionNombreNro, new { @id = lblPresentacion })</td>
+                                        <td class="left" hidden="hidden">
+                                            @Html.Hidden("idOrdenRecepcion", item1.idOrdenMuestraRecepcion)
+                                            @Html.Hidden("idOrdenReferencia", item1.idOrdenMuestraRecepcion)
+                                            @Html.Hidden("idOrdenPadre", item1.idOrdenMuestraRecepcion)
+                                            @Html.Hidden("idTipoMuestra", item.idTipoMuestra)
+                                        </td>
+                                        <td>
+                                            <a id="btnShowCodigoMuestra" class="btnShowCodigoMuestra" href="@Url.Action("ShowPopupCodigoMuestra", "Orden", new { codificacion = item1.codigoMuestra })">
+                                                <img src="@Url.Content("~/img/barcode2dx.png")">
+                                            </a>
+                                        </td>
+                                        <td>@Html.Label(item1.codigoMuestra, new { @id = lblCodMuestra })</td>
+                                        @*<td>
+                                            @if (item1.Tipo == 1)
+                                            {
+                                                <label name="idTipo[]"> Muestra Primaria </label>
+                                            }
+                                            else
+                                            {
+                                                <label name="idTipo[]"> Alícuota </label>
+                                            }
+                                        </td>*@
+                                        <td>
+                                            <select id=@cmbLab class="form-control idLaboratorioDestino" name="@cmbLab" disabled="disabled">
+                                                <option value="0"></option>
+                                            </select>
+                                            <span class="obligatorio" hidden="hidden">*</span>
+                                        </td>
+                                        <td>
+                                            @Html.Label(item1.examenNombre)
+                                            @Html.Hidden("idExamen", item1.idExamen, new { @id = "idExamen" })
+                                        </td>
+                                        <td align="center">
+                                            @*<input id=@lnkAgregar type="submit" value="Agregar" class="btnAlicuota btn-link" title="@item1.presentacionNombreNro" />*@
+
+                                            <button class="btnAlicuota btn btn-default" id=@lnkAgregar value="Agregar" type="submit" title="@item1.presentacionNombreNro"> <span class="fa fa-plus"></span> Agregar</button>
+                                        </td>
+                                        <td>
+                                            @*Juan Muga - permitir ingreso manual de fechas*@
+                                            @Html.TextBox(txtFecha, "", new { @id = txtFecha, @class = "inFechaRec datePickerWidth datepickerReferencia dateOnly", autocomplete = "off" })
+                                        </td>
+                                        <td>@Html.TextBox(txtHora, "", new { @id = txtHora, @class = "inHoraRec hourPickerWidth", disabled = "disabled" })</td>
+                                        <td class="text-center">
+                                            <input type="hidden" id=@cantRow value="0" />
+                                            <input type="hidden" id=@TipoMuestra value="" />@*JuanMuga*@
+                                            @if (Model.ClasificacionEstablecimiento == "LAB INS.")
+                                            {
+                                                <input type="checkbox" name=@Html.Raw(chkDerivar) class="chkDerivar" />
+                                            }
+                                        </td>
+                                        @*<td class="hidden">@Html.Label(item.tipoMuestraNombre, new { @id = TipoMuestra })</td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            }
+        </div>
+
+        <br />
+        <label class="alert alert-danger" pointer-events:none">Si no existen muestras a referir/derivar a otro laboratorio; Seleccionar el boton de "Guardar" .</label>
+        <br />
+        <br />
+
+        @*<td><input type="submit" value="Guardar" id="btnGuardar" class="btn-link" /></td>
+
+
+            <td><input type="button" value="Cerrar" id="btnCerrar" class="btn-link hidden" /></td>*@
+
+
+
+        <button class="btn btn-primary" value="Guardar" id="btnGuardar" type="submit"> <span class="fa fa-floppy-o"></span> Guardar</button>
+
+        <button class="btn btn-default hidden" value="Cerrar" id="btnCerrar" type="button"> 
+        <span class="fa fa-times"></span> Cerrar</button>
+}
+
+
+<div style="display: none !important;">
+    <table id="hideTblTRReferencia">
+        <tbody id="hideTRReferencia">
+            <tr>
+                <td class="text-center"><input type="checkbox" class="chkReferenciar"></td>
+                <td><label id="lblTmp"></label></td>
+                <td>
+                    <a id="btnShowCodigoTMP" class="btnShowCodigoMuestra" href="@Url.Action("ShowPopupCodigoMuestra", "Orden", new { codificacion = "COD01" })">
+                        <img src="@Url.Content("~/img/barcode2dx.png")">
+                    </a>
+                </td>
+                <td class="left" hidden="hidden">
+                    <input name="idOrdenRecepcion" id="idOrdenRecepcion" type="hidden">
+                    <input name="idOrdenReferencia" id="idOrdenReferencia" type="hidden">
+                    <input name="idOrdenPadre" id="idOrdenPadre" type="hidden">
+                </td>
+                <td>
+                    <label name="lblCodigoMuestra" id="lblCodigoMuestra"></label>
+                </td>
+                @*<td>
+                    @Html.Label("Alícuota")
+                </td>*@
+                <td>
+                    <div>
+                        <select class="form-control idLaboratorioDestino" name="idLaboratorioDestino" disabled="disabled">
+                            <option value="0"></option>
+                        </select>
+                        <span class="obligatorio" name="idValidacionLab" hidden="hidden">*</span>
+                    </div>
+                </td>
+                <td>
+                    <div id="dvPopupExamen">
+                        <select id="idExamen" name="idExamen" class="idExamen" disabled="disabled"><option value=""></option></select>
+                    </div>
+                </td>
+
+                <td align="center">
+                    @*<input type="submit" value="Quitar" class="btnQuitar btn-link" id="lnkDelete1" />*@
+
+
+                    <button class="btnQuitar btn btn-default" value="Quitar" type="submit" id="lnkDelete1"> <span class="fa fa-trash-o"></span> Quitar</button>
+                </td>
+                <td>
+                    @Html.TextBox("fechaEnvio", "", new { @id = "fechaEnvio" + 1, @class = "inFechaRec datePickerWidth datepickerReferencia", onkeydown = "return false;", autocomplete = "off" })
+                </td>
+                <td>
+                    @Html.TextBox("horaEnvio", "", new { @id = "horaEnvio" + 1, @class = "inHoraRec hourPickerWidth", disabled = "disabled" })
+                </td>
+                @if (Model.idLaboratorioRecepcion == 991)
+                {
+                    <td class="text-center"><input type="checkbox" id="chkDerivar1" class="chkDerivar"></td>
+                }
+                
+                @*<td><label name="TipoMuestra" id="TipoMuestra"></label></td>*@
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="dialog-open" style="display: none">
+
+</div>
+
+<style type="text/css" media="all">
+    /*.datePickerWidth {
+        text-align: center;
+        width: 90px !important;
+    }*/
+
+    .hourPickerWidth {
+        text-align: center;
+        width: 70px !important;
+    }
+
+    .idLaboratorioDestino {
+        width: 190px !important;
+    }
+
+    .idExamen {
+        width: 200px !important;
+    }
+
+    .obligatorio {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, muestra la pantalla para editar una categoria.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.DatoClinico.CategoriaViewModels
+
+@using (Ajax.BeginForm("EditarCategoria", "Categoria",
+                new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "POST",
+                    UpdateTargetId = "dvCategorias",
+                    OnSuccess = "closeEditDialog(\"La categoría se actualizó correctamente.\")",
+                    OnFailure = "closeEditDialog(\"Ocurrió un error al registrar la categoría.\")"
+                },
+                new { id = "frmEditarCategoria" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.IdEnfermedad)
+    @Html.HiddenFor(model => model.IdCategoriaPadre)
+    @Html.HiddenFor(model => model.Categoria.IdCategoriaDato)
+    @Html.HiddenFor(model => model.Categoria.Estado)
+
+    <div class="form-horizontal">
+        <h4>Categoría</h4>
+        <hr />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categoria.Nombre, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Categoria.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Categoria.Nombre, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categoria.Descripcion, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Categoria.Descripcion, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.Categoria.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Clase, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.DropDownListFor(model => model.Clase.IdClase, Model.Clase.SelectList, new { @class = "form-control", style = "width:100px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categoria.Visible, new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.CheckBoxFor(model => model.Categoria.Visible, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categoria.Orientacion, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Categoria.Orientacion, new { htmlAttributes = new { @class = "form-control", style = "width:100px" } })
+                @Html.ValidationMessageFor(model => model.Categoria.Orientacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("<<Retroceder", "Index", null, new { id = "closeDialog", @class = "btn btn-defalut" })
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarCategoria");
+</script>

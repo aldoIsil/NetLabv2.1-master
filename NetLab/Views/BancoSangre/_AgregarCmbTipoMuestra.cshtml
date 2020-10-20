@@ -1,0 +1,10 @@
+﻿@*  Descripción: Vista, muestra y carga el combo de Tipo de Muestra.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.TipoMuestra>
+
+@Html.DropDownList("cmbTipoMuestra",
+new MultiSelectList(Model, "idTipoMuestra", "nombre"), 
+new { value = "0"})

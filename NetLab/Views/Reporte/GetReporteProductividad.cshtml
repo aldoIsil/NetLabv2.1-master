@@ -1,0 +1,134 @@
+﻿@model List<Model.ReportesDTO.reporteProductividadRom>
+
+@{
+    ViewBag.Title = "Reporte productividad ROm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string examen = "4";
+    string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+}
+<h2>Reporte Productividad ROM</h2>
+
+@using (Html.BeginForm("GetReporteProductividad", "Reporte", FormMethod.Post))
+{
+    <div class="form-group">
+
+        @Html.Label("Fecha Desde: ", new { @class = "control -label col-md-2" })
+        <div class="col-md-2">
+            @*@Html.TextBox("fechaDesde", DateTime.Now.AddMonths(-1), new { @id = "fechaDesde", @class = "form-control datepickerDesde datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })*@
+            @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { @id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+        </div>
+        @Html.Label("Fecha Hasta: ", new { @class = "control -label col-md-2" })
+        <div class="col-md-2">
+            @*@Html.TextBox("fechaHasta", DateTime.Now, new { @id = "fechaHasta", @class = "form-control datepickerHasta datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })*@
+            @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { @id = "datepickerHasta", @class = classDatePicker, autocomplete = "off" })
+        </div>
+        <div>
+            <button class="btn btn-primary" id="btnBuscar" type="submit">Buscar</button>
+        </div>
+
+    </div>
+    <br />
+}
+
+@if (Model.Count() > 0)
+{
+    <a href="@(Url.Action("ExportExcel", "Reporte", new { examen }, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a><br />
+    <a href="@(Url.Action("ExportarReportePDF", "Reporte", Request.Url.Scheme))" target="_blank" class="lnkForm"><img src="~/img/imgPdf.gif" /> Exportar PDF</a><br /><br />
+
+    <table id="dtReporte">
+        <thead>
+            <tr>
+                <th>
+                    CODIGO ORDEN
+                </th>
+                <th>
+                    CODIGO MUESTRA
+                </th>
+                <th>
+                    MUESTRA
+                </th>
+                <th>
+                    PACIENTE
+                </th>
+                <th>
+                    ESTABLECIMIENTO ORIGEN
+                </th>
+                <th>
+                    FECHA SOLICITUD
+                </th>
+                <th>
+                    FECHA REGISTRO
+                </th>
+                <th>
+                    FECHA RECEPCION
+                </th>
+                <th>
+                    ENFERMEDAD
+                </th>
+                <th>
+                    EXAMEN
+                </th>
+
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.codigoOrden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.codigoMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Muestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Paciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreEstablecimientoOrigen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaSolicitud)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaRegistro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaRecepcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enfermedad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreExamen)
+                </td>
+
+            </tr>
+        }
+
+    </table>
+}
+
+@section scripts {
+    @Scripts.Render("~/Scripts/App/ConsultaResultados.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dtReporte').DataTable({
+                    //"scrollY": "100%,
+                    //"scrollX": "100%",
+                    "scrollCollapse": true,
+                });
+                $('.dataTables_length').addClass('bs-select');
+
+
+            });
+    </script>
+    <style type="text/css">
+        .datePickerWidth {
+        width: 100px !important;
+    }
+    </style>
+}

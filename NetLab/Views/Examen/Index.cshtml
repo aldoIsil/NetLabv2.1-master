@@ -1,0 +1,359 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de examenes
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.Examen>
+
+@{
+    ViewBag.Title = "Mantenimiento de Exámenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Examenes</h2>
+@using (Html.BeginForm("Index", "Examen", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese LOINC / CPT / Nombre :</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+    @Html.ActionLink("+ Nuevo Examen", "NuevoExamen", new { page = Model.PageNumber, ViewBag.search }, new { id = "openDialog", @class = "btn btn-primary" })
+}
+
+
+<br />
+
+
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive table-bordered" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().descripcion)
+                </th>
+                <th> Ver Enfermedades </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Cpt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Loinc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Estado)
+                </th>
+                <th>Editar</th>
+                <th>Metodos</th>
+                <th>Enfermedades</th>
+                <th>Plataforma</th>
+                <th>Componentes</th>
+                <th>Tipo de Muestra</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nombreEnfermedad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cpt)
+        </td>
+        <td style="white-space: nowrap">
+            @Html.DisplayFor(modelItem => item.Loinc)
+        </td>
+        @*<td class="text-center">
+            @Html.DisplayFor(modelItem => item.EstadoDesc)
+        </td>*@
+        <td class="text-center">
+            @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+
+            @if (item.Estado == 1)
+            {
+                <p style="color:#006f03;">Activo</p>
+            }
+            else
+            {
+                <p style="color:rgb(255,0,0);">Inactivo</p>
+            }
+        </td>
+        <td class="text-center" style="white-space: nowrap">
+            @Html.ActionLink(" ", "EditarExamen", new { id = item.idExamen, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+            @*@Html.ActionLink("Eliminar", "EliminarExamen", new {id = item.idExamen, page = Model.PageNumber, ViewBag.search}, new {@class = "confirmDialog"})*@
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "AgregarMetodos", new { id = item.idExamen }, new { @class = "btn btn-default btn-block fa fa-flask" })
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "AgregarEnfermedades", new { id = item.idExamen }, new { @class = "btn btn-default btn-block fa fa-stethoscope" })
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "ExamenPlataforma", new { id = item.idExamen, examen = item.nombre }, new { @class = "btn btn-default btn-block fa fa-stethoscope" })
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "AgregarAnalitos", new { id = item.idExamen }, new { @class = "btn btn-default btn-block fa fa-medkit" })
+        </td>
+        <td class="text-center">
+            @Html.ActionLink(" ", "AgregarTiposDeMuestra", new { id = item.idExamen }, new { @class = "btn btn-default btn-block fa fa-tint" })
+        </td>
+    </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Examen.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        $("body").on("submit", "#frmNuevoExamen", function (e) {
+
+
+            var ok=false;
+            var ok2=false;
+            var ok3=false;
+            var ok4=false;
+
+            var nombre = $.trim($('#Examen_nombre').val());
+            var cpt = $.trim($('#Examen_Cpt').val());
+            var loinC = $.trim($('#Examen_Loinc').val());
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+            var statesAvailablecpt = @Html.Raw(@ViewBag.CPTLista);
+
+            var statesAvailableLoinC = @Html.Raw(@ViewBag.LOINCLista);
+
+
+            var nom=nombre.toUpperCase();
+            if (statesAvailable.includes(nom)  ) {
+                jAlert("Ya existe un Examen con ese nombre.", "¡Alerta!");
+            }else {
+                var ok=true;
+            }
+
+            if (cpt=='') {
+                var ok2=true;
+            }else {
+                if (statesAvailablecpt.includes(cpt)  ) {
+                    jAlert("Ya existe un Examen con ese CPT.", "¡Alerta!");
+                }else {
+                    var ok2=true;
+                }
+            }
+
+            if (loinC=='') {
+                var ok3=true;
+            }else {
+                if (statesAvailableLoinC.includes(loinC)  ) {
+                    jAlert("Ya existe un Examen con ese LOINC.", "¡Alerta!");
+                }else {
+                    var ok3=true;
+                }
+            }
+
+
+
+
+
+            if ( ok && ok2 && ok3 )
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+                        $("#btnCrear").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+                        jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+
+
+
+
+
+        $("body").on("submit", "#frmEditarExamen", function (e) {
+
+
+
+
+
+
+            var ok=false;
+            var ok2=false;
+            var ok3=false;
+            var ok4=false;
+
+            var nombre = $.trim($('#Examen_nombre').val());
+            var cpt = $.trim($('#Examen_Cpt').val());
+            var loinC = $.trim($('#Examen_Loinc').val());
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+            var statesAvailablecpt = @Html.Raw(@ViewBag.CPTLista);
+
+            var statesAvailableLoinC = @Html.Raw(@ViewBag.LOINCLista);
+
+
+            //NOMBRE
+            var someDataFromPartialSomehow = $("#someDataFromPartialSomehow").val();
+            var nombreController=someDataFromPartialSomehow.toUpperCase();
+
+            //CPT
+            var someDataFromPartialSomehow2 = $("#someDataFromPartialSomehow2").val();
+            var nombreController2=someDataFromPartialSomehow2.toUpperCase();
+
+            //LOINC
+            var someDataFromPartialSomehow3 = $("#someDataFromPartialSomehow3").val();
+            var nombreController3=someDataFromPartialSomehow3.toUpperCase();
+
+            var nom =nombre.toUpperCase();
+            var cptvar=cpt.toUpperCase();
+            var loincvar=loinC.toUpperCase();
+
+            if (nom==nombreController) {
+                ok=true;
+            }else {
+                var nom=nombre.toUpperCase();
+                if (statesAvailable.includes(nom)  ) {
+                    jAlert("Ya existe un Examen con ese nombre.", "¡Alerta!");
+                }else {
+                    var ok=true;
+                }
+            }
+
+
+            if (cptvar==nombreController2) {
+                ok2=true;
+            }else {
+                if (cpt=='') {
+                    var ok2=true;
+                }else {
+                    if (statesAvailablecpt.includes(cpt)  ) {
+                        jAlert("Ya existe un Examen con ese CPT.", "¡Alerta!");
+                    }else {
+                        var ok2=true;
+                    }
+                }
+            }
+
+            if (loincvar==nombreController3) {
+                ok3=true;
+            }else {
+
+                if (loinC=='') {
+                    var ok3=true;
+                }else {
+                    if (statesAvailableLoinC.includes(loinC)  ) {
+                        jAlert("Ya existe un Examen con ese LOINC.", "¡Alerta!");
+                    }else {
+                        var ok3=true;
+                    }
+                }
+
+
+            }
+
+
+
+
+
+
+            if ( ok && ok2 && ok3)
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+                        $("#btnGuardar").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+                        jAlert("Examen Editado Satisfactoriamente", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+}

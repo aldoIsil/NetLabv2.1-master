@@ -1,0 +1,88 @@
+﻿@model PagedList.IPagedList<Model.IngresoResultadosPEEC>
+
+@{
+    ViewBag.Title = "BusquedaEvaluacion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Busqueda Evaluación</h2>
+
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table">
+        <tr>
+            @*<th>
+                @Html.DisplayNameFor(model => model.First().idConfiguracionPanel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().idConfigEvaluacion)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.First().EESSEvaluador)
+            </th>
+            <th>
+                Panel / Lote
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().nombre)
+            </th>
+            @*<th>
+        @Html.DisplayNameFor(model => model.First().descripcion)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.First().idTipo)
+    </th>*@
+            <th>
+                Tipo Metodo
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().DescEvaluacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Resultado)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.idConfiguracionPanel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idConfigEvaluacion)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.EESSEvaluador)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nroLote)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                @*<td>
+         @Html.DisplayFor(modelItem => item.descripcion)
+     </td>
+    <td>
+         @Html.DisplayFor(modelItem => item.idTipo)
+     </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescTipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescEvaluacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resultado)
+                </td>
+                <td>
+                    @Html.ActionLink("  ", "ResultadoPEED", new { idConfiguracionPanel = item.idConfiguracionPanel, idLabEvaludaor = item.idEESSEvaluador,LabEvaluador = item.EESSEvaluador, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-eye editDialog" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}

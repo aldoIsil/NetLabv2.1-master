@@ -1,0 +1,44 @@
+﻿@model List<Model.ViewData.OrdenRecepcionDetalleVd>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="display:none">Id</th>
+            <th style="display:none">CodigoOrden</th>
+            <th style="display:none">IdMuestra</th>
+            <th style="display:none">CodigoOrdenMuestraRecepcion</th>
+            <th>Código de Muestra</th>
+            <th>Tipo Muestra</th>
+            <th>Tipo</th>
+            <th>Fecha - Obtención</th>
+            <th>Hora - Obtención</th>
+            <th>Enfermedad</th>
+            <th>Examen</th>
+            <th>Fecha - Recibido</th>
+            <th>Hora - Recibido</th>
+            <th>Lab. Origen</th>
+            <th>Lab. Destino</th>
+            @*<th>Estado</th>*@
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td style="display:none">@item.idOrden</td>
+            <td style="display:none">@item.codigoOrden</td>
+            <td style="display:none">@item.IdMuestraCod</td>
+            <td style="display:none">@item.CodigoOrdenMuestraRecepcion</td>
+            <td>@item.codigoMuestra</td>
+            <td>@item.TipoMuestra</td>
+            <td>@item.Tipo</td>
+            <td>@item.FechaObtencion</td>
+            <td>@item.HoraObtencion</td>
+            <td>@item.Enfermedad</td>
+            <td>@item.Examen</td>
+            <td>@item.FechaRecepcion</td>
+            <td>@item.HoraRecepcion</td>
+            <td>@item.EstablecimientoOrigen</td>
+            <td>@item.EstablecimientoDestino</td>
+        </tr>
+    }
+</table>
+

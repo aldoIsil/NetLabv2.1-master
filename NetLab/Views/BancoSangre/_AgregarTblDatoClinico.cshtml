@@ -1,0 +1,31 @@
+﻿@*  Descripción: Vista, muestra y carga datos clinicos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model IEnumerable<Model.Dato>
+
+
+<table class="table" width="80" >
+    <tr>
+        <th>Variable</th>
+        <th>Valor</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prefijo)
+                </td>
+                <td class=@Html.DisplayFor(modelItem => item.IdDato)>
+                    @Html.CheckBox("datoClinico")
+                </td>
+            </tr>
+        }
+    }
+
+</table>

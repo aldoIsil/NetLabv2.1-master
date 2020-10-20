@@ -1,0 +1,284 @@
+﻿@model Model.Orden
+@using NetLab.Helpers;
+
+@{
+//Json.Encode(new {Tipo = 1, Maximo = 10, Minmo = 20   });
+}
+
+
+<h4 class="center">Orden de Análisis @Model.codigoOrden</h4>
+<br />
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Proyecto</label><br />
+            <span>@Model.Proyecto.Nombre</span>
+        </div>
+    </div>
+
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>EESS/LAB</label><br />
+            <span>@Model.establecimiento.Nombre</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Nombre Paciente</label><br />
+            <span>@Model.Paciente.Nombres</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Edad</label><br />
+            <span>@Model.Paciente.edadAnios</span>   <label> Años</label>
+            <span>@Model.Paciente.edadMeses</span>   <label> Meses</label>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("Update", "LiberacionResultados", FormMethod.Post, new { @id = "formLiberaResultados" }))
+{
+
+    if (Model != null)
+    {
+        if (true)
+        {
+            <table id="tblResultados">
+                <thead>
+                    <tr>
+                        <th>Examen</th>
+                        <th>Resultado</th>
+                        <th>Observación</th>
+                        <th>Método</th>
+                        @*<th>Unidad</th>
+                        <th>Valor Normal</th>*@
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @{ Guid idOrdenExamenAnterior = new Guid(); }
+                    @foreach (var item in Model.liberadosList)
+                    {
+
+                        if (idOrdenExamenAnterior != item.idOrdenExamen)
+                        {
+                            <tr>
+                                <td colspan="7" style="text-align:left">
+                                    <b>Examen:</b> @item.NombreExamen <br />
+                                    <b>Tipo de Muestra:</b> @item.NombreMuestra <br />
+                                    <b>Código Muestra:</b> @item.CodifMuestra
+                                </td>
+                            </tr>
+                            idOrdenExamenAnterior = item.idOrdenExamen;
+
+                        }
+
+                        @*CAMBIO SOTERO BUSTAMANTE DE IDORDENEXAMEN A IDORDEN PARA LIBERAR RESULTADOS*@
+                    string idChkResul = "result" + item.idOrdenExamen;
+                    //FIN DEL CAMBIO--SOTERO
+
+
+                    string ingresadoTR = "";
+                    string selected = "";
+
+                    if (item.validado == 1) { ingresadoTR = "lockedTR"; selected = "checked"; }
+
+                    <tr validacion="@Json.Encode(new { Tipo = 0, Maximo = 1, Minimo = 1 })" class="@ingresadoTR">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Analito)
+                        </td>
+                        <td width="400px">
+                            @{
+                                string GlosaPadre = "";
+                                var CodigoParent = "";
+                                var printPadre = 0;
+                                foreach (var opcion in item.ListJsResultados.OrderBy(a => a.IdAnalitoOpcionParent).ToList())
+                                {
+                                    if (opcion.Tipo == 2 || opcion.Tipo == 5)
+                                    {
+                                        if (CodigoParent != opcion.IdAnalitoOpcionParent && opcion.IdAnalitoOpcionParent.ToString() == opcion.IdAnalitoOpcionParent.ToString().ToUpper())
+                                        {
+                                            GlosaPadre = opcion.GlosaParent;
+                                            CodigoParent = opcion.IdAnalitoOpcionParent;
+                                            if (printPadre == 0)
+                                            {
+                                                <div>
+                                                    <b>
+                                                        <u>
+                                                            @Html.DisplayFor(modelItem => opcion.GlosaParent)
+                                                        </u>
+                                                    </b>
+                                                </div>
+                                                printPadre++;
+                                            }
+
+                                            string IdAnalitoOpcionParent = opcion.IdAnalitoOpcionParent;
+                                            <br />
+                                            foreach (var ValOpcion in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent == opcion.IdAnalitoOpcionParent).ToList())
+                                            {
+                                                foreach (var ValOpcion2 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                {
+                                                    <div style="display:inline-block; width:auto;">
+                                                        <b>
+                                                            @Html.DisplayFor(modelItem => ValOpcion2.Glosa):
+                                                        </b>
+                                                    </div>
+                                                    foreach (var ValOpcion3 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion2.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                    {
+                                                        if (!String.IsNullOrEmpty(ValOpcion3.Glosa))
+                                                        {
+                                                            <div style="display:inline-block; width:auto;">
+                                                                <p>
+                                                                    : @Html.DisplayFor(modelItem => ValOpcion3.Glosa)
+                                                                </p>
+                                                            </div>
+                                                            <br />
+                                                        }
+                                                        foreach (var ValOpcion4 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion3.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                        {
+                                                            if (!String.IsNullOrEmpty(ValOpcion4.Glosa))
+                                                            {
+                                                                <div style="display:inline-block; width:auto;">
+                                                                    <p>
+                                                                        -  @Html.DisplayFor(modelItem => ValOpcion4.Glosa)
+                                                                    </p>
+                                                                </div>
+                                                                <br />
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        GlosaPadre = opcion.GlosaParent;
+
+                                        if (CodigoParent != opcion.IdAnalitoOpcionParent && opcion.IdAnalitoOpcionParent.ToString().ToUpper() == opcion.IdAnalito.ToString().ToUpper())
+                                        //if(GlosaPadre.Length == 0)
+                                        {
+
+                                            CodigoParent = opcion.IdAnalitoOpcionParent;
+                                            if (printPadre == 0)
+                                            {
+                                                <div>
+                                                    <b>
+                                                        <u>
+                                                            @Html.DisplayFor(modelItem => opcion.GlosaParent)
+                                                        </u>
+                                                    </b>
+                                                </div>
+                                                printPadre++;
+                                            }
+
+                                            string IdAnalitoOpcionParent = opcion.IdAnalitoOpcionParent;
+                                            <br />
+                                            foreach (var ValOpcion in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent == opcion.IdAnalitoOpcionParent).ToList())
+                                            {
+                                                foreach (var ValOpcion2 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion.IdAnalitoOpcionResultado.ToString()).ToList())
+                                                {
+                                                    if (ValOpcion2.GlosaParent == opcion.GlosaParent)
+                                                    {
+                                                        <div style="display:inline-block; width:auto;">
+                                                            <b>
+                                                                @Html.DisplayFor(modelItem => ValOpcion2.Glosa)
+                                                            </b>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div style="display:inline-block; width:auto;">
+                                                            <b>
+                                                                @Html.DisplayFor(modelItem => ValOpcion2.GlosaParent): @Html.DisplayFor(modelItem => ValOpcion2.Glosa)
+                                                            </b>
+                                                        </div>
+                                                    }
+                                                    @*<br />*@
+                            foreach (var ValOpcion3 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion2.IdAnalitoOpcionResultado.ToString()).ToList())
+                            {
+                                if (!String.IsNullOrEmpty(ValOpcion3.Glosa))
+                                {
+                                    <div style="display:inline-block; width:auto;">
+                                        <p>
+                                            : @Html.DisplayFor(modelItem => ValOpcion3.Glosa)
+                                        </p>
+                                    </div>
+                                    @*<br />*@
+                                }
+
+                                foreach (var ValOpcion4 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion3.IdAnalitoOpcionResultado.ToString()).ToList())
+                                {
+                                    if (!String.IsNullOrEmpty(ValOpcion4.Glosa))
+                                    {
+                                        <div style="display:inline-block; width:auto;">
+                                            <p>
+                                                -  @Html.DisplayFor(modelItem => ValOpcion4.Glosa)
+                                            </p>
+                                        </div>
+                                        @*<br />*@
+                                    }
+                                    foreach (var ValOpcion5 in item.ListJsResultados.Where(p => p.IdAnalitoOpcionParent.ToString() == ValOpcion4.IdAnalitoOpcionResultado.ToString()).ToList())
+                                    {
+                                        if (!String.IsNullOrEmpty(ValOpcion5.Glosa))
+                                        {
+                                            <div style="display:inline-block; width:auto;">
+                                                <p>
+                                                    -  @Html.DisplayFor(modelItem => ValOpcion5.Glosa)
+                                                </p>
+                                            </div>
+                                        }
+                                    }
+                                }
+                                <br />
+                            }
+                            <br />
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.observacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Metodo)
+                        </td>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.Unidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ValorNormal)
+                        </td>*@
+                        <td class="text-center">
+                            <input name=@Html.Raw(idChkResul) type="checkbox" class="case" @selected />
+                            @*<input name="chkTest[]" id = "@idChkResul" type="checkbox" class="case" />*@
+                            @*CAMBIO SOTERO BUSTAMANTE DE IDORDENEXAMEN A IDORDEN PARA LIBERAR RESULTADOS*@
+                            @Html.Hidden("idValResul", item.idOrdenExamen)
+                        </td>
+                    </tr>
+
+                                }
+
+                </tbody>
+            </table>
+
+                                    }
+
+                                }
+                                <br />
+
+                                <div class="linksForm">
+                                    <input type="submit" id="btnLiberar" value="Liberar" class="btn btn-primary " />
+                                    @*<input type="submit" id="btnImprimir" value="Imprimir" class="btn-link" />*@
+                                    <label id="CerrarPopUp" class="btn btn-link">Cancelar</label>
+                                </div>
+
+                                }

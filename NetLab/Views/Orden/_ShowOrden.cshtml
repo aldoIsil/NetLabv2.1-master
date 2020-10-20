@@ -1,0 +1,616 @@
+﻿@* Descripción: Vista para mostrar la informacion de la orden y poder referenciar a otro establecimiento o Laboratorio.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.
+*@
+@model Model.Orden
+
+@{
+    ViewBag.Title = "Editar Orden";
+    var tipoRegistro = (Enums.TipoRegistroOrden)Session["tipoRegistro"];
+    int intTipoRegistro = (int)tipoRegistro;
+    var idEstablecimientoOrigen = ViewBag.idEstablecimiento;
+    var Origen = ViewBag.viewOrigen;
+}
+
+<style>
+    .field-validation-error {
+        color: Red;
+    }
+
+    .obligatorio {
+        color: Red;
+    }
+
+    .ui-autocomplete1 {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #CodigoUnicoOrigen.ui-autocomplete-loading {
+        background-image: url('../../img/loading.gif');
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+</style>
+
+@*<script src="~/Scripts/jquery.autocomplete.multiselect.js"></script>*@
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+@using (Html.BeginForm("EditOrden", "Orden", FormMethod.Post, new { id = "frmOrden" }))
+{
+    <input type="hidden" name="idOrden" value=@Html.Raw(Model.idOrden) />
+    <input type="hidden" name="hdnsolicitante" value="@ViewBag.SolicitanteNombre" />
+    <input type="hidden" name="hdnsolicitanteid" value="@Model.solicitante" />
+    <div class="form-horizontal">
+        <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+
+        <h3 style="text-align:center">Orden Nro @Html.Raw(Model.codigoOrden)</h3>
+        @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0)
+        {
+            <div style="display:none">
+                <input type="hidden" value="" id="Rechazo" />
+                <input type="hidden" value="@Model.codigoOrden" id="codigoOrden" name="codigoOrden" />
+                <fieldset class="default">
+                    <legend class="default">Rechazar Orden</legend>
+                    <div class="table-responsive div-row-width">
+                        <div id="autocompletedivid" class="div-row" style="z-index:9999 !important;">
+                            @Html.Label("Motivo Rechazo", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                            <input id="MotivoRechazoList" type="text" class="form-control" />
+                            <br />
+                            <button id="btnRechazarOrden" name="btnRechazarOrden" value="RechazarOrden" class="btn btn-danger">
+                                Rechazar Orden
+                            </button>
+                        </div>
+                        <div class="div-row">
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        <fieldset class="default">
+            <legend class="default">Datos del Paciente</legend>
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.NroDocumento, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                    <span>@Html.Raw(Model.Paciente.NroDocumento)</span>
+                </div>
+                @Html.Label("Nombre:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+                <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.Nombres + " " + Model.Paciente.ApellidoPaterno + " " + Model.Paciente.ApellidoMaterno)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.DireccionActual, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+                <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.DireccionActual)</span>
+                </div>
+                @Html.Label("Edad:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+                <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                    <span>@Html.Raw(Model.Paciente.edadAnios)</span>
+                </div>
+            </div>
+            <br /><br /><br /><br />
+            <!--primera fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.UbigeoActual.Departamento)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Provincia, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw(Model.Paciente.UbigeoActual.Provincia)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.UbigeoActual.Distrito, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>
+                        @Html.Raw(Model.Paciente.UbigeoActual.Distrito)
+                    </span>
+                </div>
+            </div>
+            <br /><br /><br />
+            <!--Segunda fila-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.TelefonoFijo, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.TelefonoFijo)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.Celular1, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.Celular1)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.Celular2, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span> @Html.Raw((String)Model.Paciente.Celular2)</span>
+                </div>
+            </div>
+            <br /><br />
+            <!--tercera linea-->
+            <div class="div-row">
+                @Html.LabelFor(model => model.Paciente.correoElectronico, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.correoElectronico)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.ocupacion, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.ocupacion)</span>
+                </div>
+                @Html.LabelFor(model => model.Paciente.tipoSeguroSalud, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.tipoSeguro)</span>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <span>@Html.Raw((String)Model.Paciente.otroSeguroSalud)</span>
+                </div>
+            </div>
+        </fieldset>
+        @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0 && Origen == "BusquedaMuestrasIngresadas")
+        {
+            <br /><br />
+            <fieldset class="default">
+                <legend class="default">Editar Paciente</legend>
+                <div class="div-row2">
+                    @Html.Label("Tipo Documento:", new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg-6">
+                        @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="div-row">
+                    @Html.Label("Documento:", new { @class = "-label- col-xs-5 col-sm-6 col-lg-3" })
+                    <div class="col-xs-5 col-sm-6 col-lg-4">
+                        @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control numericOnly", autocomplete = "off" })
+                    </div>
+                </div>
+            </fieldset>
+        }
+        <br />
+        <fieldset class="default">
+            <legend class="default">EESS/LAB</legend>
+
+            <div class="div-row2">
+                @Html.LabelFor(model => model.idProyecto, new { @class = "-label- col-xs-3 col-sm-3 col-md-1 col-lg-1" })
+                @if (true)
+                {
+                    <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                        <span>@Html.Raw((String)Model.Proyecto.Nombre)</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-xs-12 col-sm-9 col-md-2 col-lg-2">
+                        @Html.DropDownListFor(model => model.Proyecto.IdProyecto, new SelectList(ViewBag.proyectoList, "idProyecto", "nombre"), new { @id = "Proyectoval", @class = "form-control input-sm" })
+                    </div>
+                }
+            </div>
+            <br /><br /><br />
+            <div class="div-row2">
+                @Html.LabelFor(model => model.nroOficio, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-3" })
+                <div class="col-xs-12 col-sm-9 col-md-2 col-lg-8">
+                    @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0)
+                    {
+                        @Html.TextBoxFor(model => model.nroOficio, new { @class = "form-control input-sm" })
+                    }
+                    else
+                    {
+                        <span>@Html.Raw((String)Model.nroOficio)</span>
+                    }
+                </div>
+            </div>
+            <br /><br /><br />
+            <div class="div-row2">
+                @Html.LabelFor(model => model.idEstablecimiento, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-3" })
+                <div class="col-xs-12 col-sm-1 col-md-1 col-lg-8">
+                    <span>@Html.Raw(Model.establecimiento.Nombre)</span>
+                </div>
+            </div>
+            <br /><br /><br />
+            <div class="div-row2">
+                @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0 && idEstablecimientoOrigen == 991 && Origen == "BusquedaMuestrasIngresadas")
+                {
+                    @Html.LabelFor(model => model.fechaIngresoINS, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaIngresoINS, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                    @Html.LabelFor(model => model.fechaReevaluacionFicha, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaReevaluacionFicha, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                    //if (Model.fechaIngresoINS != null)
+                    //{
+
+                    //}
+                    //if (Model.fechaReevaluacionFicha != null)
+                    //{
+
+                    //}
+                }
+                else
+                {
+                    if (Model.fechaIngresoINS != null)
+                    {
+                        @Html.LabelFor(model => model.fechaIngresoINS, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-3" })
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                            <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.fechaIngresoINS))</span>
+                        </div>
+                    }
+                    if (Model.fechaReevaluacionFicha != null)
+                    {
+                        @Html.LabelFor(model => model.fechaReevaluacionFicha, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-4" })
+                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                            <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.fechaReevaluacionFicha))</span>
+                        </div>
+                    }
+                }
+
+            </div>
+        </fieldset>
+        @if (Model.ProcedenciaPaciente != null)
+        {
+            <fieldset class="default">
+                <legend class="default">País de Proveniencia</legend>
+                <div class="row">
+                    @*<div class="col-md-4">
+
+                        </div>*@
+                    <table class="table" width="600">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center" width="300">País</th>
+                                <th style="text-align:center" width="300">Ciudad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="TbCiudad">
+                            @foreach (var item in Model.ProcedenciaPaciente)
+                            {
+                                <tr><td>@item.NombrePais</td><td>@item.NombreCiudad</td></tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </fieldset>
+        }
+
+        <fieldset class="default">
+            <legend class="default"></legend> <div id="dvTblExamen" class="table-responsive div-row-width">
+                @Html.Partial("_TblExamenNoEdit", (List<Model.OrdenExamen>)Model.ordenExamenList)
+            </div>
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default"></legend>
+            @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0 && Origen == "BusquedaMuestrasIngresadas")
+            {
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div>
+                        @Html.Partial("_TblOrdenMuestraManualEdit", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div id="dvTblOrdenMuestra" class="table-responsive div-row-width">
+                    @Html.Partial("_TblOrdenMuestraNoEdit", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                </div>
+            }
+
+        </fieldset>
+        <fieldset class="default">
+            <legend class="default"></legend>
+            @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0 && Origen == "BusquedaMuestrasIngresadas")
+            {
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div>
+                        @Html.Partial("_TblMaterialEdit", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div>
+                        @Html.Partial("_TblMaterialNoEdit", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+                    </div>
+                </div>
+            }
+
+        </fieldset>
+        @if (Model.ordenExamenList.Where(x => x.estatusE == 11).ToList().Count() == 0)
+        {
+            <fieldset class="default">
+                <legend class="default">Datos Clínicos Epidemiologicos</legend>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div id="tabs">
+                        @Html.Partial("_TabDatoClinico", (List<Model.Enfermedad>)Model.enfermedadList)
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="default">
+                <legend class="default">Observaciones</legend>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(model => model.fechaSolicitud, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-2" })
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                            @Html.TextBoxFor(model => model.fechaSolicitud, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                        </div>
+                        @Html.Label("Solicitante: ", new { @class = "-label- col-xs-6 col-sm-2" })
+                        <div id="divSolicitante" class="col-xs-12 col-sm-1 col-md-1 col-lg-4">
+                            @Html.Partial("_Solicitante")
+                        </div>
+                        <div>
+                            <a href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnShowPopupSolicitante" title="Agregar Solicitante" class="btn btn-default">
+                                <span class="fa fa-user-plus" aria-hidden="true"></span>
+                                Agregar
+                            </a>
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.observacion, new { @class = "-label- col-xs-12 col-sm-12 col-md-2 col-lg-1" })
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+                        &nbsp;&nbsp;&nbsp;&nbsp;         @Html.TextAreaFor(model => model.observacion, 2, 100, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+                    </div>
+
+                </div>
+                <br /><br /><br /><br /><br /><br />
+            </fieldset>
+            <br />
+            <button id="btnEditar" name="btnEditar" value="Editar" class="btn btn-info">
+                Grabar
+            </button>
+        }
+        else
+        {
+            <fieldset class="default">
+                <legend class="default">Datos Clínicos</legend>
+                <div id="dvTblDatoClinico" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @Html.Partial("_TabDatoClinicoNoEdit", (List<Model.Enfermedad>)Model.enfermedadList)
+                </div>
+            </fieldset>
+            <fieldset class="default">
+                <legend class="form">Observaciones</legend>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(model => model.solicitante, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
+                        <span>@Html.Raw(ViewBag.SolicitanteNombre)</span>
+                    </div>
+                    @Html.LabelFor(model => model.fechaSolicitud, new { @class = "-label- col-xs-12 col-sm-1 col-md-1 col-lg-1" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.fechaSolicitud))</span>
+                    </div>
+                    @Html.LabelFor(model => model.observacion, new { @class = "-label- col-xs-12 col-sm-12 col-md-2 col-lg-2" })
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+                        <span>@Html.Raw(Model.observacion)</span>
+                    </div>
+
+                </div>
+            </fieldset>
+        }
+        <div class="piePagina">
+            <span>Registrado el día @Model.fechaRegistroShow por @Model.usuario.nombres</span>
+        </div>
+
+    </div>
+    <div id="divTblMultiple" style="display: none">
+    </div>
+}
+<style type="text/css">
+    .piePagina {
+        margin-top: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #loader-img {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .border {
+        border: 3px solid #fff;
+        border-radius: 5px;
+    }
+
+    #loaderDiv {
+        display: block;
+        width: 124px;
+        height: 124px;
+        margin: 0 auto;
+        display: none;
+    }
+
+    .loaderDiv #loaderDiv {
+        z-index: 9999;
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    #loaderDiv > div > div {
+        animation-play-state: paused;
+        border: 5px solid rgba(200, 200, 200, 1);
+        border-radius: 50%;
+        animation: rotate 1s infinite linear;
+        border-left-color: rgba(200, 200, 200, 0.4);
+        width: 100%;
+        height: 100%;
+    }
+
+    #loaderDiv > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border-radius: 50%;
+        box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.8);
+        width: 60px;
+        height: 60px;
+        padding: 5px;
+    }
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Solicitante.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @*@Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden.js?updated={0}", new Random().Next(0, 999))))*@
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/CrearOrden.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Search.js?updated={0}", new Random().Next(0, 999))))
+
+    <script type="text/javascript">
+        $(function () {
+            $(".datepickerExtension").setDefaultDatePicker();
+            //SetDateOnly();
+            //LoadSolicitantes();
+        });
+    </script>
+
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Ubigeo.js?updated={0}", new Random().Next(0, 999))))
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}
+
+<style type="text/css" media="all">
+    .cmbxBusqueda {
+        width: 230px !important;
+    }
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    /*.form-group {
+                        margin-bottom: 6px;
+                    }*/
+
+    .radioButtonWidthReg {
+        width: 250px !important;
+    }
+
+    .radioButtonWidthColec {
+        width: 275px !important;
+    }
+
+    .divWidth {
+        width: 260px !important;
+    }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+        margin-left: -15px;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    .rowExamen {
+        background-color: #67a8d4;
+        font-size: 9px;
+        text-align: center;
+    }
+
+    h4.center {
+        text-align: center !important;
+    }
+
+    .headerRegRes {
+        width: 270px !important;
+        padding: 0 10px;
+        text-align: center;
+    }
+
+    #tblOrdenExamen {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+        #tblOrdenExamen th, #tblOrdenExamen td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    #tblResultados {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+        #tblResultados th, #tblResultados td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+    .linksForm {
+        width: 100%;
+        text-align: center;
+    }
+
+    #lnkRegistrar, #lnkRegistrarResultados, #lnkFinalizarResultados, #CerrarPopUp {
+        width: 100px;
+    }
+
+    .criterioRechazo {
+        width: 100%;
+    }
+
+    .SumoSelect {
+        width: 100%;
+    }
+
+
+        .SumoSelect > .optWrapper > .options {
+            max-height: 145px;
+        }
+
+    .ms-choice {
+        height: 20px;
+    }
+
+        .ms-choice span {
+            margin-top: -3px;
+        }
+
+    .lockedTR {
+        background-color: #808080;
+    }
+
+    .ingresadoTR {
+        background-color: #EEEEEE;
+    }
+
+    .titleExamen {
+        width: 40% !important;
+        max-width: 40% !important;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .titleMuestra {
+        width: 30% !important;
+        max-width: 30% !important;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .rigthMetodo {
+        width: 28% !important;
+        max-width: 28% !important;
+        display: inline-block !important;
+        vertical-align: top;
+    }
+
+        .rigthMetodo select {
+            width: 80% !important;
+            max-width: 80% !important;
+            display: inline-block !important;
+        }
+</style>

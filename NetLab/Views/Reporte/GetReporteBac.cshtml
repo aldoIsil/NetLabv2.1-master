@@ -1,0 +1,84 @@
+﻿@using Model.ReportesDTO
+
+@Html.ActionLink("Volver al Listado de Reportes", "Index")
+    <h3>Número de Muestras Procesadas de Baciloscopia</h3>
+
+<link rel="stylesheet" type="text/css" href="~/Content/resultados.css" />
+
+    <div class="form-group">
+
+        @Html.Label("Trimestre: ", new { @class = "control -label col-md-1" })
+        <div class="col-md-2">
+            @Html.DropDownList("trimestre", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="1er", Value = "1" ,Selected = true},
+                            new SelectListItem{ Text="2do", Value = "2" },
+                            new SelectListItem{ Text="3ro", Value = "3" },
+                            new SelectListItem{ Text="4to", Value = "4" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        @Html.Label("Año: ", new { @class = "control -label col-md-1" })
+        <div class="col-md-2">
+            @Html.DropDownList("anio", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="2018", Value = "2018" ,Selected = true}
+                          }, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        @Html.Label("Departamento", new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+        <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+            @Html.Action("GetDepartamentos", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         provinciaDivId = "dvProvincias",
+                         distritoDivId = "dvDistritos",
+                         selectedValue = ""
+                     })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2">
+            <input id="btnBuscar" type="submit" value="Buscar" class="btn-link" />
+        </div>
+    </div>
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+        <table border="1">
+            <tr>
+                <th>TOTAL DIAGNOSTICO</th>
+                <th>CANTIDAD TRIMESTRAL</th>
+            </tr>
+            @*@foreach (ReporteCantidadResultado item in (List<ReporteCantidadResultado>)ViewBag.lista)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.valor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.cantidad)
+                    </td>
+                </tr>
+            }*@
+            
+        </table>
+    </div>
+}
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-hidden" style="visibility: hidden">
+</div>
+   
+@section scripts {
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Dropdownlists.js?updated={0}", new Random().Next(0, 999))))
+    
+}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+
+

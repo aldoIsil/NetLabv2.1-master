@@ -1,0 +1,72 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de enfermedades para agregar a un examen
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Enfermedad>
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarEnfermedad", "Enfermedad", new { ViewBag.idExamen }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+}
+<br />
+@using (Html.BeginForm("GuardarEnfermedad", "Enfermedad", new { ViewBag.idExamen }, FormMethod.Post, new { id = "frmAgregarEnfermedad" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+        <table class="table" id="AgregarExamenTable">
+            <tr>
+                <th></th>
+                <th>SNOMED</th>
+                <th>Enfermedad</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 20px">
+                        <input type="checkbox" name="enfermedades" value="@item.idEnfermedad" />
+                    </td>
+                    <td class="text-center" style="width: 50px">
+                        @Html.DisplayFor(modelItem => item.Snomed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                </tr>
+            }
+        </table>
+
+        @*<button id="btnGuardarEnfermedad" class="btn btn-primary">Grabar</button>
+
+            <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+
+        <button id="btnGuardarEnfermedad" class="btn btn-primary"><span class="fa fa-floppy-o"> Grabar</span></button>
+
+
+
+
+        @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+
+
+                        @*<input type="Submit" value="Guardar" class="btn-link" onclick="return ExisteElementoSeleccionado();" />*@
+    }
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarEnfermedad", new { page, ViewBag.search, ViewBag.idExamen }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))

@@ -1,0 +1,89 @@
+﻿@* Descripción: Vista, muestra la pantalla con el listado de Catalogo de Servicios.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Enfermedad>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Catalogo de Servicios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Catalogo de Servicios</h2>
+@using (Html.BeginForm("Index", "Catalogo", FormMethod.Get))
+{
+    <label>Nombre de Enfermedad/Examen:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px", @Class = "ValidateLength" })
+    @*<input type="submit" value="Buscar" class="btn-primary" />*@
+    <button class="btn btn-primary" id="btnBuscarPruebas" value="Buscar" type="submit"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+}
+<br />
+<br />
+@if (Model != null)
+{   
+        <table class="table table-responsive table-bordered" id="mydata">
+            <thead>
+<tr>
+                <th width="340">
+                    @Html.DisplayNameFor(model => model.First().nombre)
+                </th>
+                <th width="90">
+                    @Html.DisplayNameFor(model => model.First().Snomed)
+                </th>
+                <th width="90">
+                    Ver Detalle
+                </th>
+
+            </tr>
+                </thead>
+                    @foreach (var item in Model)
+                    {
+<tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Snomed)
+                    </td>
+                    <td class="text-center">
+                        @Html.ActionLink(" ", "ListarDetalle", new { idCatalogo = item.idEnfermedad, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-info editDialog" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    
+}
+    @*else
+        {
+            @Html.EmptyTable()
+        }*@
+
+    @*@if (Model != null)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))
+    }*@
+
+    <div id="dialog-edit" style="display: none">
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+        @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+        @Scripts.Render("~/Scripts/App/Catalogo.js")
+        @Scripts.Render("~/Scripts/App/NetLab.js")
+@Scripts.Render("~/Scripts/App/tabladata.js")
+    }
+
+
+    <style type="text/css">
+        .table1 {
+            width: 520px;
+        }
+    </style>
+
+

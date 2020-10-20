@@ -1,0 +1,90 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la edición de datos de una microred.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.MicroRedMant
+
+
+@using (Html.BeginForm("EditarMicroRedMant", "MicroRed", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "formEditarMicroRedMant" }))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.Label("DISA/DIR/GER", new { @class = "control-label col-md-4", @style = "padding-top:0px !important;" })
+            <div class="col-md-7">
+                @ViewBag.textoIdDisa
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("RED", new { @class = "control-label col-md-4", @style = "padding-top:0px !important;" })
+            <div class="col-md-7">
+                @ViewBag.textoIdRed
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("CODIGO MICRORED", new { @class = "control-label col-md-4", @style = "padding-top:0px !important;" })
+            <div class="col-md-7">
+                @ViewBag.textoIdMicroRed
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("MICRORED", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.nombremicrored, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.nombremicrored, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @if (Model.Estado == 1)
+                {
+                    @Html.CheckBox("chkActivoRol", true)
+                }
+                else
+                {
+                    @Html.CheckBox("chkActivoRol", false)
+                }
+            </div>
+
+        </div>
+        <input type="hidden" id="someDataFromPartialSomehownombremicrored" value="@Model.nombremicrored" />
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary"*@
+                @*onclick="return ValidaCampoRequerido();"*@ 1
+
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+                <button type="submit" value="Guardar" class="btn btn-primary" id="btnGuardar" onclick="return ValidaCampoRequerido();"><span class="fa fa-floppy-o"></span> Guardar</button>
+
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/RedMant.js")
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}
+<style type="text/css">
+    .control-label col-md-4 {
+        padding-top: 0px !important;
+    }
+</style>

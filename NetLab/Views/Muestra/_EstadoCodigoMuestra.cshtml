@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Model.MuestraCodificacion>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="text-align:center">
+                CODIGO DE MUESTRA QR
+            </th>
+            <th style="text-align:center">
+                CODIGO DE MUESTRA LINEAL
+            </th>
+            <th style="text-align:center">
+                ESTADO
+            </th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.codificacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.codificacionLineal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.estado)
+            </td>
+        </tr>
+    }
+
+</table>

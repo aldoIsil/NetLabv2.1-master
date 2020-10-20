@@ -1,0 +1,88 @@
+﻿@*  Descripción: Vista, muestra la pantalla para realizar la busqueda de examenes por laboratorios.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+
+@using NetLab.Helpers;
+
+@model NetLab.Models.LaboratorioExamenViewModels
+
+@{
+    ViewBag.Title = "Registro de Exámenes por Laboratorio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2>Exámenes para el EESS / Laboratorio: "@Model.Laboratorio.Nombre"</h2>
+<br />
+<p>
+    @Html.ActionLink(" Agregar Exámenes", "AgregarExamen", new { Model.Laboratorio.IdLaboratorio }, new { id = "openDialog", @class = "btn btn-primary fa fa-plus-square-o" })
+</p>
+<br />
+@if (Model != null && Model.Examenes.Count > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Examenes.First().Examen.nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Examenes.First().DiasEmision)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Examenes.First().DiasEntrega)
+                </th>
+                <th>Editar / Eliminar</th>
+            </tr>
+        </thead>
+            @foreach (var item in Model.Examenes)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Examen.nombre)
+                    </td>
+                    <td class="text-center" style="width: 120px">
+                        @Html.DisplayFor(modelItem => item.DiasEmision)
+                    </td>
+                    <td class="text-center" style="width: 120px">
+                        @Html.DisplayFor(modelItem => item.DiasEntrega)
+                    </td>
+                    <td class="text-center" style="white-space: nowrap">
+                        @Html.ActionLink(" ", "EditarExamen", new { id = item.Examen.idExamen, Model.Laboratorio.IdLaboratorio }, new { @class = "btn btn-default fa fa-pencil-square-o editDialog" })
+                        @Html.ActionLink(" ", "EliminarExamen", new { IdExamen = item.Examen.idExamen, Model.Laboratorio.IdLaboratorio }, new { @class = "btn btn-default fa fa-trash confirmDialog" })
+                    </td>
+                </tr>
+            }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*@Html.ActionLink("Retroceder", "Index")*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/LaboratorioExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+@Scripts.Render("~/Scripts/App/tabladata.js")
+}

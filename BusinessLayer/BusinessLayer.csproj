@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F93C55FA-7FF7-4AF4-AF0B-7C014B286CDE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BusinessLayer</RootNamespace>
+    <AssemblyName>BusinessLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExcelDataReader">
+      <HintPath>..\ReferenciasGlobales\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="RestSharp">
+      <HintPath>..\ReferenciasGlobales\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebGrease">
+      <HintPath>..\NetLab\bin\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalitoExamenBl.cs" />
+    <Compile Include="Animal\AnimalBl.cs" />
+    <Compile Include="Animal\EspecieBl.cs" />
+    <Compile Include="Animal\Interfaces\IEspecieBl.cs" />
+    <Compile Include="Animal\Interfaces\IRazaBl.cs" />
+    <Compile Include="Animal\RazaBl.cs" />
+    <Compile Include="AreaProcesamiento\AreaExamenBl.cs" />
+    <Compile Include="AreaProcesamiento\AreaProcesamientoBl.cs" />
+    <Compile Include="ConsultaResultadosBl.cs" />
+    <Compile Include="CatalogoBl.cs" />
+    <Compile Include="ContactarBl.cs" />
+    <Compile Include="DetalleAnalitoBl.cs" />
+    <Compile Include="DetalleCatalogoBl.cs" />
+    <Compile Include="DisaMantBl.cs" />
+    <Compile Include="EnvioCorreo.cs" />
+    <Compile Include="IndicadorBl.cs" />
+    <Compile Include="Interfaces\IDisaBI.cs" />
+    <Compile Include="Interfaces\IMicroRedBI.cs" />
+    <Compile Include="Interfaces\IReactivoBl.cs" />
+    <Compile Include="Interfaces\IPresentacionTipoMuestraBl.cs" />
+    <Compile Include="Interfaces\IReactivoPresentacionBl.cs" />
+    <Compile Include="Interfaces\IRedBl.cs" />
+    <Compile Include="Interfaces\IUsuarioAreaProcesamientoBl.cs" />
+    <Compile Include="Interfaces\IUsuarioRolBl.cs" />
+    <Compile Include="LocalBl.cs" />
+    <Compile Include="MenuBl.cs" />
+    <Compile Include="Interfaces\IMenuBl.cs" />
+    <Compile Include="Interfaces\IRolBl.cs" />
+    <Compile Include="ExamenTipoMuestraBl.cs" />
+    <Compile Include="Interfaces\IExamenTipoMuestraBl.cs" />
+    <Compile Include="Interfaces\ICriterioRechazoBl.cs" />
+    <Compile Include="Interfaces\IAreaExamenBl.cs" />
+    <Compile Include="Interfaces\IAreaProcesamientoBl.cs" />
+    <Compile Include="Compartido\Enums\OpcionLista.cs" />
+    <Compile Include="Compartido\Enums\Ubigeo.cs" />
+    <Compile Include="Compartido\Interfaces\IListaBl.cs" />
+    <Compile Include="Compartido\ListaBl.cs" />
+    <Compile Include="DatoClinico\CategoriaDatoBl.cs" />
+    <Compile Include="DatoClinico\DatoClinicoBl.cs" />
+    <Compile Include="DatoClinico\Interfaces\IDatoClinicoBl.cs" />
+    <Compile Include="DatoClinico\Interfaces\ICategoriaDatoBl.cs" />
+    <Compile Include="Interfaces\ILiberadosBl.cs" />
+    <Compile Include="Interfaces\IInstitucionBl.cs" />
+    <Compile Include="Interfaces\IPlantillaBl.cs" />
+    <Compile Include="Interfaces\IResultadosBl.cs" />
+    <Compile Include="Interfaces\IRolMenuBl.cs" />
+    <Compile Include="Interfaces\IValidaResultBl.cs" />
+    <Compile Include="InstitucionBl.cs" />
+    <Compile Include="Interfaces\ITipoMuestraCriterioRechazoBl.cs" />
+    <Compile Include="LaboratorioBl.cs" />
+    <Compile Include="EstablecimientoBl.cs" />
+    <Compile Include="EnfermedadExamenBl.cs" />
+    <Compile Include="Interfaces\ILaboratorioExamenBl.cs" />
+    <Compile Include="Interfaces\ILaboratorioBl.cs" />
+    <Compile Include="Interfaces\IAnalitoExamenBl.cs" />
+    <Compile Include="Interfaces\IAnimalBl.cs" />
+    <Compile Include="Interfaces\IEstablecimiento.cs" />
+    <Compile Include="Interfaces\IEnfermedadExamenBl.cs" />
+    <Compile Include="AnalitoBl.cs" />
+    <Compile Include="Interfaces\IProyectoBl.cs" />
+    <Compile Include="Interfaces\IOrdenBl.cs" />
+    <Compile Include="Interfaces\ITipoMuestraPresentacionBl.cs" />
+    <Compile Include="Interfaces\IUsuarioBl.cs" />
+    <Compile Include="CriterioRechazoBl.cs" />
+    <Compile Include="LaboratorioExamenBl.cs" />
+    <Compile Include="LiberadosBl.cs" />
+    <Compile Include="MicroRedBl.cs" />
+    <Compile Include="MuestraBl.cs" />
+    <Compile Include="OrdenExamenBl.cs" />
+    <Compile Include="Core\CoreBl.cs" />
+    <Compile Include="PEED\ConfiguracionEvalControlCalidadBl.cs" />
+    <Compile Include="PEED\ConfiguracionMaterialControlCalidadBl.cs" />
+    <Compile Include="PEED\ConfiguracionPanelControlCalidadBl.cs" />
+    <Compile Include="PEED\IngresoResultadosControlCalidadBl.cs" />
+    <Compile Include="Plantilla\EstablecimientoPlantillaBl.cs" />
+    <Compile Include="Interfaces\IEstablecimientoPlantillaBl.cs" />
+    <Compile Include="IngresoResultadosBl.cs" />
+    <Compile Include="PresentacionTipoMuestraBl.cs" />
+    <Compile Include="ProcesoDesatendido\ExcelImportacion.cs" />
+    <Compile Include="ProcesoDesatendido\ExcelImportHelpers.cs" />
+    <Compile Include="ProyectoBl.cs" />
+    <Compile Include="OrdenBl.cs" />
+    <Compile Include="MaterialBl.cs" />
+    <Compile Include="Interfaces\IMaterialBl.cs" />
+    <Compile Include="OrdenMuestraBl.cs" />
+    <Compile Include="Interfaces\IReporteResultadosBl.cs" />
+    <Compile Include="ReactivoBl.cs" />
+    <Compile Include="ReactivoPresentacionBl.cs" />
+    <Compile Include="RecepcionBl.cs" />
+    <Compile Include="RedMantBl.cs" />
+    <Compile Include="ReporteBl.cs" />
+    <Compile Include="Reportes\ReporteResultadosBl.cs" />
+    <Compile Include="ResultadosBl.cs" />
+    <Compile Include="RolBl.cs" />
+    <Compile Include="Interfaces\IPresentacionBl.cs" />
+    <Compile Include="PresentacionBl.cs" />
+    <Compile Include="SeguimientoBl.cs" />
+    <Compile Include="SolicitanteBl.cs" />
+    <Compile Include="TempOrdenBl.cs" />
+    <Compile Include="UsuarioAreaProcesamientoBl.cs" />
+    <Compile Include="UsuarioEnfermedadExamenBl.cs" />
+    <Compile Include="UsuarioRolBl.cs" />
+    <Compile Include="TipoMuestraBl.cs" />
+    <Compile Include="EnfermedadBl.cs" />
+    <Compile Include="DatoClinico\DatoBl.cs" />
+    <Compile Include="ExamenBl.cs" />
+    <Compile Include="Interfaces\IAnalitoBl.cs" />
+    <Compile Include="Interfaces\IEnfermedadBl.cs" />
+    <Compile Include="DatoClinico\Interfaces\IDatoBl.cs" />
+    <Compile Include="Interfaces\ITipoMuestraBl.cs" />
+    <Compile Include="Interfaces\IExamenBl.cs" />
+    <Compile Include="IReniecConsumer.cs" />
+    <Compile Include="IReniecUpdater.cs" />
+    <Compile Include="PacienteBl.cs" />
+    <Compile Include="RolMenuBl.cs" />
+    <Compile Include="TipoMuestraCriterioRechazoBl.cs" />
+    <Compile Include="DISABl.cs" />
+    <Compile Include="UbigeoBl.cs" />
+    <Compile Include="Plantilla\PlantillaBl.cs" />
+    <Compile Include="ReniecConsumer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReniecUpdater.cs" />
+    <Compile Include="UsuarioBl.cs" />
+    <Compile Include="ValidaResultBl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
+      <Project>{a7c12f64-a37d-468d-a3aa-47bb91d79168}</Project>
+      <Name>DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.DAL\Framework.DAL.csproj">
+      <Project>{91d2fff9-8031-4c62-9ded-4ff7ac3acb13}</Project>
+      <Name>Framework.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.WebCommon\Framework.WebCommon.csproj">
+      <Project>{36960B03-0723-4535-B229-D82AE39B04CF}</Project>
+      <Name>Framework.WebCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{2e588952-5389-42e5-8ed8-c42b9e38f6d7}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reniec\Reniec.csproj">
+      <Project>{e58fd391-32b5-4b63-8905-725dd2ed4645}</Project>
+      <Name>Reniec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilitario\Utilitario.csproj">
+      <Project>{663df441-4f38-44f3-865c-cd9bc296c7a4}</Project>
+      <Name>Utilitario</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

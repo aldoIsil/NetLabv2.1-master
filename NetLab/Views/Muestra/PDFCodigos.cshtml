@@ -1,0 +1,16 @@
+﻿@model IEnumerable<NetLab.Models.PDFCodigoMuestraModel>
+@{Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body>
+
+    <table width="100%">
+        @foreach (NetLab.Models.PDFCodigoMuestraModel item in Model)
+        {
+            <tr><td>@item.codigo</td></tr>
+        }
+    </table>
+</body>
+</html>
+    

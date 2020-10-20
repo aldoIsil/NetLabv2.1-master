@@ -1,0 +1,54 @@
+﻿@*  Descripción: Vista, muestra la pantalla para buscar y seleccionar el componente.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Analito>
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarAnalitos", "Analito", new { ViewBag.idExamen }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+}
+<br />
+@using (Html.BeginForm("GuardarAnalito", "Analito", new { ViewBag.idExamen }, FormMethod.Post, new { id = "frmAgregarComponente" }))
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table" id="AgregarAnalitoTable">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" name="analitos" value="@item.IdAnalito" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+            </tr>
+        }
+    </table>
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+        @*<label id="btnGuardarComponente" class="btn btn-primary">Grabar</label>
+
+            <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+
+        <button id="btnGuardarComponente" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Guardar</button>
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+
+
+                        @*<input type="Submit" value="Guardar" class="btn-link" onclick="return ExisteElementoSeleccionado();"/>*@
+    }
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarAnalitos", new { page, ViewBag.search, ViewBag.idExamen }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))

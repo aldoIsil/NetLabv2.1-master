@@ -1,0 +1,145 @@
+﻿@model Model.SolicitudExamen
+
+@{
+    var TipoSolicitud = Model.tipoSolicitud;
+
+    ViewBag.Title = (TipoSolicitud == 1) ? "Solicitud de Examen de Genotipificación" : "Solicitud de Examen de Tropismo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string examen = (TipoSolicitud == 1) ? "GENOTIFICACIÓN" : "TROPISMO";
+
+    //string classDatePicker = "form-control datepickerDesde datePickerWidth dateOnly";
+    //ViewBag.IsSearch = true;
+    //if (!ViewBag.IsSearch)
+    //{
+    //    classDatePicker = classDatePicker + " inFechaRec1";
+    //}
+    //var fechaGeno = DateTime.Now;
+    //var fechaTropismo = DateTime.Now;
+    //var fechaObtencion = DateTime.Now;
+}
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+
+<div id="divformSol" class="divformSol">
+    <h3 style="text-align:center" class="text-primary">SOLICITUD DE LA PRUEBA DE RESISTENCIA A DROGAS ARV DEL VIH POR @examen</h3>
+    <fieldset class="default">
+        <legend class="default">I. Datos del Paciente</legend>
+        <div class="div-row">
+            @Html.Label("Nombre:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-4">
+                <span>@Html.Raw(Model.Paciente.Nombres + " " + Model.Paciente.ApellidoPaterno + " " + Model.Paciente.ApellidoMaterno)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.NroDocumento, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                <span>@Html.Raw(Model.Paciente.NroDocumento)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.FechaNacimiento, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                <span>@Html.Raw(Model.Paciente.FechaNacimiento)</span>
+            </div>
+            @Html.Label("Edad:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+                <span>@Html.Raw(Model.Paciente.edadAnios)</span>
+            </div>
+        </div>
+        <br /><br /><br />
+        <div class="div-row">
+            @Html.LabelFor(model => model.Paciente.UbigeoActual.Departamento, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.UbigeoActual.Departamento)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.UbigeoActual.Provincia, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.UbigeoActual.Provincia)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.UbigeoActual.Distrito, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2 " })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <span>
+                    @Html.Raw(Model.Paciente.UbigeoActual.Distrito)
+                </span>
+            </div>
+        </div>
+        <br /> <br />
+        <!--Segunda fila-->
+        <div class="div-row">
+            @Html.LabelFor(model => model.Paciente.DireccionActual, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.DireccionActual)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.TelefonoFijo, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.TelefonoFijo)</span>
+            </div>
+            @Html.LabelFor(model => model.Paciente.Celular1, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <span>@Html.Raw(Model.Paciente.Celular1)</span>
+            </div>
+        </div>
+    </fieldset>
+    <br /> 
+    <fieldset class="default">
+        <legend class="default">II. Datos del Establecimiento de Origen</legend>
+        
+        <div class="div-row">
+            @Html.LabelFor(model => model.Establecimiento.Nombre, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <span>@Html.Raw((String)Model.Establecimiento.Nombre)</span>
+            </div>
+        </div>
+    </fieldset>
+    <br /> 
+    <fieldset class="default">
+        <legend class="default">III. Datos del Médico</legend>
+        <input type="hidden" value="@Model.Solicitante.idSolicitante" id="idSolicitante" />
+        <div class="div-row">
+            @Html.LabelFor(model => model.Solicitante.Nombres, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <span>@Html.Raw((String)Model.Solicitante.Nombres)</span>
+            </div><br /><br />
+            @Html.LabelFor(model => model.Solicitante.correo, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <span>@Html.Raw((String)Model.Solicitante.correo)</span>
+            </div>
+            @Html.LabelFor(model => model.Solicitante.telefonoContacto, new { @class = "-label- col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <span>@Html.Raw((String)Model.Solicitante.telefonoContacto)</span>
+            </div>
+        </div>
+    </fieldset>
+    <br /> 
+    @if (TipoSolicitud == 1)
+    {
+        <fieldset class="form">
+            <div class="div-row">
+                <div id="pvResulVih" class="div-row">
+                    @Html.Partial("_Genotipificacion", Model)
+                </div>
+            </div>
+        </fieldset>
+       
+    }
+    else
+    {
+        <fieldset class="form">
+            <div class="div-row">
+                <div id="pvResulVih" class="div-row">
+                    @Html.Partial("_Tropismo", Model)
+                </div>
+            </div>
+        </fieldset>
+        
+    }
+</div>
+
+@section Scripts
+{
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/SolicitudExamen.js")
+}
+<style type="text/css" media="all">
+    .datePickerWidth {
+        width: 100px !important;
+    }
+</style>

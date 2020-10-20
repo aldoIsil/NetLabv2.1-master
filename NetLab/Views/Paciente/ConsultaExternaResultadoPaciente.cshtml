@@ -1,0 +1,100 @@
+﻿@model Model.Paciente
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConsultaOrdenResultadoPaciente</title>
+</head>
+<body>
+    <fieldset class="default">
+        <legend class="default">
+            CONSULTA EXTERNA RESULTADOS PACIENTE
+        </legend>
+        <div id="dvBusquedaUsuario">
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                    @Html.Label("Documento:", new { @class = "-label col-xs-6 col-sm-3 col-md-1 col-lg-2" })
+                </div>
+                <div class="col-sm-1">
+                    @Html.TextBox("nroDocumento", "", new { @class = "form-control", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Apellido Paterno:", new { @class = "-label col-xs-6 col-sm-3  col-md-2 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoPaterno", "", new { @class = "form-control input-sm", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Apellido Materno:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("apellidoMaterno", "", new { @class = "form-control", autocomplete = "off" })
+                </div>
+                <div>
+                    @Html.Label("Nombre:", new { @class = "-label col-xs-6 col-sm-3  col-md-3 col-lg-1" })
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                    @Html.TextBox("nombre", "", new { @class = "form-control", autocomplete = "off" })
+                </div>
+            </div><br /><br />
+            <div class="form-group">
+                <center>
+                    <button class="btn btn-primary" id="btnConsultarPaciente" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                </center>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <div id="dvPaciente">
+
+    </div>
+    <br />
+    <div id="dvResultado">
+
+    </div>
+
+    <div id="InfoPruebaRapida" class="table-responsive">
+        @Html.Hidden("tipoPage")
+    </div>
+
+    @section Scripts {
+    @Scripts.Render("~/Scripts/App/Paciente.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+
+    }
+
+    <style type="text/css" media="all">
+        .fa-user-md:before {
+            content: "\f0f0";
+        }
+
+        table, td, th {
+            border: 1px solid black;
+            font: 90% Arial;
+            vertical-align:central;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        thead {
+            background-color: #337ab7;
+        }
+
+        th {
+            font-weight: bold;
+            height: 50px;
+            color: white;
+        }
+    </style>
+</body>
+</html>
+
+

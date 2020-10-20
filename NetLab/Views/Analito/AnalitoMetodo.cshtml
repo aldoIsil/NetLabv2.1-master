@@ -1,0 +1,73 @@
+﻿@*  Descripción: Vista, muestra pantalla con la busqueda de metodos por analitos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.MetodosAnalitoViewModels
+
+@{
+    ViewBag.Title = "Registro de Métodos por Analito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Métodos para el Componente: "@Model.Analito.Nombre"</h2>
+<br />
+<p>
+    @Html.ActionLink("Agregar Métodos", "NuevoMetodo", new { Model.Analito.IdAnalito }, new { id = "openDialog" })
+</p>
+<br />
+<br />
+@if (Model != null && Model.Metodos.Count > 0)
+{
+    <table class="table" style="width: 600px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Orden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Glosa1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Metodos.First().Glosa2)
+            </th>
+            <th></th>
+        </tr>
+
+        @for (var index = 0; index < Model.Metodos.Count; index++)
+        {
+            var item = Model.Metodos[index];
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Orden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa2)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink("Editar", "EditarMetodo", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoMetodo = item.IdAnalitoMetodo}, new { @class = "editDialog" }) | 
+                    @Html.ActionLink("Eliminar", "EliminarMetodo", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoMetodo = item.IdAnalitoMetodo}, new {@class = "confirmDialog"})
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AnalitoMetodo.js")
+}

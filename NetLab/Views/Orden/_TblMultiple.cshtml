@@ -1,0 +1,32 @@
+﻿@* Descripción: Vista que permite eliminar registros de la enfermedad y material.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+@if (ViewBag.eliminarEnfermedad != null)
+{
+    @Html.Hidden("eliminarEnfermedad", (int)ViewBag.eliminarEnfermedad)
+}
+else
+{
+    @Html.Hidden("eliminarEnfermedad", 0)
+}
+
+
+
+<div id="dvTblExamenSubMultiple" class="col-xs-12">
+    @Html.Partial("_TblExamen", (List<Model.OrdenExamen>)Model.ordenExamenList)
+</div>
+<div id="dvTblOrdenMuestraSubMultiple" class="col-xs-12">
+    @Html.Partial("_TblOrdenMuestra", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+</div>
+<div id="dvTblMaterialSubMultiple" class="col-xs-12">
+    @Html.Partial("_TblMaterial", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+</div>
+    
+
+
+
+

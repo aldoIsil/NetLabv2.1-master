@@ -1,0 +1,15 @@
+﻿    thead,
+    tfoot {
+       background-color: #337ab7 !important;
+       color: #fff;
+    }
+
+    table {
+        font-family: sans-serif;
+        -webkit-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+    }
+    td,
+    th {
+        border: 1px solid #ddd !important;
+    }   

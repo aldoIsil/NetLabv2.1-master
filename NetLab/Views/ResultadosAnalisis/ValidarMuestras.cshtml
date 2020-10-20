@@ -1,0 +1,179 @@
+﻿@*  Descripción: Vista, Permite mostrar un popup para validar Muestras recepcionadas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using System.Globalization
+@model Model.ViewData.OrdenIngresarResultadoVd
+@{
+    var k = 0;
+}
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+
+<input type="hidden" value="@Model.idOrden" id="CodigoOrdenEnvioRespuesta" name="CodigoOrdenEnvioRespuesta" />
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Proyecto</label><br />
+            <span>@Model.nombreProyecto</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>EESS/LAB de Origen</label><br />
+            <span>@Model.nombreEstablecimiento</span>
+        </div>
+    </div>
+    <!--Establecimiento-->
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Fecha de Solicitud</label><br />
+            <span>@Model.fechaRegistro.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)</span>
+        </div>
+    </div>
+</div>
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Tipo - Nro. Documento</label><br />
+            <span>@Model.tipoDocumento @Model.nroDocumento</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Nombres y Apellidos Paciente</label><br />
+            <span>@Model.nombrePaciente</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Edad</label><br />
+            <span>@Model.edadPaciente</span>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ValidarMuestras", "ResultadosAnalisis", FormMethod.Post, new { @id = "formValidarMuestras" }))
+{
+    <input type="hidden" value="@Model.idOrden" id="id" name="id" />
+    <div>
+        <table id="tblResultados" class="table">
+            <thead>
+                <tr>
+                    <th width="100px">Enfermedad</th>
+                    <th>Tipo de Muestra</th>
+                    <th>Examen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.ordenInfoListnew)
+            {
+                <tr>
+                    <td>
+                        @item.nombreEnfermedad
+                    </td>
+                    <td>
+                        @item.nombreTipoMuestra
+                    </td>
+
+                    <td>
+                        @item.nombreExamen
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <br />
+        <table id="tblResultados">
+            <thead>
+                <tr>
+                    <th width="100px">Código Muestra</th>
+                    <th>Tipo de Muestra</th>
+                    <th>Fecha-Hora Obtención</th>
+                    <th>Fecha-Hora Recepción ROM</th>
+                    <th>Fecha-Hora Recepción LAB</th>
+                    @*<th>Materiales</th>*@
+                    <th>Exámen</th>
+                    <th width="60px">Conforme</th>
+                    <th width="370px">Motivos de Rechazo</th>
+                    @*<th width="370px">Metodo/Kit</th>*@
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in @Model.muestrasValidar)
+                {
+                    k++;
+                    var nombre = "ost_" + k;
+                <tr>
+                    <td>
+                        @item.codificacion
+                    </td>
+                    <td>
+                        @item.tipoMuestra
+                    </td>
+
+                    <td>
+                        @item.fechaHoraColeccion
+                    </td>
+                    <td>
+                        @item.fechaHoraRecepcionROM
+                    </td>
+                    <td>
+                        @item.fechaHoraRecepcionLAB
+                    </td>
+
+                    <td>
+                        @*@item.presentacion @item.reactivo @item.volumen ml*@
+                        @item.nombreExamen
+                        <input type="hidden" name="codigoMuestra[]" value="@item.idOrdenMuestraRecepcion" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="conforme_@item.idOrdenMuestraRecepcion" class="conformeMuestra" checked />
+                    </td>
+                    <td>
+                        <div class="selMotivoRechazoDiv" style="display: none;">
+                            @Html.DropDownList("criterioRechazo_" + @item.idOrdenMuestraRecepcion, (List<SelectListItem>)ViewBag.listaCriterios[item.idTipoMuestra], new { @id = "selMotivoRechazo" + nombre, @multiple = "multiple", @class = "selMotivoRechazo" })
+                        </div>
+                    </td>
+                    @*<td>
+                        @Html.Partial("_MetodoResultadoInterfazMASED")
+                    </td>*@
+                    <td>
+                        <div class="selMotivoRechazoDiv" style="display: none;">
+                            <input type="text" name="observacionrechazo_@item.idOrdenMuestraRecepcion" value="@item.observacionrechazo" />
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    </div>
+        <div id="divFechaRecepcion" class="hidden">
+            Fecha y Hora de Validación: <label id="fechaRecepcion">@Model.fechaRecepcion</label>
+        </div>
+        <br />
+        <div class="linksForm">
+            <input type="button" id="btnlnkValidarMuestras" value="Grabar" class="btn btn-primary" />
+        </div>
+
+        }
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.criterioRechazo').SumoSelect({ placeholder: 'Seleccione Motivo de Rechazo' });
+
+                $('.selMotivoRechazo').change(function () {
+                }).multipleSelect({
+                    width: '280px',
+                    maxHeight: 250,
+                    dropWidth: undefined,
+                    multiple: true,
+                    multipleWidth: 300
+                });
+
+            });
+
+        </script>

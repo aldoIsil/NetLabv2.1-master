@@ -1,0 +1,25 @@
+﻿@model IEnumerable<NetLab.Models.PEED.Baciloscopia>
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>
+                Nro Pregunta
+            </th>
+            <th>
+                Resultado
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroPregunta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resultados)
+                </td>
+            </tr>
+        }
+    </table>
+</div>

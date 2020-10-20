@@ -1,0 +1,102 @@
+﻿@*  Descripción: Vista, muestra la pantalla para dar mantenimiento a los examenes por laboratorio.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.LaboratorioExamenViewModels
+
+@{
+    ViewBag.Title = "Registro de Exámenes por Laboratorio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Exámenes para el EESS / Laboratorio:</h2>
+<h2> "@Model.Laboratorio.Nombre"</h2>
+<br />
+<p>
+    @Html.ActionLink("+ Agregar Exámenes", "AgregarExamen", new { Model.Laboratorio.IdLaboratorio }, new { id = "openDialog" })
+</p>
+<br />
+@if (Model != null && Model.Examenes.Count > 0)
+{
+    <table class="table" style="width: 800px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Examenes.First().Examen.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Examenes.First().DiasEmision)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Examenes.First().DiasEntrega)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Examenes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Examen.nombre)
+                </td>
+                <td class="text-center" style="width: 120px">
+                    @Html.DisplayFor(modelItem => item.DiasEmision)
+                </td>
+                <td class="text-center" style="width: 120px">
+                    @Html.DisplayFor(modelItem => item.DiasEntrega)
+                </td>
+                <td class="text-center" style="white-space: nowrap">
+                    @Html.ActionLink("Editar", "EditarExamen", new { id = item.Examen.idExamen, Model.Laboratorio.IdLaboratorio }, new { @class = "editDialog" }) |
+                    @Html.ActionLink("Eliminar", "EliminarExamen", new { IdExamen = item.Examen.idExamen, Model.Laboratorio.IdLaboratorio }, new { @class = "confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @Html.ActionLink("  Salir", "Index")
+
+
+
+
+
+
+
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/LaboratorioExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}

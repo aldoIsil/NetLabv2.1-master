@@ -1,0 +1,21 @@
+﻿@model List<Model.Paciente>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Prueba</th>
+            <th>Variable</th>
+            <th>Resultado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Prueba</td>
+                <td>@item.NombreVariable</td>
+                <td>@item.sResultado</td>
+            </tr>
+        }
+    </tbody>
+</table>

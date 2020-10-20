@@ -1,0 +1,221 @@
+﻿@model Model.Orden
+@{
+    bool errorfecharom = false;
+    bool errorfechaeval = false;
+    bool errornrooficio = false;
+    bool errorpaciente = false;
+    bool errordatoclinico = false;
+    bool errorcodificacion = false;
+    bool errorfechaObtecionMuestra = false;
+    bool errorSolicitante = false;
+    bool errorfechasol = false;
+    bool erroreessdestino = false;
+    string SinErrores = "";
+    string idOrden = "";
+
+}
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+<h3 class="centered" align="center">Orden de Análisis N° @Model.codigoOrden</h3>
+@{
+    var ordenCriterioRechazoList = (List<Model.OrdenMuestrasRechazo>)ViewBag.TipoRechazoAlta;
+
+    foreach (var item in ordenCriterioRechazoList)
+    {
+        switch ((Enums.TipoRechazoAlta)item.tipoRechaazoAlta)
+        {
+            case Enums.TipoRechazoAlta.RECHAZOPACIENTE:
+                errorpaciente = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOFECHAINGRESOROM:
+                errorfecharom = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZODATOCLINICO:
+                errordatoclinico = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOCODIFICACION://falta
+                errorcodificacion = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOFECHAEVALFICHA:
+                errorfechaeval = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOFECHASOL:
+                errorfechasol = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOFECHAOBTENCIONMUESTRA:
+                errorfechaObtecionMuestra = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOSOLICITANTE:
+                errorSolicitante = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZONROOFICIO:
+                errornrooficio = true;
+                break;
+            case Enums.TipoRechazoAlta.RECHAZOEESSDESTINO:
+                erroreessdestino = true;
+                break;
+            default:
+                SinErrores = "LA ORDEN CONTIENE RECHAZOS SIN OPCION A MODIFICACIONES.";
+                break;
+        }
+    }
+}
+@using (Html.BeginForm("LevantarObservacionesLab", "OrdenMuestra", FormMethod.Post, new { id = "frmOrdenMuestraObservacion" }))
+{
+    <br />
+    <div class="form-horizontal">
+        <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+        @Html.Hidden("hddRECHAZOPACIENTE", errorpaciente)
+        @Html.Hidden("hddRECHAZOFECHAINGRESOROM", errorfecharom)
+        @Html.Hidden("hddRECHAZODATOCLINICO", errordatoclinico)
+        @Html.Hidden("hddRECHAZOCODIFICACION", errorcodificacion)
+        @Html.Hidden("hddRECHAZOFECHAEVALFICHA", errorfechaeval)
+        @Html.Hidden("hddRECHAZOFECHASOL", errorfechasol)
+        @Html.Hidden("hddRECHAZOFECHAOBTENCIONMUESTRA", errorfechaObtecionMuestra)
+        @Html.Hidden("hddRECHAZOSOLICITANTE", errorSolicitante)
+        @Html.Hidden("hddRECHAZONROOFICIO", errornrooficio)
+        @Html.Hidden("hddRECHAZOEESSDESTINO", erroreessdestino)
+        @Html.Hidden("hddFechaObtencion")
+        @Html.Hidden("hddHoraObtencion")
+        @Html.Hidden("idOrden", Model.idOrden)
+        <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+        @if (errorfecharom || errorfechaeval)
+        {
+            <div class="div-row2">
+                @if (errorfecharom)
+                {
+                    @Html.LabelFor(model => model.fechaIngresoINS, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaIngresoINS, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+
+                }
+                @if (errorfechaeval)
+                {
+                    @Html.LabelFor(model => model.fechaReevaluacionFicha, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-4">
+                        @Html.TextBoxFor(model => model.fechaReevaluacionFicha, "{0:dd/MM/yyyy}",
+             new
+             {
+                 @class = "form-control  input-sm datepickerMaxValue dateOnly",
+                 Style = "width: 105px;",
+                 autocomplete = "off",
+                 placeholder = "dd/mm/yyyy"
+             })
+                    </div>
+                }
+                @*<label class="alert alert-danger" pointer-events:none">TENER EN CUENTA QUE ESTA MODIFICACIÓN AFECTARÁ A TODO EL OFICIO: @Model.nroOficio.</label>*@
+
+            </div>
+        }
+
+        @if (errornrooficio)
+        {
+            <br /><br />
+            <div class="div-row2">
+                @Html.LabelFor(model => model.nroOficio, new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-3" })
+                <div class="col-xs-12 col-sm-9 col-md-2 col-lg-8">
+                    @Html.TextBoxFor(model => model.nroOficio, new { Id = "nroOficioNew", @class = "form-control input-sm" })
+                </div>
+            </div>
+        }
+
+        @if (errorpaciente)
+        {
+            <br /><br />
+            <div class="div-row2">
+                @Html.Label("Tipo Documento:", new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                <div class="col-xs-12 col-sm-6 col-md-2 col-lg-6">
+                    @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control" })
+                </div>
+            </div>
+            <br /><br />
+            <div class="div-row">
+                @Html.Label("Documento:", new { @class = "-label- col-xs-5 col-sm-6 col-lg-3" })
+                <div class="col-xs-5 col-sm-6 col-lg-4">
+                    @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control numericOnly", autocomplete = "off" })
+                </div>
+            </div>
+        }
+        @if (errorfechasol || errorSolicitante)
+        {
+            <br /><br />
+            <div class="div-row2">
+                @*<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">*@
+                @if (errorfechasol)
+                {
+                    @Html.LabelFor(model => model.fechaSolicitud, new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="display:flex">
+                        @Html.TextBoxFor(model => model.fechaSolicitud, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                }
+                @if (errorSolicitante)
+                {
+                    @Html.Label("Solicitante: ", new { @class = "-label- col-xs-6 col-sm-2" })
+                    <div id="divSolicitante" class="col-xs-12 col-sm-1 col-md-1 col-lg-4">
+                        @Html.Partial("_Solicitante")
+                    </div>
+                    @*<div>
+                            <a href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnShowPopupSolicitante" title="Agregar Solicitante" class="btn btn-default">
+                                <span class="fa fa-user-plus" aria-hidden="true"></span>
+                                Agregar
+                            </a>
+
+                        </div>*@
+                }
+                @*</div>*@
+            </div>
+        }
+        @if (errorfechaObtecionMuestra)
+        {
+            <br /><br />
+            <div class="div-row2">
+                <fieldset class="default">
+                    <legend class="default">Fecha Obtención</legend>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div>
+                            @Html.Partial("_TblOrdenMuestraManualEdit", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        @if (erroreessdestino)
+        {
+            <br /><br />
+            <div class="div-row2">
+                <fieldset class="default">
+                    <legend class="default"></legend>
+                    <div id="dvTblMaterial" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        @Html.Partial("_TblMaterialEdit", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+                    </div>
+                </fieldset>
+            </div>
+        }
+        @if (errordatoclinico)
+        {
+            <br /><br />
+            <div class="div-row2">
+                <fieldset class="default">
+                    <legend class="default">Datos Clínicos Epidemiologicos</legend>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="tabs">
+                            @Html.Partial("_TabDatoClinico", (List<Model.Enfermedad>)Model.enfermedadList)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        @if (string.IsNullOrEmpty(SinErrores))
+        {
+            <br /><br />
+            <button class="btn btn-block" type="button" id="btnEditarObservacion" name="btnEditarObservacion"> <span class="fa fa-exclamation "></span> Aplicar Cambios</button>
+        }
+        else
+        {
+            <b> @SinErrores </b>
+        }
+    </div>
+}

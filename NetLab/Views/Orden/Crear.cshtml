@@ -1,0 +1,1159 @@
+﻿@using Model;
+@using Enums;
+@model Model.ViewModels.CrearOrdenVM
+@{
+    ViewBag.Title = "Crear Orden";
+    var labModel = (Laboratorio)ViewBag.LabUbigeo;
+    var paciente = (Paciente)ViewBag.DatosPaciente;
+}
+<style type="text/css">
+    .clearboth {
+        clear: both;
+        padding-top: 5px;
+    }
+
+    .ui-autocomplete-input {
+        /*border: none;*/
+        /*font-size: 14px;*/
+        /*width: 300px;
+    height: 24px;*/
+        /*margin-bottom: 5px;
+    padding-top: 2px;*/
+        border: 1px solid #DDD !important;
+        padding-top: 0px !important;
+        /*z-index: 1511;
+        position: absolute;*/
+    }
+
+    .ui-menu .ui-menu-item a {
+        font-size: 12px;
+    }
+
+    .ui-autocomplete {
+        position: absolute;
+        cursor: default;
+        z-index: 2000 !important;
+        top: 0;
+        left: 0;
+        float: left;
+        display: none;
+        /*min-width: 160px;*/
+        /*width: 160px;*/
+        padding: 4px 0;
+        margin: 2px 0 0 0;
+        list-style: none;
+        background-color: #ffffff;
+        border-color: #ccc;
+        border-color: rgba(0, 0, 0, 0.2);
+        border-style: solid;
+        /*border-width: 1px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;*/
+        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding;
+        background-clip: padding-box;
+        /**border-right-width: 2px;
+    *border-bottom-width: 2px;*/
+    }
+
+    .ui-menu-item > a.ui-corner-all {
+        display: block;
+        padding: 3px 15px;
+        clear: both;
+        font-weight: normal;
+        line-height: 18px;
+        color: #555555;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .ui-state-hover, .ui-state-active {
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #0088cc;
+        border-radius: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        background-image: none;
+    }
+
+    .padding-left-cero {
+        padding-left: 0px;
+    }
+</style>
+@using (Html.BeginForm("Guardar", "Orden", FormMethod.Post, new { id = "frmCrearOrden" }))
+{
+    @Html.HiddenFor(model => model.TipoRegistro)
+    @Html.HiddenFor(model => model.Orden.IdOrden)
+    @Html.Hidden("SolicitanteId")
+    <div>
+        @if (string.IsNullOrWhiteSpace(Model.Orden.CodigoOrden))
+        {
+            switch (Model.TipoRegistro)
+            {
+                case Enums.TipoRegistroOrden.SOLO_ORDEN:
+                case Enums.TipoRegistroOrden.SOLO_ORDEN_MUESTRA:
+                    <h3 style="text-align:center" class="text-primary">Registro de Orden</h3>
+                    break;
+                default:
+                    <h3 style="text-align:center" class="text-primary">Registro de Orden y Recepción</h3>
+                    break;
+            }
+        }
+
+        <fieldset class="default">
+            <legend class="default">Datos del Paciente</legend>
+            <div class="div-row clearboth">
+                @Html.Label("Nro. Documento:", new { @class = " col-md-1 col-xs-12 " })
+                <div class="col-md-1 col-xs-12 ">
+                    <span>@Html.Raw(Model.Paciente.NroDocumento)</span>
+                </div>
+                @Html.Label("Nombre:", new { @class = "col-md-1 col-xs-12 " })
+                <div class="col-md-2 col-xs-12 ">
+                    <span>@Html.Raw(Model.Paciente.NombreCompleto)</span>
+                </div>
+                @Html.Label("Dirección:", new { @class = "col-md-1 col-xs-12 " })
+                <div class="col-md-2 col-xs-12 ">
+                    <span>@Html.Raw(Model.Paciente.Direccion)</span>
+                </div>
+                @Html.Label("Edad:", new { @class = "col-md-1 col-xs-12 " })
+                <div class="col-md-1 col-xs-12 ">
+                    <span>@Html.Raw(Model.Paciente.Edad)</span>
+                </div>
+                <input type="hidden" value="@Model.Paciente.Genero" id="idSexo" />
+            </div>
+            <div id="_ubigeoActualNoEditable">
+                <!--primera fila-->
+                <div class="div-row clearboth">
+                    @Html.Label("Departamento:", new { @class = "col-md-2 col-xs-12  " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw(Model.Paciente.Departamento)</span>
+                    </div>
+                    @Html.Label("Provincia:", new { @class = "col-md-2 col-xs-12  " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw(Model.Paciente.Provincia)</span>
+                    </div>
+                    @Html.Label("Distrito:", new { @class = "col-md-2 col-xs-12  " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>
+                            @Html.Raw(Model.Paciente.Distrito)
+                        </span>
+                    </div>
+                </div>
+                <!--Segunda fila-->
+                <div class="div-row clearboth">
+                    @Html.Label("Teléfono Fijo:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.TelefonoFijo)</span>
+                    </div>
+                    @Html.Label("Celular 1:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.Celular1)</span>
+                    </div>
+                    @Html.Label("Celular 2:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span> @Html.Raw((String)Model.Paciente.Celular2)</span>
+                    </div>
+                </div>
+                <!--tercera linea-->
+                <div class="div-row clearboth">
+                    @Html.Label("Email:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.Email)</span>
+                    </div>
+                    @Html.Label("Ocupación:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.Ocupacion)</span>
+                    </div>
+                    @Html.Label("Tipo de Seguro de Salud:", new { @class = "col-md-2 col-xs-12 " })
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.TipoSeguroSalud)</span>
+                    </div>
+                    <div class="col-md-2 col-xs-12 ">
+                        <span>@Html.Raw((String)Model.Paciente.OtroSeguroSalud)</span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default">EESS/LAB</legend>
+            @if (string.IsNullOrWhiteSpace(Model.Orden.CodigoOrden))
+            {
+                <div class="div-row clearboth">
+                    @Html.Label("Departamento", new { @class = "col-md-1 col-xs-12" })
+                    <div class="col-md-2 col-xs-12">
+                        @Html.Action("GetDepartamentos", "Ubigeo",
+                        new
+                        {
+                            departamentoSelectId = "ActualDepartamentoEESS",
+                            provinciaSelectId = "ActualProvinciaEESS",
+                            distritoSelectId = "ActualDistritoEESS",
+                            provinciaDivId = "dvProvinciasEESS",
+                            distritoDivId = "dvDistritosEESS",
+                            selectedValue = labModel.UbigeoLaboratorio.Id.Substring(0, 2)
+                        })
+                    </div>
+                    @Html.Label("Provincia", new { @class = "col-md-1 col-xs-12" })
+                    <div id="dvProvinciasEESS" class="col-md-2 col-xs-12">
+                        @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                        new
+                        {
+                            departamentoSelectId = "ActualDepartamentoEESS",
+                            provinciaSelectId = "ActualProvinciaEESS",
+                            distritoSelectId = "ActualDistritoEESS",
+                            distritoDivId = "dvDistritosEESS",
+                            codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                            selectedValue = labModel.UbigeoLaboratorio.Id.Substring(2, 2)
+                        })
+                    </div>
+                    @Html.Label("Distrito", new { @class = "col-md-1 col-xs-12" })
+                    <div id="dvDistritosEESS" class="col-md-2 col-xs-12">
+                        @Html.Action("GetDistritosPorProvincia", "Ubigeo", new
+                        {
+                            distritoSelectId = "ActualDistritoEESS",
+                            codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                            codigoProvincia = labModel.UbigeoLaboratorio.Id.Substring(2, 2),
+                            selectedValue = labModel.UbigeoLaboratorio.Id.Substring(4, 2)
+                        })
+                    </div>
+                </div>
+                <div class="div-row clearboth">
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("EESS/LAB Origen:")
+                    </div>
+                    <div class="col-xs-12 col-md-10">
+                        <input class="form-control autocomplete obligatorio-select" id="establecimientoorigenid-au" name="establecimientoorigenid-au" placeholder="Seleccione el Establecimiento de origen" />
+                        @Html.HiddenFor(m => m.EstablecimientoOrigenId)
+                    </div>
+                </div>
+                if (Model.TipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                {
+                    <div class="div-row clearboth">
+                        <div class="col-xs-12 col-md-1">
+                            @Html.Label("EESS/LAB Envío:")
+                        </div>
+
+                        <div class="col-xs-12 col-md-10">
+                            <input class="form-control autocomplete obligatorio-select" id="establecimientoenvioid-au" name="establecimientoenvioid-au" placeholder="Seleccione el Establecimiento de destino" />
+                            @Html.HiddenFor(m => m.EstablecimientoEnvioId)
+                        </div>
+                    </div>
+                    <div class="div-row clearboth">
+                        <div class="col-xs-12 col-md-1">
+                            @Html.Label("Fecha Ingreso ROM-INS:")
+                        </div>
+                        <div class="col-xs-12 col-md-2" style="display:flex;">
+                            @Html.TextBoxFor(model => model.FechaIngresoROM, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly col-md-1 obligatorio-fecha-fir", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                        </div>
+                        <div class="col-xs-12 col-md-1">
+                            @Html.Label("Fecha Evaluación de la Ficha:")
+                        </div>
+                        <div class="col-xs-12 col-md-2" style="display:flex;">
+                            @Html.TextBoxFor(model => model.FechaEvaluacionFicha, "{0:dd/MM/yyyy}", new { @class = "form-control  input-sm datepickerMaxValue dateOnly col-md-1", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                        </div>
+                    </div>
+                }
+                <div class="div-row clearboth">
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("Motivo:")
+                    </div>
+                    @*@Html.LabelFor(model => model.Proyecto, new { @class = "label-proyecto-width" })*@
+                    <div class="col-xs-12 col-md-2">
+                        @Html.DropDownListFor(model => model.ProyectoId, new SelectList(ViewBag.proyectoList, "idProyecto", "nombre"), new { @id = "Proyectoval", @class = "form-control input-sm" })
+                    </div>
+                </div>
+                <div class="div-row clearboth">
+                    @if (Model.TipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                    {
+                        <div class="col-xs-12 col-md-1">
+                            @Html.Label("Nro. Oficio:")
+                        </div>
+                        <div class="control-nrooficio-width col-xs-12 col-md-6">
+                            @Html.TextBoxFor(model => model.NroOficio, new { @class = "form-control input-sm" })
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="div-row clearboth">
+                    @Html.Label("Motivo:")
+                    @if (Model.TipoRegistro == Enums.TipoRegistroOrden.ORDEN_RECEPCION)
+                    {
+                        @Html.Label("Nro. Oficio:")
+                        if (string.IsNullOrWhiteSpace(Model.NroOficio))
+                        {
+                            <div class="col-md-6 col-xs-12">
+                                @Html.TextBoxFor(model => model.NroOficio, new { @class = "form-control input-sm" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6 col-xs-12">
+                                @Html.TextBoxFor(model => model.NroOficio, new { @class = "form-control input-sm" }) @*, disabled = "disabled"*@
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            <div class="alert alert-danger alerta-todos clearboth" role="alert" id="alert-eesslab" style="display:none;">
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default">
+                Exámenes
+            </legend>
+            <div id="dvTblExamen" class="table-responsive div-row-width" style="overflow-x:unset;">
+                @*@Html.Partial("_TblExamen", (List<Model.OrdenExamen>)Model.ordenExamenList)*@
+                <div id="divNuevoExamen">
+                    @Html.Partial("_Crear_AgregarExamen", Model.NuevoOrdenExamen)
+                </div>
+                <div id="divExamenes" style="padding-top:10px; display:none;"></div>
+                <div class="alert alert-danger alerta-todos" role="alert" id="alert-codigomuestra" style="display:none;">
+                    Ingrese código de muestra
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="default" id="fieldset-dce">
+            <legend class="default">Datos Clínicos Epidemiológicos</legend>
+            <div class="div-row" id="div-dce">
+            </div>
+        </fieldset>
+
+        <fieldset class="default" id="tienepr" style="display:none;">
+            <legend class="default">Datos del personal que realiza la prueba rápida</legend>
+            <div class="div-row clearboth">
+                <div class="col-xs-12 col-md-1">
+                    @Html.Label("DNI:")
+                </div>
+                <div class="col-xs-12 col-md-2">
+                    <div class="div-row">
+                        <div class="col-xs-7 col-md-7">
+                            @Html.TextBox("dniPR", null, new { @class = "form-control", placeholder = "DNI", maxlength = 8, type = "search" })
+                        </div>
+                        <div class="col-xs-5 col-md-5">
+                            <button type="button" class="btn btn-sm btn-default" id="btnBuscarEjecutorPR">
+                                <span class="glyphicon glyphicon-plus-sign">Buscar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-1">
+                    @Html.Label("Nombre:")
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <input class="form-control" type="text" id="ejecutor" placeholder="Nombre y apellidos" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default">Observaciones</legend>
+            <div class="div-row">
+                @if (Model.TipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+                {
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("Fecha de Solicitud:")
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <span>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.FechaSolicitud))</span>
+                    </div>
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("Solicitante:")
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="div-row">
+                            <div class="col-xs-11 col-md-1">
+                                @Html.Partial("_Solicitante")
+                            </div>
+                            <div class="col-xs-1 col-md-1">
+                                <div class="obligatorio">
+                                    <span>*</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="div-row">
+                            <div class="col-xs-12 col-md-5 padding-left-cero">
+                                <a data-href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnPopupSolicitante" title="Agregar Solicitante" class="btn btn-sm btn-default">
+                                    <span class="fa fa-user-plus" aria-hidden="true"></span>
+                                    Agregar
+                                </a>
+                            </div>
+                            @*<div class="col-xs-2 col-md-1">
+                                    <span>*</span>
+                                </div>*@
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("Fecha de Solicitud:")
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        @Html.TextBoxFor(model => model.FechaSolicitud, "{0:dd/MM/yyyy}", new { @class = "form-control input-sm datepickerMaxValue dateOnly col-md-1 obligatorio-fecha", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                    </div>
+                    <div class="col-xs-12 col-md-1">
+                        @Html.Label("Solicitante:")
+                    </div>
+                    if (string.IsNullOrWhiteSpace(Model.CodigoOrden))
+                    {
+                        <div class="col-xs-12 col-md-4">
+                            <div class="div-row">
+                                <div class="col-xs-10 col-md-9 padding-left-cero">
+                                    <input class="form-control autocomplete obligatorio-select" id="solicitante-au" name="solicitante-au" placeholder="Seleccione el solicitante" />
+                                </div>
+                                <div class="col-xs-1 col-md-1">
+                                    <div class="obligatorio">
+                                        <span>*</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-2">
+                            <div class="div-row">
+                                <div class="col-xs-12 col-md-5 padding-left-cero">
+                                    <a data-href="@Url.Action("ShowPopupSolicitante", "Orden")" id="btnPopupSolicitante" title="Agregar Solicitante" class="btn btn-sm btn-default">
+                                        <span class="fa fa-user-plus" aria-hidden="true"></span>
+                                        Agregar
+                                    </a>
+                                </div>
+                                @*<div class="col-xs-2 col-md-1">
+                                        <div class="obligatorio">
+                                            <span>*</span>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-xs-12 col-md-2">
+                            <span>@Html.Raw(ViewBag.SolicitanteNombre)</span>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="div-row clearboth">
+                <div class="col-xs-12 col-md-1">
+                    @Html.Label("Observación:")
+                </div>
+                <div class="col-xs-12 col-md-4">
+                    @Html.TextAreaFor(model => model.Observacion, 2, 100, new { @class = "form-control input-sm" })
+                </div>
+            </div>
+            <div class="alert alert-danger alerta-todos clearboth" role="alert" id="alert-observaciones" style="display:none;">
+            </div>
+        </fieldset>
+        <div class="div-row clearboth">
+            @if (string.IsNullOrWhiteSpace(Model.CodigoOrden))
+            {
+                <button class="btn btn-primary" id="btnGuardar" value="Guardar"> <span class="fa fa-floppy-o "></span> Guardar</button>
+            }
+            else
+            {
+                if (Model.TipoRegistro == Enums.TipoRegistroOrden.EDITAR_ORDEN_DATOCLINICO)
+                {
+                    <button class="btn btn-danger" id="btnEditar" value="Editar"> <span class="fa fa-exclamation "></span> Editar</button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" id="btnFinalizar" value="Finalizar"> <span class="fa fa-exclamation "></span> Finalizar</button>
+                }
+            }
+        </div>
+    </div>
+}
+
+<div id="dialog-openSolicitante" style="display: none;">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @*@Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/Solicitante.js?updated={0}", new Random().Next(0, 999))))*@
+    @*@Scripts.Render(Url.Content(string.Format("~/Scripts/App/Orden/CrearOrden.js?updated={0}", new Random().Next(0, 999))))*@
+
+    <script type="text/javascript">
+        $(function () {
+            SetDatePickerMaxValue();
+            SetFechaObtencionMaxValue();
+            ObtenerOrdenExamenListPartial();
+            ObtenerDatosClinicosPartial();
+            $("#establecimientoorigenid-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Orden/GetEstablecimientosNew",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { Prefix: request.term },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EstablecimientoOrigenId").val(i.item.value);
+                    $("#establecimientoorigenid-au").val(i.item.label);
+                    RevisarDatosObligatorios();
+                },
+                minLength: 3
+            });
+
+            $("#establecimientoenvioid-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Orden/GetEstablecimientosNew",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { Prefix: request.term },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EstablecimientoEnvioId").val(i.item.value);
+                    $("#establecimientoenvioid-au").val(i.item.label);
+                    RevisarDatosObligatorios();
+                },
+                minLength: 3
+            });
+
+            CargarSolicitantes();
+
+            $("#btnShowPopupEnfermedadExamen").click(function (e) {
+                e.preventDefault();
+                CargarNuevoAgregarExamen();
+            });
+
+            ClickAgregarExamen();
+
+            $("#btnBuscarEjecutorPR").click(function () {
+                var dni = $('#dniPr').val();
+                $.ajax({
+                    url: URL_BASE + "Orden/ValidarPersona",
+                    cache: false,
+                    method: "POST",
+                    data: { nroDocumento: dni },
+                    success: function (response) {
+                        $("#ejecutor").val(response);
+                    },
+                });
+            });
+
+            $("#btnGuardar").click(function () {
+                $(".alerta-todos").hide();
+                $("#alert-eesslab").html('');
+                $("#alert-observaciones").html('');
+
+                //fecha validacion >= fecha obtencion
+                //fecha obtencion <= fecha actual
+                var validacionfechas = true;
+                var d = new Date();
+                var fechaValidacion;
+                $(".obligatorio-fecha-fir:not(.k-widget)").each(function (index, value) {
+                    if ($(value).val() != "") {
+                        var splt = $(value).val().split('/');
+                        var joined = splt[1] + '/' + splt[0] + '/' + splt[2] + ' ' + d.getHours() + ':' + d.getMinutes();
+                        fechaValidacion = new Date(joined);
+                    }
+                });
+
+                //$(".obligatorio-fecha-fir:not(.k-widget)")
+                $(".fechahoraobtencion").each(function () {
+                    if ($(this).val() != "") {
+                        var fosplt = $(this).val().split('/');
+                        var fechaobtencion = new Date(fosplt[1] + '/' + fosplt[0] + '/' + fosplt[2]);
+
+                        if (fechaValidacion < fechaobtencion) {
+                            validacionfechas = false;
+                        }
+                    }
+                });
+
+                //setTimeout(function () {
+                //console.log("validacion fechas: ", validacionfechas);
+                //}, 1000);
+                
+                var habilitarBtn = RevisarDatosObligatorios();
+                if (!habilitarBtn) {
+                    return false;
+                }
+            });
+
+            $("#btnPopupSolicitante").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).data("href");
+                $("#dialog-openSolicitante").dialog({
+                    title: "Nuevo Solicitante",
+                    autoOpen: false,
+                    resizable: true,
+                    height: 430,
+                    width: 500,
+                    show: { effect: "drop", direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    open: function () {
+                        $(this).load(url, function () {
+                            //agregarEventosPopupSolicitante();
+                            CargarCodigoUnicoSolicitante();
+                            GrabarSolicitante();
+                        });
+                    },
+                    close: function (event, ui) {
+                        $(this).dialog('close');
+                    }
+                });
+                $("#dialog-openSolicitante").dialog("open");
+                return false;
+            });
+
+            GrabarSolicitante();
+
+            $('.ui-layout-toggler-north').click(function () {
+                $('#chosen_select').toggleClass('hide');
+            });
+        });
+
+        function CargarSolicitantes() {
+            $("#solicitante-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Comun/ObtenerSolicitantes",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: { nombre: request.term },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.name, value: item.id };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#SolicitanteId").val(i.item.value);
+                    $("#solicitante-au").val(i.item.label);
+                    RevisarDatosObligatorios();
+                },
+                minLength: 3
+            });
+        }
+
+        function ClickAgregarExamen() {
+            $("#btnAgregarExamen").click(function (e) {
+                e.preventDefault();
+                var datoscompletos = RevisarDatosObligatoriosAgregarExamen();
+                if (datoscompletos == true) {
+                    $.ajax({
+                        url: "/Orden/CrearOrdenExamen",
+                        type: "POST",
+                        cache: false,
+                        //data: JSON.stringify({}),
+                        data: {
+                            OrdenId: $("#Orden_IdOrden").val(),
+                            TipoRegistro: $("#TipoRegistro").val(),
+                            EnfermedadId: $("#EnfermedadId").val(),
+                            EstablecimientoDestinoId: $("#EstablecimientoDestinoId").val(),
+                            ExamenId: $("#ExamenId").val(),
+                            TipoMuestraId: $("#TipoMuestraId").val(),
+                            FechaObtencion: $("#FechaObtencion").val(),
+                            HoraObtencion: $("#HoraObtencion").val(),
+                            //EnfermedadNombre: $("#EnfermedadNombre").val(),
+                            //EstablecimientoDestinoNombre: $("#EstablecimientoDestinoNombre").val(),
+                            //ExamenNombre: $("#ExamenNombre").val(),
+                            //TipoMuestraNombre: $("#TipoMuestraNombre").val(),
+                        },
+                        success: function (response) {
+                            $("#divExamenes").html(response);
+                            $("#divExamenes").show();
+                            if ($("#hdnTienePR") != undefined && parseInt($("#hdnTienePR").val()) == 1) {
+                                $("#tienepr").show();
+                            } else {
+                                $("#tienepr").hide();
+                            }
+                            //CargarNuevoAgregarExamen();
+                            ObtenerDatosClinicosPartial();
+                        }
+                    });
+                } else {
+                    $("#btnAgregarExamen").prop("disabled", "disabled");
+                }
+            });
+        }
+
+        function SetDatePickerMaxValue() {
+            $(".datepickerMaxValue").setDatePickerWithMaxValue();
+        }
+
+        function SetFechaObtencionMaxValue() {
+            $(".fechaObtencionMaxValue").setDatePickerWithMaxValue();
+        }
+
+        function SetDatoClinicoDatePickerMaxValue() {
+            $(".fechasdatoclinico").setDatePickerWithMaxValue();
+        }
+
+        function CargarNuevoAgregarExamen() {
+            $.ajax({
+                url: "/Orden/CargarNuevoExamen",
+                type: "GET",
+                cache: false,
+                data: { ordenId: $("#Orden_IdOrden").val() },
+                success: function (response) {
+                    $("#divNuevoExamen").html(response);
+                    SetFechaObtencionMaxValue();
+                    ClickAgregarExamen();
+                }
+            });
+        }
+
+        function CargarAutocomplete() {
+            $("#enfermedad-au").autocomplete({
+                source: function (request, response) {
+                    //console.log("enfermedad-au inicio");
+                    $.ajax({
+                        url: URL_BASE + "Comun/ObtenerEnfermedadesPorNombre",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { nombre: request.term },
+                        success: function (respdatos) {
+                            //if (respdatos.length == 0) {
+                            //    $("#EnfermedadId").val("");
+                            //    $("#enfermedad-au").val("No existen coincidencias con su búsqueda.");
+                            //}
+                            response($.map(respdatos, function (item) {
+                                return { label: item.name, value: item.id };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EnfermedadId").val(i.item.value);
+                    $("#enfermedad-au").val(i.item.label);
+                    //console.log("test enfermedad");
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                change: function (event, ui) {
+                    if (ui.item == null) {
+                        $("#EnfermedadId").val("");
+                    }
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                minLength: 3
+            });
+
+            $("#establecimientodestino-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Comun/ObtenerEstablecimientosPorNombre",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { nombre: request.term, ExamenVA: "", tipoRegistro: $("#TipoRegistro").val() },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EstablecimientoDestinoId").val(i.item.value);
+                    $("#establecimientodestino-au").val(i.item.label);
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                change: function (event, ui) {
+                    if (ui.item == null) {
+                        $("#EstablecimientoDestinoId").val("");
+                    }
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                minLength: 3
+            });
+
+            $("#examen-au").autocomplete({
+                source: function (request, response) {
+                    //console.log("examen-au inicio");
+                    $.ajax({
+                        url: URL_BASE + "Comun/ObtenerExamenesPorNombre",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: { genero:0, idenfermedad: $("#EnfermedadId").val(), nombre: request.term },
+                        success: function (respdatos) {
+                            //console.log("examen-au success: ", respdatos);
+                            response($.map(respdatos, function (item) {
+                                //return { label: item.NombreExamen, value: item.IdExamen };
+                                return { label: item.name, value: item.id };
+                            }));
+                        },
+                        error: function (jqXHR, textStatus, exception) {
+                            //console.log(textStatus, exception);
+                            //var msg = '';
+                            //if (jqXHR.status === 0) {
+                            //    msg = 'Not connect.\n Verify Network.';
+                            //} else if (jqXHR.status == 404) {
+                            //    msg = 'Requested page not found. [404]';
+                            //} else if (jqXHR.status == 500) {
+                            //    msg = 'Internal Server Error [500].';
+                            //} else if (exception === 'parsererror') {
+                            //    msg = 'Requested JSON parse failed.';
+                            //} else if (exception === 'timeout') {
+                            //    msg = 'Time out error.';
+                            //} else if (exception === 'abort') {
+                            //    msg = 'Ajax request aborted.';
+                            //} else {
+                            //    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                            //}
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#ExamenId").val(i.item.value);
+                    $("#examen-au").val(i.item.label);
+                    CargarTipoMuestraPartial(i.item.value);
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                change: function (event, ui) {
+                    if (ui.item == null) {
+                        $("#ExamenId").val("");
+                    }
+                    RevisarDatosObligatoriosAgregarExamen();
+                },
+                minLength: 3
+            });
+        }
+
+        function CancelarAgregarExamen() {
+            CargarNuevoAgregarExamen();
+        }
+
+        function CargarEESSDestinoAutocomplete(id){
+            $(id).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Comun/ObtenerEstablecimientosPorNombre",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { nombre: request.term, ExamenVA: "", tipoRegistro: $("#hdnTipoRegistro-tabla").val() },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#tabla-eessdestino-id-"+id).val(i.item.value);
+                    $(id).val(i.item.label);
+                    //$("#NombreEESSDestino").val(i.item.label);
+                },
+                minLength: 3
+            });
+        }
+
+        function CargarEESSDestinoSeleccionado(id, nombre) {
+            setTimeout(function() {
+                $(id).val(nombre);
+            }, 100);
+        }
+
+        function ObtenerOrdenExamenListPartial() {
+            $.ajax({
+                url: "/Orden/ObtenerOrdenExamenList",
+                type: "GET",
+                cache: false,
+                data: { idOrden: $("#Orden_IdOrden").val(), tipoRegistro: $("#TipoRegistro").val() },
+                success: function (response) {
+                    $("#divExamenes").html(response);
+                    $("#divExamenes").show();
+                    
+                    if ($("#hdnTienePR") != undefined && parseInt($("#hdnTienePR").val()) == 1) {
+                        $("#tienepr").show();
+                    } else {
+                        $("#tienepr").hide();
+                    }
+                }
+            });
+        }
+
+        function CargarTipoMuestraPartial(idExamen) {
+            $.ajax({
+                url: "/Comun/ObtenerTipoMuestraPorExamen?idExamen=" + idExamen,
+                cache: false,
+                method: "GET"
+            }).done(function (msg) {
+                $("#divTipoMuestra").html(msg);
+                $("#TipoMuestraId").chosen({ placeholder_text_single: "Seleccione el Tipo de Muestra", no_results_text: "No existen coincidencias con el texto" });
+            });
+            @*$.ajax({
+                url: '@Url.Content("/Comun/ObtenerTipoMuestraPorExamen")',
+                type: 'GET',
+                contentType: 'application/json',
+                dataType: "json",
+                data: { idExamen: idExamen },
+                success: function (respdatos) {
+                    //response($.map(respdatos, function (item) {
+                    //    return { label: item.name, value: item.id };
+                    //}));
+                    $("#divTipoMuestra").html(msg);
+                    $("#TipoMuestraId").chosen({ placeholder_text_single: "Seleccione el Tipo de Muestra", no_results_text: "No existen coincidencias con el texto" });
+                }
+            });*@
+        }
+
+        function ObtenerDatosClinicosPartial() {
+            $.ajax({
+                url: "/Orden/CargarDatosClinicos",
+                type: "GET",
+                cache: false,
+                data: { idOrden: $("#Orden_IdOrden").val() },
+                success: function (response) {
+                    $("#div-dce").html(response);
+                    $("#fieldset-dce").show();
+                }
+            });
+        }
+
+        function RevisarDatosObligatorios() {
+            $(".alerta-todos").hide();
+            $("#alert-eesslab").html('');
+            $("#alert-observaciones").html('');
+            var habilitarBoton = true;
+
+            if ($(".codmuestra").length == 0) {
+                habilitarBoton = false;
+                $("#alert-codigomuestra").show();
+            }
+
+            $(".codmuestra").each(function () {
+                if ($(this).val() == '' || $(this).val().trim() == '') {
+                    //console.log("validacion codmuestra");
+                    habilitarBoton = false;
+                    $("#alert-codigomuestra").show();
+                }
+            });
+
+            $(".obligatorio-fecha:not(.k-widget)").each( function (index, value) {
+	            //console.log("index: ", index);
+                //console.log("fecha solicitud $(value).val(): ", $(value).val());
+                if ($(value).val() == '') {
+                    //console.log("validacion fecha obligatorio");
+                    habilitarBoton = false;
+                    $("#alert-observaciones").append("<span>Ingrese Fecha de Solicitud</span><br/>");
+                    $("#alert-observaciones").show();
+                }
+            });
+
+            if ($("#SolicitanteId").val() == "" || $("#SolicitanteId").val() == "0") {
+                //console.log("validacion solicitante");
+                habilitarBoton = false;
+                $("#alert-observaciones").append("<span>Ingrese Solicitante</span><br/>");
+                $("#alert-observaciones").show();
+            }
+
+            $(".obligatorio-fecha-fir:not(.k-widget)").each( function (index, value) {
+	            //console.log("index: ", index);
+                //console.log("fecha ingreso rom $(value).val(): ", $(value).val());
+                if ($(value).val() == '') {
+                    //console.log("validacion fecha obligatorio");
+                    habilitarBoton = false;
+                    $("#alert-eesslab").append("<span>Ingrese Fecha Ingreso al ROM</span><br/>");
+                    $("#alert-eesslab").show();
+                }
+            });
+
+            if ($("#EstablecimientoOrigenId").val() == "" || $("#EstablecimientoOrigenId").val() == "0") {
+                //console.log("validacion eess origen");
+                habilitarBoton = false;
+                $("#alert-eesslab").append("<span>Ingrese EESS/LAB Origen</span><br/>");
+                $("#alert-eesslab").show();
+            }
+
+            if ($("#EstablecimientoEnvioId").val() == "" || $("#EstablecimientoEnvioId").val() == "0") {
+                //console.log("validacion eess envio");
+                habilitarBoton = false;
+                $("#alert-eesslab").append("<span>Ingrese EESS/LAB Envío</span><br/>");
+                $("#alert-eesslab").show();
+            }
+
+            //if (habilitarBoton == true) {
+            //    $("#btnGuardar").removeAttr("disabled");
+            //} else {
+            //    $("#btnGuardar").prop("disabled", "disabled");
+            //}
+
+            return habilitarBoton;
+        }
+
+        function MantenerBtnGuardar() {
+            var result = RevisarDatosObligatorios();
+
+            if (result == true) {
+                $("#btnGuardar").removeAttr("disabled");
+            } else {
+                $("#btnGuardar").prop("disabled", "disabled");
+            }
+        }
+
+        function EliminarOrdenExamen(ordenexamenid, ordenid) {
+            $.ajax({
+                url: "/Orden/EliminarOrdenExamen",
+                type: "POST",
+                cache: false,
+                //data: JSON.stringify({}),
+                data: {
+                    ordenId: ordenid,
+                    ordenExamenId: ordenexamenid,
+                    tipoRegistro: $("#TipoRegistro").val()
+                },
+                success: function (response) {
+                    $("#divExamenes").html(response);
+                    $("#divExamenes").show();
+
+                    if ($("#hdnTienePR") != undefined && parseInt($("#hdnTienePR").val()) == 1) {
+                        $("#tienepr").show();
+                    } else {
+                        $("#tienepr").hide();
+                    }
+                    CargarNuevoAgregarExamen();
+                    ObtenerDatosClinicosPartial();
+                }
+            });
+        }
+
+        function CargarCodigoUnicoSolicitante() {
+            $("#CodigoUnico").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Catalogo/GetEESS",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                //
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }))
+                        }
+                    })
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#hddDato").val(i.item.value);
+                    $("#CodigoUnico").val(i.item.label);
+                },
+                minLength: 1
+            });
+        }
+
+        function GrabarSolicitante() {
+            $("#btnAgregarSolicitante").on("click", function () {
+                //debugger;
+                var Dni = $("#Dni").val();
+                var codigoColegio = $("#codigoColegio").val();
+                var ApePat = $("#apellidoPaterno").val();
+                var ApeMat = $("#apellidoMaterno").val();
+                var Nombre = $("#Nombres").val();
+                var Correo = $("#correo").val();
+                var profesion = $("#cmbProfesion").val();
+                var telefono = $("#telefono").val();
+                var laboratorio = $("#hddDato").val();
+
+                //if (codigoColegio == undefined || codigoColegio == "" || codigoColegio == 0) {
+                //    jAlert("Ingrese el Código del Colegio Profesional.", "Alerta!");
+                //    return null;
+                //}
+                if (ApePat == undefined || ApePat == "" || ApePat == 0) {
+                    jAlert("Ingrese el Apellido Paterno.", "Alerta!");
+                    return null;
+                }
+                if (Nombre == undefined || Nombre == "" || Nombre == 0) {
+                    jAlert("Ingrese el Nombres.", "Alerta!");
+                    return null;
+                }
+                if (laboratorio == undefined || laboratorio == "" || laboratorio == 0) {
+                    jAlert("Seleccione Centro de Trabajo", "Alerta!");
+                    return null;
+                }
+
+                $.get(URL_BASE + "Orden/ValidarCodigoColegio?codigoColegio=" + codigoColegio, function (data) {
+                    if (data == "True") {
+                        jAlert("Código Colegio ya está registrado", "Alerta!");
+                        return null;
+                    }
+                    else {
+                        var datos = "?Dni=" + Dni + "&" +
+                            "codigoColegio=" + codigoColegio + "&" +
+                            "ApePat=" + ApePat + "&" +
+                            "ApeMat=" + ApeMat + "&" +
+                            "Nombre=" + Nombre + "&" +
+                            "Correo=" + Correo + "&" +
+                            "profesion=" + profesion + "&" +
+                            "laboratorio=" + laboratorio + "&" +
+                            "telefono=" + telefono;
+
+                        dpUI.loading.start("Creando ...");
+                        $("#dialog-open").dialog("close");
+                        $.ajax({
+                            url: URL_BASE + "Orden/AddSolicitante" + datos,
+                            cache: false,
+                            method: "GET"
+                        }).done(function (msg) {
+                            //LoadSolicitantes();
+                            CargarSolicitantes();
+                        }).fail(function () {
+                            //console.log("fail");
+                            jAlert("Error, por favor comunicarse con el Administrador.", "Error");
+                            dpUI.loading.stop();
+                        }).success(function () {
+                            dpUI.loading.stop();
+                            $("#dialog-openSolicitante").dialog("close");
+                        });
+                    }
+                });
+            });
+        }
+    </script>
+}

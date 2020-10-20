@@ -1,0 +1,56 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el registro de una presentación.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Presentacion
+
+@using (Html.BeginForm("NuevoPresentacion", "Presentacion", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmAgregarPresentacion" }))
+{
+    @Html.AntiForgeryToken()
+
+    
+    
+
+    <div class="form-horizontal">
+        <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+        <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.glosa, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.glosa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.glosa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+               
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" value="Crear"  id="btnCrear" class="btn btn-primary"  onclick="return ValidaCampoRequeridoPresentacion();"/>
+                <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+
+}
+<div id="presentacionDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+
+@section Styles
+    {
+    
+    <link href="@Url.Content("~/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+
+    }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,200 @@
+﻿@* Descripción: Vista para mostrar la informacion de la orden para ser seleccionable mas tarde
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMaterial>
+
+<style type="text/css">
+    .enfermedad {
+        width: 250px;
+        height: 30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .texto {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+    /*JRCR-REQ01*/
+    .dis-none{
+        display: none;
+    }
+</style>
+
+@if (Model != null && Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        string idRow = item.idOrdenMaterial.ToString();
+        string idVolumenMuestra = "volMuestra" + idRow;
+        string idNoPrecisaVolumen = "noVol" + idRow;
+
+
+        var columnasAdicionales = @item.cantidad + 2;
+        if (item.ordenMuestraRecepcionList.Count == 0)
+            columnasAdicionales = 1;
+
+        <table id="idTableRecepcionar" class="table" width="1200">
+            <tr>
+                <th width="150">Examen</th>
+                <th width="100">T. Muestra</th>
+                <th width="100">T. Material</th>
+                @if (item.ordenMuestraRecepcionList.Count == 0)
+                    {
+                    <th width="100">Lab. Destino</th>
+                }
+                else
+                {
+                    <th width="100">Lab. Recepción</th>
+                }
+
+                <th width="150">Fecha Envío</th>
+                <th width="80">Hora Envío</th>
+                @*JRCR-REQ01*@
+                @*<th width="100">Material</th>
+                <th width="40">Cantidad</th>
+                <th width="100">Volumen Muestra Colectada</th>
+                <th width="50"></th>*@
+            </tr>
+
+            <tr>
+                <td title='@Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)'>
+                    <div class="enfermedad">
+                        @Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)
+                    </div>
+                    @Html.Hidden("idOrdenMaterialTest", idRow)
+                </td>
+
+                <td>@Html.DisplayTextFor(model => item.Material.TipoMuestra.nombre)</td>
+                <td>@Html.DisplayTextFor(model => item.tipoToString)</td>
+
+
+                <td>
+                    <!--<div class="enfermedad">-->
+                    @{ string idLaboratorio = "laboratorio" + idRow;
+                    }
+                    <select id="@idLaboratorio" class="form-control idLaboratorioDestinoMaterial"
+                            name="@idLaboratorio" style="width: 200px">
+                        <option value=""></option>
+                        @if (item.Laboratorio.IdLaboratorio != 0)
+                        {
+                        <option selected="selected" value="@item.Laboratorio.IdLaboratorio">@item.Laboratorio.Nombre</option>
+                        }
+                    </select>
+
+
+
+                    <!--</div>-->
+                </td>
+                @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                <td>@Html.TextBox("fechaEnvio" + idRow, item.fechaEnvioToString, new { @class = "datepickerTelerik dateOnly form-control input-sm", style = "max-width:100px", autocomplete = "off" })</td>
+                <td>@Html.TextBox("horaEnvio" + idRow, item.horaEnvioToString, new { @class = "timepicker form-control input-sm", style = "max-width:100px" })</td>
+                @*JRCR-REQ01*@
+                @Html.HiddenFor(model => item.Material.descripcion, new { @class = "dis-none" })
+                @*<td>@Html.DisplayTextFor(model => item.Material.descripcion)</td>*@
+                @*<td>
+                    @Html.Raw(item.cantidad.ToString())
+                </td>*@
+                @Html.Hidden("cantidad" + idRow, item.cantidad, new { @class = "dis-none" })
+                @Html.Hidden("volumenMuestraColectada" + idRow, item.volumenMuestraColectada, new { @class = "dis-none" })
+                @Html.Hidden(idVolumenMuestra, item.volumenMuestraColectada, new { @class = "dis-none" })
+                @Html.CheckBox(idNoPrecisaVolumen, item.noPrecisaVolumen == 1, new { @class = "dis-none"})
+                @*<td>
+                    <div style="display:flex">
+                        @Html.TextBox("volumenMuestraColectada" + idRow, item.volumenMuestraColectada, new { id = idVolumenMuestra, type = "number", min = "0", max = "100", step = "0.10", @class = "volumen", style = "max-width:70px" })
+                        @Html.Hidden("idCompuestoMaterial", idRow)
+                        <div style="padding-left: 2px">
+                            @if (item.noPrecisaVolumen == 1)
+                            {
+                            <input id=@Html.Raw(idNoPrecisaVolumen) checked="checked" type="checkbox" class="noPrecisaVolumen" name="noPrecisaVolumen" />
+                            }
+                            else
+                            {
+                            <input id=@Html.Raw(idNoPrecisaVolumen) type="checkbox" class="noPrecisaVolumen" name="noPrecisaVolumen" />
+                            }
+                        </div>
+                        <div style="padding-left: 2px; padding-top: 6px">
+                            <label for="noPrecisaVolumen">No Precisa</label>
+                        </div>
+                    </div>
+                </td>
+                <td rowspan=@columnasAdicionales class=@Html.Raw(idRow)>
+                    <label class="eliminarMaterial btn-link">Eliminar</label>
+                </td>*@
+
+            </tr>
+
+
+            @if (item.ordenMuestraRecepcionList.Count > 0)
+            {
+                <tr class="trth">
+                    <td colspan="1">Número Muestra Recepcionada</td>
+                    <td colspan="1">Conformidad</td>
+                    @*JRCR-REQ01*@
+                    <td colspan="4">Motivos de Rechazo</td>
+                </tr>
+                for (int i = 0; i < item.ordenMuestraRecepcionList.Count(); i++)
+                {
+
+                    var nombreCheckConforme = "conforme" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                    var nombreDivCheckConforme = "divconforme" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                    var nombreMotivoRechazo = "motivosRechazo" + item.ordenMuestraRecepcionList[i].idOrdenMuestraRecepcion;
+                    <tr>
+                        @{ var nroMaterial = i + 1;}
+                        <td colspan="1">@nroMaterial</td>
+                        <td colspan="1">
+                            @if (item.ordenMuestraRecepcionList[i].conforme == 1)
+                            {
+                                <input type="checkbox" name=@Html.Raw(nombreCheckConforme) id=@Html.Raw(nombreCheckConforme) checked="checked" class="chkConformeMuestra" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name=@Html.Raw(nombreCheckConforme) id=@Html.Raw(nombreCheckConforme) class="chkConformeMuestra" />
+                            }
+                            <label for=@Html.Raw(nombreCheckConforme)>Es conforme</label>
+                        </td>
+                        @*JRCR-REQ01*@
+                        <td colspan="4">
+                            <div class="selMotivoRechazoDiv" id=@nombreDivCheckConforme>
+                                @{
+                                    List<SelectListItem> listaCriterio = new List<SelectListItem>();
+                                    foreach (Model.CriterioRechazo criterioRechazo in item.ordenMuestraRecepcionList[i].criterioRechazoList)
+                                    {
+                                        listaCriterio.Add(new SelectListItem
+                                        {
+                                            Text = criterioRechazo.Glosa,
+                                            Value = criterioRechazo.IdCriterioRechazo.ToString(),
+                                            Selected = criterioRechazo.rechazado
+                                        });
+                                    }
+                                }
+                                @Html.DropDownList(@nombreMotivoRechazo, (List<SelectListItem>)listaCriterio, new { @id = @nombreMotivoRechazo, @multiple = "multiple", @class = "selMotivoRechazo" })
+                            </div>
+                        </td>
+                    </tr>
+            }
+        }
+        </table>
+    }
+}
+else
+{
+    <table id="idTableRecepcionar" class="table emptytablemr" width="1200">
+        <tr>
+            <th width="150">Examen</th>
+            <th width="100">T. Muestra</th>
+            <th width="100">T. Material</th>
+            <th width="100">Lab. Destino</th>
+            @*JRCR-REQ01*@
+            @*<th width="150">Fecha Envío</th>
+            <th width="80">Hora Envío</th>
+            <th width="100">Material</th>
+            <th width="40">Cantidad</th>
+            <th width="100">Volumen Muestra Colectada</th>
+            <th width="50"></th>*@
+        </tr>
+    </table>
+}

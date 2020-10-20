@@ -1,0 +1,111 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el ingreso de datos del usuario.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Usuario
+
+<div class="form-group">
+    @if (!string.IsNullOrEmpty(@ViewBag.MensajeServicio))
+    {
+        <div class="div-row">
+            <span class="msj-error">@ViewBag.MensajeServicio</span>
+        </div>
+    }
+    <div class="div-row">
+        @Html.Label("Apellido Paterno:", new {@class = "label-width"})
+        <div class="control-width" style="display: flex">
+            @if (Model.idUsuario != 0)
+            {
+                <span>@Model.apellidoPaterno</span>
+                @Html.HiddenFor(model => model.apellidoPaterno, new {htmlAttributes = new {@class = "form-control" , id= "apellidoPaterno" } })
+            }
+            else
+            {
+                @Html.EditorFor(model => model.apellidoPaterno, new {htmlAttributes = new {@class = "form-control  input-sm ValidateLength lettersOnly", id = "apellidoPaterno" } })
+            }
+
+            @Html.Hidden("estatusUsuario", Model.estatus)
+        </div>
+
+        @Html.Label("Apellido Materno:", new {@class = "label-width2"})
+        <div class="control-width2" style="display: flex">
+            @if (Model.idUsuario != 0)
+            {
+                <span>@Model.apellidoMaterno</span>
+                @Html.HiddenFor(model => model.apellidoMaterno, new {htmlAttributes = new {@class = "form-control", id= "apellidoMaterno" } })
+            }
+            else
+            {
+                @Html.EditorFor(model => model.apellidoMaterno, new {htmlAttributes = new {@class = "form-control ValidateLength lettersOnly", id = "apellidoMaterno" } })
+            }
+        </div>
+
+        @Html.Label("Nombres:", new {@class = "label-width3"})
+        <div class="control-width3">
+            @if (Model.idUsuario != 0)
+            {
+                <span>@Model.nombres</span>
+                @Html.HiddenFor(model => model.nombres, new {htmlAttributes = new {@class = "form-control", id = "nombres" } })
+            }
+            else
+            {
+                @Html.EditorFor(model => model.nombres, new {htmlAttributes = new {@class = "form-control ValidateLength lettersOnly", id = "nombres" } })
+            }
+        </div>
+
+    </div>
+</div>
+
+<style type="text/css" media="all">
+   
+    .div-row {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 780px;
+    }
+
+    .label-width {
+        text-align: left;
+        width: 100px;
+    }
+
+    .label-width2 {
+        padding-left: 10px;
+        text-align: left;
+        width: 120px;
+    }
+
+    .label-width3 {
+        padding-right: 70px;
+        text-align: left;
+        width: 60px;
+    }
+
+    .control-width {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width2 {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width3 {
+        width: 160px;
+        display: flex;
+    }
+
+    .obligatorio {
+        float: left;
+    }
+
+    .obligatorio span {
+        color: red;
+        margin-left: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>

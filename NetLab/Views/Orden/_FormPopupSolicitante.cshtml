@@ -1,0 +1,220 @@
+﻿@model  NetLab.Models.SolicitanteViewModels
+@using Model;
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+@Html.AntiForgeryToken()
+<div class="form-group">
+    <h4>Solicitante</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="div-rowSol2 row">
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("DNI:", new { @class = "label-widthhh" })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.Editor("Dni", new { htmlAttributes = new { @class = "form-control ValidateLength simpleNumbersOnly" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.Dni, "", new { @class = "text-danger" })
+                @*<div class="obligatorio">
+                    <span>*</span>
+                </div>*@
+            </div>
+            
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Código Profesional:", new { @class = "label-width2hh" })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.Editor("codigoColegio", new { htmlAttributes = new { @class = "form-control ValidateLength simpleNumbersOnly" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.codigoColegio, "", new { @class = "text-danger" })
+            </div>
+            @*<div class="obligatorio">
+                <span>*</span>
+            </div>*@
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Apellido Paterno:", new { @class = "label-widthhh" })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.EditorFor(model => model.apellidoPaterno, new { htmlAttributes = new { @class = "form-control  input-sm ValidateLength lettersOnly" } })
+                @Html.ValidationMessageFor(model => model.apellidoPaterno, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Apellido Materno:", new { @class = "label-width2hh" })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.EditorFor(model => model.apellidoMaterno, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly" } })
+                @Html.ValidationMessageFor(model => model.apellidoMaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>        
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Nombres:", new { })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control ValidateLength lettersOnly" } })
+                @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Correo:", new { })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.Editor("correo", new { htmlAttributes = new { @class = "form-control ValidateLength" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.correo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Profesión:", new { })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.DropDownList("profesion", Model.Profesion.SelectList, new { @class = "form-control cmbTipo222", id = "cmbProfesion", name = "cmbProfesion" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Telefono:", new { })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.Editor("telefono", new { htmlAttributes = new { @class = "form-control ValidateLength simpleNumbersOnly" } })
+                @Html.ValidationMessageFor(model => model.Solicitante.telefonoContacto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                @Html.Label("Centro de Trabajo:", new { @class = "label-width" })
+            </div>
+            <div class="col-xs-12 col-md-4">
+                @Html.TextBox("CodigoUnico", "", new { @class = "form-control" })
+                @Html.Hidden("hddDato", (string)ViewBag.CodigoUnico)
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="divRow">
+        <div style="clear: both; float: left" class="labelPopup">&nbsp;</div>
+        <div class="controlPopup" style="float: left">
+            @*<label id="btnAgregarSolicitante" class="btn-link text-center">Agregar</label>*@
+
+            <label id="btnAgregarSolicitante" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-ok "></span> Agregar</label>
+
+        </div>
+        <div style="float: left">
+
+            @*<label onclick="$('#dialog-open').dialog('close');" class="btn-link text-center">Cancelar</label>*@
+
+            <label onclick="$('#dialog-open').dialog('close');" class="btn btn-default btn-sm" text-center"><span class="glyphicon glyphicon-remove"></span> Cancelar</label>
+
+
+        </div>
+
+    </div>
+</div>
+<style type="text/css" media="all">
+    .labelPopup {
+        font-size: 10px;
+        width: 150px;
+        text-align: left;
+    }
+
+    .cmbDatos {
+        width: 200px !important;
+    }
+
+    .txtDatos {
+        width: 200px !important;
+    }
+
+    .cmbTipo {
+        width: 200px !important;
+    }
+
+    .controlPopup {
+        font-size: 10px;
+        width: 140px;
+        text-align: left;
+    }
+
+    .div-rowSol {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 680px;
+    }
+    /*width: 780px;*/
+    .control-width3 {
+        width: 160px;
+        display: flex;
+    }
+
+    .label-width3 {
+        padding-left: 10px;
+        text-align: left;
+        width: 60px;
+    }
+
+    .div-rowBTN {
+        display: flex;
+        padding-left: 10px;
+        height: 25px;
+        width: 750px;
+    }
+
+    .label-width {
+        text-align: left;
+        width: 140px;
+    }
+
+    .label-width2 {
+        padding-left: 13px;
+        text-align: left;
+        width: 120px;
+    }
+
+    .label-width3 {
+        padding-left: 10px;
+        text-align: left;
+        width: 80px;
+    }
+
+    .control-widthEL {
+        width: 100px;
+    }
+
+    .control-width {
+        width: 130px;
+        display: flex;
+    }
+
+    .control-width2 {
+        width: 140px;
+        display: flex;
+    }
+    .control-widthLong{
+        width: 390px;
+        display: flex;
+    }
+    .control-width3 {
+        width: 140px;
+        display: flex;
+    }
+
+    .widthBtn1 {
+        width: 90px;
+    }
+
+    .widthBtn2 {
+        width: 210px;
+    }
+
+    /*#tabs {
+        width: 780px;
+        height: 280px !important;
+    }*/
+</style>

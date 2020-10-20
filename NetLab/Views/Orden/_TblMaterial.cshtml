@@ -1,0 +1,155 @@
+﻿@* Descripción: Vista para mostrar la informacion seleccionada, en la parte de los materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMaterial>
+
+<style type="text/css">
+    .enfermedad {
+        width: 100px;
+        height: 80px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .texto {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+    /*JRCR-REQ01*/
+    .dis-none {
+        display: none;
+    }
+</style>
+
+
+
+<table id="tableMaterial" class="table" width="1200">
+    <tr>
+        <th width="350">Examen</th>
+        <th width="100">T. Muestra</th>
+        @*<th width="100">T. Material</th>*@
+        <th width="300">Lab. Destino</th>
+        @*<th width="100" class="invisible">Fecha Envío</th>
+            <th width="80" class="invisible">hora Envío</th>*@
+        @*JRCR-REQ01*@
+        @*<th width="100">Material</th>
+            <th width="40">Cantidad</th>
+            <th width="150">Volumen Muestra Colectada</th>*@
+        @*<th width="50"></th>*@
+        @*//SOTERO BUSTMANTE AGREGADO PARA NRO DE MUESTRA DE PACIENTE*@
+        <th width="100">N° Muestra</th>
+    </tr>
+
+
+
+    @if (Model != null)
+    {
+        <tbody id="tbodyMaterial" style="font-size: 9px">
+            @foreach (var item in Model)
+            {
+                string idRow = item.idOrdenMaterial.ToString();
+                string idVolumenMuestra = "volMuestra" + idRow;
+                string idNoPrecisaVolumen = "noVol" + idRow;
+                string idLaboratorio = "laboratorio" + idRow;
+                string laboratorioNombre = "laboratorioNombre" + idRow;
+
+                <tr>
+                    <td class="texto" title='@Html.Raw(item.OrdenExamen.Enfermedad.nombre + "-" + item.OrdenExamen.Examen.nombre)'>
+                        @*<div class="enfermedad">*@
+                        @if (!String.IsNullOrEmpty(item.ExamenNombreCompleto))
+                        {
+                            @Html.Raw(item.ExamenNombreCompleto)
+                        }
+                        else
+                        {
+                            @Html.Raw(item.OrdenExamen.Examen.nombre)
+                        }
+                        @*</div>*@
+                        @Html.Hidden("idOrdenMaterialTest", idRow)
+                    </td>
+                    <td class="texto">
+                        @if (item!= null && item.Material != null && !String.IsNullOrEmpty(item.Material.TipoMuestra.nombre))
+                        {
+                            @Html.DisplayTextFor(model => item.Material.TipoMuestra.nombre)
+                        }
+                        else
+                        {
+                            @Html.DisplayTextFor(model => item.Material.TipoMuestra.idTipoMuestra)
+                        }
+                    </td>
+                    @*<td class="texto">@Html.DisplayTextFor(model => item.tipoToString)</td>*@
+                    <td class="texto">
+                        <select id="@idLaboratorio" class="form-control idLaboratorioDestinoMaterial"
+                                name="@idLaboratorio" style="width: 350px">
+                            <option value=""></option>
+                            @if (item.Laboratorio != null && item.Laboratorio.IdLaboratorio != 0)
+                            {
+                                <option selected="selected" value="@item.Laboratorio.IdLaboratorio">@item.Laboratorio.Nombre</option>
+                            }
+                        </select>
+
+                        @if (item.Laboratorio != null)
+                        {
+                            <input type="hidden" id="@laboratorioNombre" name="@laboratorioNombre" value="@item.Laboratorio.Nombre" />
+                        }
+                        @Html.HiddenFor(model => item.Material.descripcion, new { @class = "dis-none" })
+                        @Html.Hidden("cantidad" + idRow, item.cantidad, new { @class = "dis-none" })
+                        @Html.Hidden("volumenMuestraColectada" + idRow, item.volumenMuestraColectada, new { @class = "dis-none" })
+                        @Html.Hidden(idVolumenMuestra, item.volumenMuestraColectada, new { @class = "dis-none" })
+                        @Html.CheckBox(idNoPrecisaVolumen, item.noPrecisaVolumen == 1, new { @class = "dis-none" })
+                    </td>
+                    @*<td class="invisible">@Html.TextBox("fechaEnvio" + idRow, item.fechaEnvioToString, new { @class = "datepickerTelerik form-control input-sm", style = "max-width:80px", onkeydown = "return false;", autocomplete = "off" })</td>
+                        <td class="invisible">@Html.TextBox("horaEnvio" + idRow, item.horaEnvioToString, new { @class = "timepicker form-control input-sm", style = "width:35px", })</td>*@
+                    @*JRCR-REQ01*@
+
+                    @*<td class="texto">@Html.DisplayTextFor(model => item.Material.descripcion)</td>*@
+
+                    @*<td>@Html.TextBox("cantidad" + idRow, item.cantidad, new { @class = "cantidad", type = "number", min = "0.10", max = "100", step = "1", style = "max-width:40px" })</td>*@
+
+
+                    @*
+                        <td>
+                            <div style="float: left">
+                                <div style="float: left">
+                                    @Html.TextBox("volumenMuestraColectada" + idRow, item.volumenMuestraColectada, new { id = idVolumenMuestra, type = "number", min = "0", max = "100", step = "0.10", @class = "volumen", style = "max-width:70px" })
+                                    @Html.Hidden("idCompuestoMaterial", idRow)
+                                </div>
+                                <div style="padding-left: 2px; float: left">
+                                    @if (item.noPrecisaVolumen == 1)
+                                    {
+                                        <input id=@Html.Raw(idNoPrecisaVolumen) checked="checked" type="checkbox" class="noPrecisaVolumen" name="noPrecisaVolumen" />
+                                    }
+                                    else
+                                    {
+                                        <input id=@Html.Raw(idNoPrecisaVolumen) type="checkbox" class="noPrecisaVolumen" name="noPrecisaVolumen" />
+                                    }
+                                </div>
+                                <div style="padding-left: 2px; padding-top: 6px; float: left">
+                                    <label for="noPrecisaVolumen">No Precisa</label>
+                                </div>
+                            </div>
+
+                        </td>
+                    *@
+                    @*<td>
+                            <span class="@idRow" style="font-size: 9px; padding-top: 2px;">
+                                <a class="eliminarMaterial btn-link" title="Eliminar Material">
+                                    <img alt="Eliminar Material" src="@Url.Content("~/img/remove.png")">
+                                    Eliminar
+                                </a>
+                            </span>
+                        </td>*@
+                    @*//SOTERO BUSTMANTE AGREGADO PARA NRO DE MUESTRA DE PACIENTE*@
+                    <td>
+                        <input type="text" name="nroMuestra[]" value="@item.nroMuestra" />
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    }
+</table>

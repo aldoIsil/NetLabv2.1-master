@@ -1,0 +1,101 @@
+﻿@model PagedList.IPagedList<Model.Paciente>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+<div class="list-group-item active">Historial NetLab v1.0 </div>
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table" id="paciente">
+        <tr>
+            <th></th>
+            <th>
+                Código Muestra
+            </th>
+            <th>
+                Apellido Materno
+            </th>
+            <th>
+                Apellido Paterno
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Nro Documento
+            </th>
+            <th>
+                Fecha Obtención de Muestra
+            </th>
+            <th>
+                EESS-Origen
+            </th>
+            <th>
+                Enfermedad
+            </th>
+            <th>
+                Prueba
+            </th>
+        </tr>
+        @foreach (var item in Model.GroupBy(p => new { p.Prueba, p.sEnfermedad, p.dFechaObtencionMuestra }).Select(g => g.First()).ToList())
+        {
+            <tr>
+                <td style="text-align:center"> <img src="~/img/001_31.png" style="cursor:pointer" Prueba="@item.cCodPrueba" Muestra ="@item.cCodMuestra" /></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cCodMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sApellidoMaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sApellidoPaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sNombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sNumeroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dFechaObtencionMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreEESS)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sEnfermedad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prueba)
+                </td>
+            </tr>
+            <tr id="fila-@item.cCodPrueba-@item.cCodMuestra" style="display:none">
+                <td></td>
+                <td colspan="10">
+                    @Html.Action("DetallePacienteNetLab1", new { Prueba = item.Prueba, Muestra = item.cCodMuestra })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">@ViewBag.notFound</div>
+}
+<script type="text/javascript">
+    $(function () {
+        $("#paciente tbody img").click(function () {
+            var Prueba = $(this).attr("Prueba");
+            var Muestra = $(this).attr("Muestra");
+            debugger;
+            var fila = $("#fila-" + Prueba +"-"+ Muestra);
+            if (fila.css("display") == "none") {
+                fila.css("display", "table-row");
+                $(this).attr("src", "@Url.Content("~/img/remove.png")");
+            } else {
+                fila.css("display", "none");
+                $(this).attr("src", "@Url.Content("~/img/001_31.png")");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,125 @@
+﻿@{
+    var tipoRegistro = (Enums.TipoProcesoMasivo)Session["TipoProcesoMasivo"];
+}
+@switch (tipoRegistro)
+{
+    case Enums.TipoProcesoMasivo.RECEPCION_MASIVA_LABORATORIO:
+        <h3 style="text-align:center" class="text-primary">Recepción Masiva en Lab.</h3>
+        @*<input type="hidden" id="tipoRegistro" value="1" />*@
+        break;
+    case Enums.TipoProcesoMasivo.VALIDACION_MASIVA_LABORATORIO:
+        <h3 style="text-align:center" class="text-primary">Validación Masiva en Lab.</h3>
+        @*<input type="hidden" id="tipoRegistro" value="2" />*@
+        break;
+    case Enums.TipoProcesoMasivo.RECEPCION_VALIDACION_MASIVA_LABORATORIO:
+        <h3 style="text-align:center" class="text-primary">Recepción y Validación Masiva en Lab.</h3>
+        @*<input type="hidden" id="tipoRegistro" value="3" />*@
+        break;
+}
+<div>
+    <fieldset class="default">
+        <legend class="default"></legend>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            @Html.Label("Muestra: ", new { @class = " -label col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+            <input type="text" id="CodigoMuestra" name="CodigoMuestra" />
+        </div>
+        @if (@ViewBag.idEstablecimiento == "995" || @ViewBag.idEstablecimiento == "983")
+        {
+            <br />
+            <br />
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                @Html.Label("Solicitud: ", new { @class = " -label col-xs-12 col-sm-2 col-md-2 col-lg-2" })
+                <input type="text" id="NroSolicitud" name="NroSolicitud" class="col-md-10"  />
+            </div>
+            <br />
+        }
+
+        @switch (tipoRegistro)
+        {
+            case Enums.TipoProcesoMasivo.RECEPCION_MASIVA_LABORATORIO:
+                <input type="button" id="btnAddMuestra" onclick="ProcesoMasivoLabCodigoMuestra(1);" value="Recibir Muestra" class="btn btn-group-xs" />
+                break;
+            case Enums.TipoProcesoMasivo.VALIDACION_MASIVA_LABORATORIO:
+                <input type="button" id="btnValMuestra" onclick="ProcesoMasivoLabCodigoMuestra(2);" value="Validar Muestra" class="btn btn-group-xs" />
+                if (@ViewBag.idEstablecimiento == "995")
+                {
+                    <div>
+                        @Html.Label("Metodo/Kit: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                        @Html.Partial("_MetodoResultadoInterfazMASED")
+                    </div>
+                }
+                break;
+            case Enums.TipoProcesoMasivo.RECEPCION_VALIDACION_MASIVA_LABORATORIO:
+                <input type="button" id="btnRecValMuestra" onclick="ProcesoMasivoLabCodigoMuestra(3);" value="Recibir y Validar Muestra" class="btn btn-group-xs" />
+                if (@ViewBag.idEstablecimiento == "995")
+                {
+                    <div>
+                        @Html.Label("Metodo/Kit: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                        @Html.Partial("_MetodoResultadoInterfazMASED")
+                    </div>
+                }
+                break;
+        }
+    </fieldset>
+    <br />
+    <fieldset class="default">
+        <legend class="default"></legend>
+        <div id="DivPrintRecepcion">
+            @switch (tipoRegistro)
+            {
+                case Enums.TipoProcesoMasivo.RECEPCION_MASIVA_LABORATORIO:
+                    @Html.Label("Usuario Rom: ", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-2" })
+                    <input type="text" id="UsuarioRom" name="UsuarioRom" class="col-md-10" />
+                    break;
+            }
+            <br />
+            <br />
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Codigo Lineal
+                        </th>
+                        <th>
+                            Muestra
+                        </th>
+                        <th>
+                            Paciente
+                        </th>
+                        <th>
+                            DNI
+                        </th>
+                        <th>
+                            Establecimiento
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th>
+                            Historial Paciente
+                        </th>
+                    </tr>
+                <thead>
+                <tbody id="filasMuestra"></tbody>
+            </table>
+            <br />
+            <br />
+            <h3 style="text-align:center" class="text-primary">Usuario Recepcion Lab.:      @ViewBag.UsuarioLogin</h3>
+        </div>
+    </fieldset>
+    <div>
+        <input type="button" id="btnRegresar" onclick="iBuscarClick();" value="Regresar" class="btn btn-group-xs" />
+
+        <input type="button" id="btnPrint" onclick="$('#DivPrintRecepcion').printThis();" value="Imprimir Recepción" class="btn btn-group-xs" />
+    </div>
+</div>
+
+@*<script type="text/javascript">
+        $(document).on('keypress', function (e) {
+            if (e.which == 13) {
+                var tr = $('#tipoRegistro').val();
+                console.log('123');
+                ProcesoMasivoLabCodigoMuestra(tr);
+            }
+        });
+    </script>*@

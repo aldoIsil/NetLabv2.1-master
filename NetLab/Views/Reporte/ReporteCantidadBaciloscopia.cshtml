@@ -1,0 +1,328 @@
+﻿@model PagedList.IPagedList<Model.ReportesDTO.ReporteCantidadResultado>
+@using Model
+
+@{
+    ViewBag.Title = "Reporte Cantidad Baciloscopia y Cultivo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string titulo = ViewBag.nombrefiltro + ": " + ViewBag.Jurisdiccion;
+    string cabecera = "";
+    if(ViewBag.examen == 1)
+    {
+        cabecera = "BACILOSCOPIAS";
+    }
+    else
+    {
+        cabecera = "CULTIVOS DE MICOBACTERIAS";
+    }
+}
+@Html.ActionLink("Volver al Listado de Reportes", "Index")
+<h2>Número de Muestras Procesadas de Baciloscopia y Cultivos</h2>
+
+@using (Html.BeginForm("ReporteCantidadBaciloscopia", "Reporte", FormMethod.Post))
+{
+    @Html.Hidden("nombrefiltro")
+    @Html.Hidden("nombreJurisdiccion")
+    <div class="form-group">
+        @Html.Label("Examen: ", new { @class = "control -label col-md-1" })
+        <div class="col-md-2">
+            @Html.DropDownList("examen", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Baciloscopia", Value = "1" ,Selected = true},
+                            new SelectListItem{ Text="Cultivos", Value = "2" },
+                            new SelectListItem{ Text="Pruebas Sensibilidad", Value = "3" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        @Html.Label("Trimestre: ", new { @class = "control -label col-md-1" })
+        <div class="col-md-2">
+            @Html.DropDownList("trimestre", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="1er", Value = "1" ,Selected = true},
+                            new SelectListItem{ Text="2do", Value = "2" },
+                            new SelectListItem{ Text="3ro", Value = "3" },
+                            new SelectListItem{ Text="4to", Value = "4" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        @Html.Label("Año: ", new { @class = "control -label col-md-1" })
+        <div class="col-md-2">
+            @Html.DropDownList("anio", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="2020", Value = "2020" ,Selected = true},
+                            new SelectListItem{ Text="2019", Value = "2019" },
+                            new SelectListItem{ Text="2018", Value = "2018" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        <br /><br />
+
+        <!-------------------------------------------------------------------------------------------------->
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Seleccione Tipo Búsqueda:</label>
+            <div class="col-md-6" id="divtipobusqueda">
+                <input type="radio" name="tipobusqueda" value="1" />Por Jurisdicción<br />
+                <input type="radio" name="tipobusqueda" value="2" />Por Establecimiento<br />
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+        <br />
+        <div id="divTipoBusquedaEstablecimiento" style="display:none;">
+            <div class="form-group">
+                <input type="hidden" id="hdnEstablecimiento" name="hdnEstablecimiento" value="0" />
+                <label class="col-md-2 control-label">EESS:</label>
+                <div class="col-md-6" id="divddlestablecimiento">
+                    <select id="selEstablecimientos" name="selEstablecimientos" class="form-control">
+                        <option value="-1">Seleccione un Establecimiento</option>
+                        @foreach (Establecimiento item in (List<Establecimiento>)ViewBag.Establecimientos)
+                        {
+                            <option value="@item.IdEstablecimiento">@item.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--Inicio Filtros Jurisdiccion-->
+        <br />
+        <div id="divTipoBusquedaJurisdiccion">
+            <input type="hidden" id="hdnInstitucion" name="hdnInstitucion" value="0" />
+            <div class="form-group">
+                <label for="selInstituciones" class="col-md-2 control-label"> SUB SECTOR:</label>
+                <div class="col-md-6" id="divddlinstituciones">
+                    <select id="selInstituciones" name="selInstituciones" class="form-control">
+                        <option value="0">Seleccione una Institución</option>
+                        @foreach (Institucion item in (List<Institucion>)ViewBag.Instituciones)
+                        {
+                            <option value="@item.codigoInstitucion">@item.nombreInstitucion</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <br />
+            <input type="hidden" id="hdnDisa" name="hdnDisa" value="0" />
+            <div class="form-group">
+                <label for="seldisa" class="col-md-2 control-label"> DISA/DIRESA/GERESA:</label>
+                <div class="col-md-6" id="divddldisa">
+                    @*<select id="seldisa" name="seldisa" class="form-control"></select>*@
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <br />
+            <input type="hidden" id="hdnRed" name="hdnRed" value="0" />
+            <div class="form-group">
+                <label for="selRed" class="col-md-2 control-label"> RED:</label>
+                <div class="col-md-6" id="divddlred">
+                    @*<select id="selRed" name="selRed" class="form-control"></select>*@
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <br />
+            <input type="hidden" id="hdnMicroRed" name="hdnMicroRed" value="0" />
+            <div class="form-group">
+                <label for="selmicrored" class="col-md-2 control-label"> MICRO RED:</label>
+                <div class="col-md-6" id="divddlmicrored">
+                    @*<select id="selmicrored" name="selmicrored" class="form-control"></select>*@
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <br />
+        </div>
+
+        <!-------------------------------------------------------------------------------------------------->
+
+
+    </div>
+    <div class="form-group">
+                <div class="col-sm-2">
+                    <input id="btnsubmit" type="submit" value="Buscar" class="btn-link" />
+                </div>
+            </div>
+}
+
+@if (Model != null)
+{
+    if (Model.Count > 0)
+    {
+        <br /><br /><br />
+        <a href="@(Url.Action("ExportExcel", "Reporte", new { ViewBag.examen}, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>
+        <br /><br />
+        <b><span style="font-size:small;text-transform:uppercase">@titulo</span></b>
+        <br /><br />
+        <div class="table-responsive">
+            @if (ViewBag.examen != 3)
+            {
+                <table class="table" style="width:850px" align="center">
+                    <tr>
+                        <th colspan="1"></th>
+                        <th colspan="4">@cabecera</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            ACTIVIDADES
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL POSITIVAS
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA POSITIVAS
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.valor)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.cantidad)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.cantidadAcumulada)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canPos)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canAcumPos)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <table class="table" style="width:850px" align="center">
+                    <tr>
+                        <th colspan="1"> 
+                            ACTIVIDADES                                     
+                        </th>
+                        <th colspan="2">
+                            REALIZADAS
+                        </th>
+                        <th colspan="2">
+                            SENSIBLES A H Y R
+                        </th>
+                        <th colspan="2">
+                            RESISTENTE SOLO A H
+                        </th>
+                        <th colspan="2">
+                            RESISTENTE A H Y R
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            PRUEBAS DE SENSIBILIDAD
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA
+                        </th>
+                        <th>
+                            CANTIDAD TRIMESTRAL
+                        </th>
+                        <th>
+                            CANTIDAD ACUMULADA
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.valor)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.cantidad)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.cantidadAcumulada)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canPos)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canAcumPos)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canTriRi)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canAcumRi)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canTriRri)
+                            </td>
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.canAcumRri)
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @*<table class="table" style="width:850px" align="center">
+                                
+                </table>*@
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">No se encontraron resultados</div>
+    }
+}
+
+@section scripts {
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Dropdownlists.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    <link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<script type="text/javascript">
+    $(function () {
+        $("#EESSAutocomplete").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: URL_BASE + "Catalogo/GetEESS",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Nombre, value: item.CodigoUnico };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                $("#hdnEstablecimiento").val(i.item.value);
+                $("#EESSAutocomplete").val(i.item.label);
+            },
+            minLength: 1
+        });
+    });
+</script>
+}

@@ -1,0 +1,16 @@
+﻿<script src="~/Scripts/JsExcel/xlsx.core.min.js" type="text/javascript"></script>
+<script src="~/Scripts/JsExcel/xls.core.min.js" type="text/javascript"></script>
+
+<fieldset class="form">
+    <legend class="form">Resultados</legend>
+    <div class="div-row">
+        <h5>Tuberculosis - Ensayo en Sonda Lineal Esputo/Cepa</h5>
+    </div>
+    <div class="div-row">
+        <input type="file" id="csvFileInput" onchange="handleFiles(this.files)"  accept=".csv" />
+        <hr />
+        <button id="btnProcesar" name="btnProcesar" class="btn btn-info" onclick="ExportToTable()" title="">
+            <span class="glyphicon glyphicon-download "></span> PROCESAR
+        </button>
+    </div>
+</fieldset>

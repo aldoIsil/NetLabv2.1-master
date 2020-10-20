@@ -1,0 +1,83 @@
+﻿@model Model.ReportesDTO.DTOReporteCoronavirus
+@using System.Globalization;
+<div class="div-row">
+    <div class="well well-sm" @*style="padding-top: 0px; vertical-align: central; align-items:center "*@>
+        <div class="control-text text-info">
+            <a href="@(Url.Action("ExportExcelCoronavirus", "Reporte", "", Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" style="height:25px" /> Descargar Excel</a>
+            ¿Desae incluir datos del Paciente en la descarga del Excel?
+            <input type="checkbox" name="chkDatosPaciente" id="chkDatosPaciente" />
+        </div>
+
+    </div>
+</div>
+<div class="div-row" style="display: flex;text-align: center; justify-content: center">
+    <table class="table table-responsive table-bordered" id="dtDatosJEF">
+        <thead>
+            <tr>
+                <th>
+                    Región
+                </th>
+                <th>
+                    Establecimiento
+                </th>
+                <th>
+                    Nombre Paciente
+                </th>
+                <th>
+                    Código de Muestra
+                </th>
+                <th>
+                    Tipo de Muestra
+                </th>
+                <th>Edad</th>
+                <th>
+                    Sexo
+                </th>
+                <th>Fecha de Resultado</th>
+                <th>Fech Hora Resultado</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.LstPacienteCoronavirus)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EESSDepOrigen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstablecimientoOrigen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombrePaciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.codigoMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoMuestra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.edad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SexoPaciente)
+                </td>
+                <td>
+                    @{
+                            string parameterValue = item.FechaValidado.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10);
+                    }
+                    @Html.Raw(parameterValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechHoraValidado2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resultado)
+                </td>
+            </tr>
+                            }
+    </table>
+</div>
+
+
+

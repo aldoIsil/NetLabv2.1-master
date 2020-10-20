@@ -1,0 +1,61 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el registro de un tipo de muestra para una presentacion.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.TipoMuestra>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarTipoMuestra", new { ViewBag.idPresentacion }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+   @*<div>
+       <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+       <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+   </div>*@
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+}
+<br />
+
+@using (Html.BeginForm("AgregarTipoMuestra", "Presentacion", new { ViewBag.idPresentacion }, FormMethod.Post, new { @id = "formAgregarTipoMuestra" }))
+{
+
+
+
+    @Html.AntiForgeryToken()
+
+    <table id="TableTipoMuestra" class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width:15px">
+                    <input type="checkbox" name="tipomuestras" value="@item.idTipoMuestra" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+            </tr>
+        }
+    </table>
+
+    @*<input type="Submit" value="Guardar" class="btn-link"  onclick="return ExisteElementoSeleccionadoPresentacion();" />*@
+
+    <label id="btnGuardarTipoMuestra" class="btn btn-primary">Grabar</label>
+
+    <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />
+
+
+    @*<div>
+        <script type="text/javascript" src="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.js")"></script>
+        <link href="@Url.Content("/Scripts/jquery.alerts/jquery.alerts.css")" rel="stylesheet" type="text/css" />
+    </div>*@
+
+}
+
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarTipoMuestra", new { page, ViewBag.search, ViewBag.idPresentacion }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))

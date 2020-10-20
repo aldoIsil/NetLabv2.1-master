@@ -1,0 +1,93 @@
+﻿@*  Descripción: Vista, muestra la pantalla para registrar las opciones de las listas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.OpcionDatoViewModels
+
+@{
+    ViewBag.Title = "Registro de Opciones por Lista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+<h2 class="text-primary">Opciones para la lista:</h2>
+<h2> "@Model.ListaDato.Nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Nueva Opción", "NuevaOpcion", new { Model.ListaDato.IdListaDato }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null && Model.Opciones.Count > 0)
+{
+    <table class="table" style="width: 400px">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opciones.First().Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opciones.First().Orden)
+            </th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+
+        @foreach (var item in Model.Opciones)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdOpcionDato)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Valor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Orden)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarOpcion", new { item.IdOpcionDato }, new { @class = "editDialog btn btn-default fa fa-pencil-square-o" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EliminarOpcion", new { item.IdOpcionDato, Model.ListaDato.IdListaDato, item.Orden }, new { @class = "confirmDialog btn btn-default fa fa-trash" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @Html.ActionLink("Retroceder", "ListaDatos", "Datos")
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Plantilla/OpcionDato.js")
+}
+
+
+
+
+

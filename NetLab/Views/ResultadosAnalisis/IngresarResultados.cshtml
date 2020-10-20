@@ -1,0 +1,207 @@
+﻿@*  Descripción: Vista, Permite mostrar un popup para ingresar resultados a Muestras  Validadas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using System.Globalization
+@model Model.ViewData.OrdenIngresarResultadoVd
+
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+<div class="cont-line">
+    <div style="text-align: center;">
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Proyecto</label><br />
+                <span>@Model.nombreProyecto</span>
+            </div>
+        </div>
+
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>EESS/LAB de Origen</label><br />
+                <span>@Model.nombreEstablecimiento</span>
+            </div>
+        </div>
+        <!--Establecimiento-->
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Fecha de Solicitud</label><br />
+                <span>@Model.fechaRegistro.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)</span>
+            </div>
+        </div>
+   
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Tipo - Nro. Documento</label><br />
+                <span>@Model.tipoDocumento @Model.nroDocumento</span>
+            </div>
+        </div>
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Nombres y Apellidos Paciente</label><br />
+                <span>@Model.nombrePaciente</span>
+            </div>
+        </div>
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Edad</label><br />
+                <span>@Model.edadPaciente</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cont-line">
+   
+</div>
+<br />
+<div class="linksForm">
+    <button class="btn btn-info" id="lnkRegistrarResultados"><span class="glyphicon glyphicon-floppy-disk"></span> Grabar</button>
+    <button class="btn btn-primary" id="lnkFinalizarResultados"><span class="glyphicon glyphicon-check"></span> Finalizar</button>
+
+</div>
+
+@using (Html.BeginForm("RegistroResultados", "ResultadosAnalisis", FormMethod.Post, new { @id = "formRegistroResultados" }))
+{
+    <link href="~/Content/multiple-select.css" rel="stylesheet" />
+    <input type="hidden" name="idUsuario" value="@Model.statusP" />
+    <input type="hidden" name="idOrden" value="@Model.idOrden" />
+    <input type="hidden" id="jsonvalues" name="jsonvalues" />
+    <input type="hidden" id="observacionesjsonvalues" name="observacionesjsonvalues" />
+    <div class="my-custom-scrollbar table-wrapper-scroll-x">
+        <table id="tblOrdenExamen">
+            <thead>
+                <tr>
+                    <th width="15px"></th>
+                    <th width="100px">Enfermedad</th>
+                    <th width="250px">Examen</th>
+                    <th width="250px">Descripcion</th>
+                    <th>Código Muestra</th>
+                    <th>Tipo de Muestra</th>
+                    <th width="70px">Fecha-Hora Obtención</th>
+                    <th width="70px">Fecha-Hora Recepción ROM</th>
+                    <th width="70px">Fecha-Hora Recepción LAB</th>
+                    <th>Método</th>
+                    <th>Plataforma</th>
+                    <th>Motivo No conforme</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Model.ViewData.OrdenExamenResultadosVd examen in ViewBag.examenes)
+            {
+                var disable = string.Empty;
+                var x = 0;
+
+                if (examen.estatusE == 10 || examen.estatusE == 11)
+                {
+                    disable = "disabled = disabled";
+                }
+                else
+                {
+                    x = x + 1;
+                }
+            <tr class="@examen.IdOrdenExamen">
+                <td><input type="checkbox" id="resultados" name="resultados" value="@examen.IdOrdenExamen" onclick="verDetalle();" /></td>
+                <td>@examen.NombreEnfermedad</td>
+                <td>@examen.Item.nombre</td>
+                <td>@examen.Item.descripcion</td>
+                <td>@examen.CodigoMuestra | @examen.CodigoBarra</td>
+                @*<td>
+                @Html.ActionLink(@examen.CodigoMuestra, "ImprimirGenerados", "Muestra", new { id = @examen.CodigoBarra }, new { @class = "btn btn-link btnShowPopupEnfermedadExamen", id = @examen.CodigoBarra, @target = "_blank" })
+                </td>*@
+                <td>@examen.Muestra.tipoMuestra </td>
+                <td>@examen.Muestra.fechaColeccion.ToString("dd/MM/yy HH:mm")</td>
+                <td>@examen.Muestra.fechaRecepcion.ToString("dd/MM/yy HH:mm")</td>
+                <td>@examen.Muestra.fechaRecepcionP.ToString("dd/MM/yy HH:mm")</td>
+
+                <td>
+                    <input type="hidden" name="ordenExamen[]" value="@examen.IdOrdenExamen" />
+                    <input type="hidden" name="estatusOrdenExamen[]" value="@examen.estatusE" />
+                    @if (x >= 1)
+                        {
+                        <input type="hidden" id="EnabledButton" value="1" />
+                        }
+
+                    @if (examen.Metodos.Count > 0)
+                        {
+
+                        <select id="@examen.IdOrdenExamen" name="metodo[]" class="form-control" @disable>
+                            <option value="-1">Seleccione</option>
+                            @foreach (var metodo in examen.Metodos)
+                                {
+                                    var selectedMetodo = "";
+                                    if (examen.IdExamenMetodo == metodo.IdExamenMetodo || examen.Metodos.Count == 1)
+                                    {
+                                        selectedMetodo = "selected";
+                                    }
+                        <option value="@metodo.IdExamenMetodo" @selectedMetodo>
+                            @metodo.Glosa
+                        </option>
+                                }
+                        </select>
+
+                        }
+                        else
+                        {
+                        @Html.Raw("No especificado")
+                        }
+                </td>
+                <td>
+                    @if (examen.Plataformas.Count > 0)
+                    {
+                        <select id="ListaPlataforma" name="ListaPlataforma" class="form-control" @disable>
+                            <option value="-1">Seleccione</option>
+                            @foreach (var plataforma in examen.Plataformas)
+                            {
+                                var selectedPlataforma = "";
+                                if (examen.idPlataforma == plataforma.idPlataforma || examen.Plataformas.Count == 1)
+                                {
+                                    selectedPlataforma = "selected";
+                                }
+                                <option value="@plataforma.idPlataforma" @selectedPlataforma>
+                                    @plataforma.Plataforma
+                                </option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="ListaPlataforma" name="ListaPlataforma" class="form-control" @disable>
+                            <option value="0">Ninguno</option>
+                        </select>
+                    }
+                </td>
+                <td>
+                    @examen.Muestra.MotivoNoConforme
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+        <div style="height: 350px" class="my-custom-scrollbar table-wrapper-scroll-x">
+            <div id="divDetalle" class="modal-body">
+            </div>
+        </div>
+        <br />
+
+}
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+    @Scripts.Render("~/Scripts/App/ResultadosAnalisis.js?updated=2")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+}
+@*  Descripción: Configuracion para la seleccion del combo
+    Author: Juan Muga.
+    Fecha Creacion: 21/05/2018
+*@
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('.form-control .resultadoAnalito .combo').each(function () {
+            configSelect($(this).attr('id'));
+        }).change(function () {
+            //console.log($(this).val());
+        });
+    });
+</script>
+

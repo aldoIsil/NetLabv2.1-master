@@ -1,0 +1,81 @@
+﻿@model Model.ConfiguracionPanelControlCalidad
+
+@{
+    ViewBag.Title = "Editar Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Editar Panel/Lote :"@Model.nombre" </h2>
+
+
+@using (Html.BeginForm("EditEvaluacionPanel", "ConfiguracionEvalControlCalidad", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmEditarPanel" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.idConfiguracionPanel)
+    @Html.HiddenFor(model => model.idConfigEvaluacion)
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idTipoEvaluacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @*@Html.EditorFor(model => model.idTipoEvaluacion, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.idTipoEvaluacion, "", new { @class = "text-danger" })*@
+               @Html.DropDownListFor(model => model.idTipoEvaluacion, (List<SelectListItem>)ViewBag.ListTipoEvaluacion, new { @class = "form-control cmbxBusqueda" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.idTipo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.idTipo, (List<SelectListItem>)ViewBag.ListTipoMetodo, new { @class = "form-control cmbxBusqueda" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.nroLote, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.nroLote, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nroLote, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-6">
+                <input type="button" id="btnEditarPanel" name="btnEditarPanel" value="Editar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "ConfigEvalPanel")
+</div>*@
+<div id="PanelDialog">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+        $.validator.unobtrusive.parse("#frmEditarPanel");
+    });
+</script>
+
+

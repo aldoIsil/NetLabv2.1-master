@@ -1,0 +1,85 @@
+﻿@*  Descripción: Vista, Muestra los datos del catalogo de servicio "Off Line"
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@model PagedList.IPagedList<Model.Enfermedad>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Catalogo de Servicios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary">Catalogo de Servicios</h2>
+@using (Html.BeginForm("Index", "CatalogoOffline", FormMethod.Get))
+{
+    <label>Nombre de Enfermedad/SNOMED:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px", @Class = "ValidateLength" })
+    <input type="submit" value="Buscar" class="btn-link"/>
+    @Html.ActionLink("Regresar", "Index", "Login")
+}
+<br />
+<br />
+@if (Model != null)
+{  <div class="table-responsive">
+        <table class="table table1">
+
+            <tr>
+                <th width="340">
+                    @Html.DisplayNameFor(model => model.First().nombre)
+                </th>
+                <th width="90">
+                    @Html.DisplayNameFor(model => model.First().Snomed)
+                </th>
+                <th width="90">
+                </th>
+
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Snomed)
+                    </td>
+                    <td class="text-center">
+                        @Html.ActionLink("Ver Detalle", "Details", new { id = item.idEnfermedad, page = Model.PageNumber, ViewBag.search }, new { @class = "editDialog" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+        @*else
+            {
+                @Html.EmptyTable()
+            }*@
+
+        @if (Model != null)
+        {
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))
+        }
+
+        <div id="dialog-edit" style="display: none">
+        </div>
+
+        @section Scripts {
+            @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+            @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+            @Scripts.Render("~/Scripts/App/Catalogo.js")
+            @Scripts.Render("~/Scripts/App/NetLab.js")
+        }
+
+
+        <style type="text/css">
+            .table1 {
+                width: 520px;
+            }
+        </style>
+

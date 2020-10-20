@@ -1,0 +1,110 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la seleccion y registro de las muestra de una planilla.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.PlantillaEnfermedadExamen
+
+
+@using (Html.BeginForm("AgregarMuestra", "Plantilla", new { Model.IdPlantilla }, FormMethod.Post, new { id = "frmNuevaMuestra" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IdPlantilla)
+
+    <div class="form-horizontal">
+        <br />
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Enfermedad, new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.IdEnfermedad, new SelectList(new List<SelectListItem>()), new
+           {
+               id = "idEnfermedad",
+               @class = "form-control input-sm",
+               data_url = @Url.Action("GetEnfermedades", "Orden"),
+               data_examen_url = @Url.Action("GetExamenes"),
+               data_loading_image = @Url.Content("~/Content/images/loading.gif")
+           })
+                @Html.ValidationMessageFor(model => model.IdEnfermedad, "", new { @class = "msj-error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Examen, new { @class = "control-label col-md-4" })
+            <div id="dvExamen" class="col-md-8">
+                @Html.DropDownListFor(model => model.IdExamen, new SelectList(new List<SelectListItem>()), new
+           {
+               id = "idExamen",
+               @class = "form-control input-sm",
+               data_url = @Url.Action("GetTiposMuestra"),
+               data_loading_image = @Url.Content("~/Content/images/loading.gif")
+           })
+                @Html.ValidationMessageFor(model => model.IdExamen, "", new { @class = "msj-error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Muestra, new { @class = "control-label col-md-4" })
+            <div id="dvMuestra" class="col-md-8">
+                @Html.DropDownListFor(model => model.IdTipoMuestra, new SelectList(new List<SelectListItem>()), new
+           {
+               id = "idTipoMuestra",
+               @class = "form-control input-sm",
+               data_url = @Url.Action("GetMaterialByTiposMuestra"),
+               data_loading_image = @Url.Content("~/Content/images/loading.gif")
+           })
+                @Html.ValidationMessageFor(model => model.IdTipoMuestra, "", new { @class = "msj-error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Material, new { @class = "control-label col-md-4" })
+            <div id="dvMaterial" class="col-md-8">
+                @Html.DropDownListFor(model => model.IdMaterial, new SelectList(new List<SelectListItem>()), new
+           {
+               id = "idMaterial",
+               @class = "form-control input-sm",
+               data_url = @Url.Action("GetTiposMuestra"),
+               data_loading_image = @Url.Content("~/Content/images/loading.gif")
+           })
+                @Html.ValidationMessageFor(model => model.IdTipoMuestra, "", new { @class = "msj-error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cantidad, new { @class = "control-label col-md-4" })
+            <div id="dvMaterial" class="col-md-8">
+                @Html.EditorFor(model => model.Cantidad)
+                @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "msj-error" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" id="btnCrearMuestra" value="Crear" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @Html.ActionLink("<<Retroceder", "AgregarMuestras", new { Model.IdPlantilla }, new { id = "closeDialog", @class = "btn btn-default" })
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#Cantidad").kendoNumericTextBox({ format: "0" });
+        selectChosenConfig("idEnfermedad", "Seleccione la Enfermedad");
+        selectChosenConfig("idExamen", "Seleccione el Examen");
+        selectChosenConfig("idTipoMuestra", "Seleccione el tipo de Muestra");
+        selectChosenConfig("idMaterial", "Seleccione el Material");
+        enfermedadHandler();
+        examenHandler();
+        muestraHandler();
+        $.validator.setDefaults({ ignore: [":hidden:not(select)", ":hidden:not(input)"] });
+        $.validator.unobtrusive.parse("#frmNuevaMuestra");
+    });
+</script>

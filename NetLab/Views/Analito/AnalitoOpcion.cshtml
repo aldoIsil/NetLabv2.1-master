@@ -1,0 +1,200 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de Opciones por Analito.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.OpcionesAnalitoViewModels
+
+@{
+    ViewBag.Title = "Registro de Opciones por Analito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+
+
+
+
+<h2 class="text-primary">Opciones para el Componente :</h2>
+<h2>"@Model.Analito.Nombre"</h2>
+<br />
+<br />
+<p>
+    @Html.ActionLink("+ Agregar Opciones", "NuevaOpcion", new { Model.Analito.IdAnalito }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+<br />
+
+@*<div class="container">
+
+    </div>*@
+
+<div id="DivTabla" class="table-responsive">
+    <table class="table" id="orden">
+        @{
+            int currentID = 0;
+            int rowIndex = 0;
+            //if (Model.Opciones.Where(a => a.IdAnalitoOpcionParent.Trim().Equals(null)) )
+            //                {
+
+            //}
+            foreach (var i in Model.Opciones.Where(a => a.IdAnalitoOpcionParent.Trim().Equals(Model.Analito.IdAnalito.ToString().ToUpper())))
+            {
+                if (i.IdAnalitoOpcionResultado == currentID)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (rowIndex == 0)
+                    {
+                        <thead class="table">
+                            <tr>
+                                <th>Detalle</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Opciones.First().Orden)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Opciones.First().Glosa)
+                                </th>
+                                <th>Tipo</th>
+                                <th>Plataforma</th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th width="70">
+                                    Opcion Resultados
+                                </th>
+                                <th width="70">Editar/Eliminar</th>
+                            </tr>
+                        </thead>
+                    }
+                    rowIndex++;
+                    currentID = i.IdAnalitoOpcionResultado;
+                    var Sub = Model.Opciones.Where(model => model.IdAnalitoOpcionParent.Trim().Equals(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+                    //(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+                    var newOpcionesList = Model.Opciones.Where(model => !model.IdAnalitoOpcionParent.Trim().Equals(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+                    string estado = "Activo";
+                    if (i.Estado == 0) { estado = "Inactivo"; }
+
+                    <tbody class="table">
+                        <tr>
+                            <td align="center">
+                                <img src="~/img/001_31.png" style="cursor:pointer" idOpcionParent="@i.IdAnalitoOpcionResultado " />
+                            </td>
+                            <td align="center">
+                                @i.Orden
+                            </td>
+                            <td>@i.Glosa</td>
+                            <td>@i.TipoRespuesta.Glosa</td>
+                            <td>@i.Plataforma</td>
+                            <td>@estado</td>
+                            <td>
+                                @Html.ActionLink(" ", "NuevaOpcion", new { Model.Analito.IdAnalito, IdOpcionParent = i.IdAnalitoOpcionResultado }, new { id = "openDialog", @class = "btn btn-default btn-block fa fa-book fa-lg" })
+                            </td>
+                            <td class="text-center">
+                                @Html.ActionLink(" ", "EditarOpcion", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoOpcion = i.IdAnalitoOpcionResultado }, new { @class = "btn btn-default fa fa-pencil-square-o editDialog" })
+                                @Html.ActionLink(" ", "EliminarOpcion", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoOpcion = i.IdAnalitoOpcionResultado }, new { @class = "btn btn-default fa fa-trash confirmDialog" })
+                            </td>
+                        </tr>
+                        <tr id="fila-@i.IdAnalitoOpcionResultado" style="display:none;">
+                            @if (Sub.Count > 0)
+                            {
+                                <td colspan="7" class="innerTable">
+                                    @Html.Action("DetalleOpciones", new { NewOpcionesList = newOpcionesList.ToList().AsEnumerable(), idOpcionParent = i.IdAnalitoOpcionResultado.ToString() })
+                                </td>
+                            }
+                            @*else
+                                {
+                                    <td colspan="4"></td>
+                                }*@
+                        </tr>
+                    </tbody>
+                }
+            }
+        }
+    </table>
+</div>
+<br />
+@*@Html.ActionLink("<< Regresar", "Index")*@
+
+<a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+@Html.ActionLink("  Salir", "Index")
+
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/AnalitoOpcion.js")
+    <script type="text/javascript">
+            $(function () {
+                $("#orden tbody img").click(function () {
+                    var idOpcionParent = $(this).attr("idOpcionParent");
+                    var fila = $("#fila-" + idOpcionParent);
+                    if (fila.css("display") == "none") {
+                        fila.css("display", "table-row");
+                        $(this).attr("src", "@Url.Content("~/img/remove.png")");
+                    } else {
+                        fila.css("display", "none");
+                        $(this).attr("src", "@Url.Content("~/img/001_31.png")");
+                    }
+                });
+            });
+    </script>
+}
+@* CSS *@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<style>
+    .container {
+        min-width: 500px;
+        overflow: hidden;
+    }
+
+    .innerTable table {
+        margin: 0px auto;
+        border-left-width: 4px;
+    }
+
+    td.innerTable {
+        padding-left: 20px !important;
+    }
+
+    .icon {
+        background-image: url('../img/001_31.png');
+        background-repeat: no-repeat;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        float: left;
+    }
+
+    .icon-e {
+        background-position: -32px -16px;
+    }
+
+    .icon-s {
+        background-position: -64px -16px;
+    }
+
+    .buton {
+        width: 16px;
+        background-image: url(../../img/iconos_menu/busqueda_ordenes.png);
+    }
+</style>

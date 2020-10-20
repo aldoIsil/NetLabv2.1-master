@@ -1,0 +1,524 @@
+﻿@*  Descripción: Vista, muestra la pantalla para ingresar informacion de un establecimiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.LaboratorioViewModels
+
+@using Model;
+
+@{
+
+    var instituciones = ViewBag.instituciones as List<Institucion>;
+    var disas = ViewBag.disas as List<DISA>;
+    var redes = ViewBag.redes as List<Red>;
+    var microredes = ViewBag.microredes as List<MicroRed>;
+    var establecimientos = ViewBag.establecimientos as List<Establecimiento>;
+    var localModel = ViewBag.Locales as Local;
+    var labModel = ViewBag.LabUbigeo as Laboratorio;
+    var laboratorio = ViewBag.laboratorio;
+
+    ViewBag.Title = "EESS/LAB";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+@using (Html.BeginForm("SelectMain", "EESS", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "frmInstituciones", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h2 class="text-primary">Crear EESS/LAB</h2>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Código Unico", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("codigoUnico", (string)ViewBag.codigoUnico, new { @class = "form-control", @style = "width: 100px !important", @min = "0", @value = "0" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Nombre", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("nombreEstablecimiento", (string)ViewBag.nombreEstablecimiento, new { @class = "form-control", @style = "width: 400px !important" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Clasificación", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("clasificacion", (string)ViewBag.clasificacion, new { @class = "form-control", @style = "width:200px !important" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.Label("Ubigeo", new { @class = "control-label col-md-1" })
+                <div class="col-md-7">
+                    @Html.TextBox("ubigeo", (string)ViewBag.ubigeo, new { @class = "form-control", @style = "width:150px !important", @type = "number", @min = "0", @value = "0" })
+                </div>
+            </div>*@
+        <div id="direccionActualFieldSet1" class="form-group">
+            @Html.LabelFor(model => labModel.UbigeoLaboratorio.Departamento, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+            <div class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+                @Html.Action("GetDepartamentos", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         provinciaDivId = "dvProvincias",
+                         distritoDivId = "dvDistritos",
+                         selectedValue = labModel.UbigeoLaboratorio.Id.Substring(0, 2)
+                     })
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+            <br />      <br /><br />
+            @Html.LabelFor(model => labModel.UbigeoLaboratorio.Provincia, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+            <div id="dvProvincias" class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+                @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                     new
+                     {
+                         departamentoSelectId = "ActualDepartamento",
+                         provinciaSelectId = "ActualProvincia",
+                         distritoSelectId = "ActualDistrito",
+                         distritoDivId = "dvDistritos",
+                         codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+                         selectedValue = labModel.UbigeoLaboratorio.Id.Substring(2, 2)
+                     })
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+            <br />      <br /><br />
+            @Html.LabelFor(model => labModel.UbigeoLaboratorio.Distrito, new { @class = "-label col-xs-12 col-sm-6 col-md-2 col-lg-1" })
+            <div id="dvDistritos" class="-label col-xs-12 col-sm-6 col-md-2 col-lg-3">
+
+                @Html.Action("GetDistritosPorProvincia", "Ubigeo", new
+           {
+               distritoSelectId = "ActualDistrito",
+               codigoDepartamento = labModel.UbigeoLaboratorio.Id.Substring(0, 2),
+               codigoProvincia = labModel.UbigeoLaboratorio.Id.Substring(2, 2),
+               selectedValue = labModel.UbigeoLaboratorio.Id.Substring(4, 2)
+           })
+                <div class="obligatorio">
+                    <span>*</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Dirección", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("direccion", (string)ViewBag.direccion, new { @class = "form-control", @style = "width: 400px !important" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" id="hdnTipo" name="hdnTipo" value="0" />
+            <input type="hidden" id="hdnInstitucion" name="hdnInstitucion" value="0" />
+            @Html.Label("Institución:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @if (instituciones != null && instituciones.Count > 0)
+                {
+                    <select id="selInstituciones" name="selInstituciones" class="form-control">
+                        @foreach (Institucion item in instituciones)
+                        {
+                            if (item.IdInstitucion == localModel.IdInstitucion.ToString())
+                            {
+                                <option value="@item.IdInstitucion" selected="selected"> @item.nombreInstitucion</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdInstitucion"> @item.nombreInstitucion</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selInstituciones" name="selInstituciones" class="form-control"></select>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+
+            <input type="hidden" id="hdnDisa" name="hdnDisa" value="0" />
+            <label class="control-label col-md-1">DISA/DIR/GER:</label>
+            <div class="col-md-7">
+
+                @if (disas != null && disas.Count > 0)
+                {
+                    <select id="seldisa" name="seldisa" class="form-control">
+                        @foreach (var item in disas)
+                        {
+                            if (item.IdDISA == localModel.IdDisa)
+                            {
+                                <option value="@item.IdDISA" selected="selected"> @item.NombreDISA</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdDISA"> @item.NombreDISA</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="seldisa" name="seldisa" class="form-control"></select>
+                }
+
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="hidden" id="hdnRed" name="hdnRed" value="0" />
+            <label class="control-label col-md-1">RED:</label>
+            <div class="col-md-7">
+                @if (redes != null && redes.Count > 0)
+                {
+                    <select id="selRed" name="selRed" class="form-control">
+                        @foreach (var item in redes)
+                        {
+                            if ((item.IdRed + item.IdDISA) == localModel.IdRed)
+                            {
+                                <option value="@(item.IdRed + item.IdDISA)" selected="selected"> @item.NombreRed</option>
+                            }
+                            else
+                            {
+                                <option value="@(item.IdRed + item.IdDISA)"> @item.NombreRed</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selRed" name="selRed" class="form-control"></select>
+                }
+
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="hidden" id="hdnMicroRed" name="hdnMicroRed" value="0" />
+            @Html.Label("Micro RED:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @if (microredes != null && microredes.Any())
+                {
+                    <select id="selmicrored" name="selmicrored" class="form-control">
+                        @foreach (var item in microredes)
+                        {
+                            if ((item.IdMicroRed + item.IdRed + item.IdDISA) == localModel.IdMicroRed)
+                            {
+                                <option value="@(item.IdMicroRed + item.IdRed + item.IdDISA)" selected="selected"> @item.NombreMicroRed</option>
+                            }
+                            else
+                            {
+                                <option value="@(item.IdMicroRed + item.IdRed + item.IdDISA)"> @item.NombreMicroRed</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selmicrored" name="selmicrored" class="form-control"></select>
+                }
+
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.Label("Categoría:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.DropDownList("categoria", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="SIN CATEGORIA", Value = "0" , Selected = true},
+                            new SelectListItem{ Text="I-1", Value = "1" },
+                            new SelectListItem{ Text="I-2", Value = "2" },
+                            new SelectListItem{ Text="I-3", Value = "3" },
+                            new SelectListItem{ Text="I-4", Value = "4" },
+                            new SelectListItem{ Text="II-1", Value = "5" },
+                            new SelectListItem{ Text="II-2", Value = "6" },
+                            new SelectListItem{ Text="II-E", Value = "7" },
+                            new SelectListItem{ Text="III-1", Value = "8" },
+                            new SelectListItem{ Text="III-2", Value = "9" },
+                            new SelectListItem{ Text="III-E", Value = "10" },
+                            new SelectListItem{ Text="I7", Value = "11" },
+                            new SelectListItem{ Text="Referencial", Value = "12" }
+                          }, new { @class = "form-control cmbxBusqueda" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Latitud", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("latitud", (string)ViewBag.latitud, new { @class = "form-control", @style = "width: 300px !important" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Longitud", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("longitud", (string)ViewBag.longitud, new { @class = "form-control", @style = "width: 300px !important" })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Tipo:", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.DropDownList("tipo", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Establecimiento", Value = "1" , Selected = true},
+                            new SelectListItem{ Text="Laboratorio", Value = "2" }
+
+                          }, new { @class = "form-control cmbxBusqueda" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("CorreoElectrónico", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("correoElectronico", (string)ViewBag.correoelectronico, new { @class = "form-control", @style = "width: 400px !important" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("WebSite", new { @class = "control-label col-md-1" })
+            <div class="col-md-7">
+                @Html.TextBox("website", (string)ViewBag.website, new { @class = "form-control", @style = "width: 400px !important" })
+            </div>
+        </div>
+
+        @*  Descripción: Se adiciona item Logo Regional.
+            Autor: Marcos Mejia
+            Fecha 19/01/2018 *@
+        <div class="form-group">
+            @Html.Label("Logo Regional", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileLogo">
+                @*@Html.TextBoxFor(model => model.LogoRegional, new { id = "logoRegional", type = "file" })
+        @Html.ValidationMessageFor(model => model.LogoRegional, "", new { @class = "text-danger" })*@
+                <input type="file" id="LogoRegional" name="LogoRegional" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Logo", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileLogo">
+                @*@Html.TextBoxFor(model => model.Logo, new { id = "logo", type = "file" })
+        @Html.ValidationMessageFor(model => model.Logo, "", new { @class = "text-danger" })*@
+                <input type="file" id="Logo" name="Logo" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.Label("Sello", new { @class = "control-label col-md-1" })
+            <div class="col-md-7 divFileSello">
+                @*@Html.TextBoxFor(model => model.Sello, new { id = "sello", type = "file" })
+        @Html.ValidationMessageFor(model => model.Sello, "", new { @class = "text-danger" })*@
+                <input type="file" id="Sello" name="Sello" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @if (ViewBag.verboton == "1")
+                {
+                    <input type="submit" value="Crear" id="btnGrabar" class="btn-link hidden" onclick="return validarCampos();" />
+                }
+                else
+                {
+                    <input type="submit" value="Crear" id="btnGrabar" class="btn btn-primary" onclick="return validarCampos();" />
+                }
+
+                @Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search }, new { @class = "btn-link" })
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link" />*@
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Laboratorio.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Ubigeo.js?updated={0}", new Random().Next(0, 999))))
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#selEstablecimiento").chosen({ placeholder_text_single: "----Todos----", no_results_text: "No existen coincidencias" });
+            $("#seldisa").chosen({ placeholder_text_single: "----Todos----", no_results_text: "No existen coincidencias" });
+            $("#selInstituciones").chosen({ placeholder_text_single: "----Todos----", no_results_text: "No existen coincidencias" });
+            $("#selRed").chosen({ placeholder_text_single: "----Todos----", no_results_text: "No existen coincidencias" });
+            $("#selmicrored").chosen({ placeholder_text_single: "----Todos----", no_results_text: "No existen coincidencias" });
+
+            $('#btnEstablecimiento').click(function () {
+                debugger;
+                var selected = $('#selEstablecimiento').val();
+                $('#hdnEstablecimiento').val(selected);
+
+                selected = $('#selRed').val();
+                $('#hdnRed').val(selected);
+
+                selected = $('#seldisa').val();
+                $('#hdnDisa').val(selected);
+
+                selected = $('#selInstituciones').val();
+                $('#hdnInstitucion').val(selected);
+
+                selected = $('#selmicrored').val();
+                $('#hdnMicroRed').val(selected);
+
+                $('#hdnTipo').val('Establecimientos');
+
+                $('#frmInstituciones').submit();
+            });
+
+            $('#selInstituciones').change(function () {
+                debugger;
+                var selected = $('#selInstituciones').val();
+                $('#hdnInstitucion').val(selected);
+
+                $('#hdnTipo').val('Instituciones');
+                $('#frmInstituciones').submit();
+            });
+
+            $('#seldisa').change(function () {
+                debugger;
+                var selected = $('#seldisa').val();
+                $('#hdnDisa').val(selected);
+
+                selected = $('#selInstituciones').val();
+                $('#hdnInstitucion').val(selected);
+
+                $('#hdnTipo').val('Disa');
+                $('#frmInstituciones').submit();
+            });
+
+            $('#selRed').change(function () {
+                debugger;
+                var selected = $('#selRed').val();
+                $('#hdnRed').val(selected);
+
+                selected = $('#seldisa').val();
+                $('#hdnDisa').val(selected);
+
+                selected = $('#selInstituciones').val();
+                $('#hdnInstitucion').val(selected);
+
+                $('#hdnTipo').val('Red');
+                $('#frmInstituciones').submit();
+            });
+
+            $('#selmicrored').change(function () {
+                debugger;
+                var selected = $('#selRed').val();
+                $('#hdnRed').val(selected);
+
+                selected = $('#seldisa').val();
+                $('#hdnDisa').val(selected);
+
+                selected = $('#selInstituciones').val();
+                $('#hdnInstitucion').val(selected);
+
+                selected = $('#selmicrored').val();
+                $('#hdnMicroRed').val(selected);
+
+                $('#hdnTipo').val('MicroRed');
+                $('#frmInstituciones').submit();
+            });
+        });
+
+        function validarCampos() {
+
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombreList);
+
+            var ok = true;
+            debugger;
+
+            var codigoUnico = $('#codigoUnico').val();
+
+            var nombreEstablecimiento = $('#nombreEstablecimiento').val();
+
+            var selInstitucion = $('#selInstituciones').val();
+
+            var selDisa = $('#seldisa').val();
+
+            var selRed = $('#selRed').val();
+
+            var selMicroRed = $('#selmicrored').val();
+
+
+            if (statesAvailable.includes(codigoUnico)) {
+
+                jAlert("Ya existe EESS/LAB con el codigo Unico Ingresado", "Aviso");
+                ok = false;
+
+            }
+            if (codigoUnico=="") {
+                jAlert("Ingrese el codigo Unico", "Aviso");
+                ok = false;
+            }
+
+            if (nombreEstablecimiento == "") {
+                jAlert("Ingrese un nombre de Establecimiento", "Aviso");
+                ok = false;
+            }
+
+
+            if (selInstitucion === null || selInstitucion === "0") {
+                jAlert("Seleccione un Sub Sector", "Aviso");
+                ok = false;
+            }
+
+
+            if (selDisa === null || selDisa == "-" || selDisa == "") {
+                jAlert("Seleccione una Disa", "Aviso");
+                ok = false;
+            }
+
+            if (selRed === null || selRed == "-" || selRed == "") {
+                jAlert("Seleccione una red", "Aviso");
+                ok = false;
+            }
+
+            if (selMicroRed === null || selMicroRed == "-" || selMicroRed == "") {
+                jAlert("Seleccione una MicroRed", "Aviso");
+                ok = false;
+            }
+
+            if (ok) {
+                $('#hdnDisa').val(selDisa);
+                $('#hdnRed').val(selRed);
+                $('#hdnMicroRed').val(selMicroRed);
+                $("#btnCrear").addClass("hidden");
+                jAlert("Datos Ingresados Satisfactoriamente", "Aviso");
+            }
+            return ok;
+
+        }
+
+    </script>
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}
+
+
+
+<style>
+    .form-control {
+        width: 350px !important;
+    }
+</style>

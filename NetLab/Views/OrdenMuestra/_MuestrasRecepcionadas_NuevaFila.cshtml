@@ -1,0 +1,52 @@
+﻿@using Model.ViewModels;
+@model List<OrdenMuestraRecepcionado>
+
+@for (int i = 0; i < Model.GroupBy(x => x.IdOrdenMuestraRecepcion).Count(); i++)
+{
+    var items = Model.GroupBy(x => x.IdOrdenMuestraRecepcion).ToList()[i];
+    var item = items.First();
+    <tr>
+        <td>
+            @Html.Hidden(string.Format("Model[{0}].IdOrdenMuestraRecepcion", i), item.IdOrdenMuestraRecepcion)
+            @Html.Hidden(string.Format("Model[{0}].CodigoLineal", i), item.CodigoLineal)
+            @Html.Hidden(string.Format("Model[{0}].CodigoMuestra", i), item.CodigoMuestra)
+            @Html.Hidden(string.Format("Model[{0}].Paciente", i), item.Paciente)
+            @item.CodigoMuestra
+        </td>
+        <td>@item.CodigoLineal</td>
+        <td>@item.Paciente</td>
+        <td>
+            @Html.DropDownList(string.Format("Model[{0}].MotivoRechazo", i), items.Select(x => new SelectListItem { Value = x.IdCriterioRechazo.ToString(), Text = x.CriterioRechazoGlosa }), new { @class = "motivorechazoddl motivorechazoddl" + item.IdOrdenMuestraRecepcion, @multiple = "multiple" })
+        </td>
+    </tr>
+}
+
+<script type="text/javascript">
+        $(function () {
+
+            $('.motivorechazoddl').each(function (i, elm) {
+                $(this).multipleSelect({
+                    width: '100%',
+                    multiple: true,
+                    multipleWidth: 300
+                });
+            });
+
+            $('.chckconforme').change(function (e) {
+                e.preventDefault();
+                $(this).val(this.checked);
+                if (this.checked) {
+                    var selector = ".motivorechazoddl" + $(this).data("id");
+                    $(selector).attr("disabled", "disabled");
+                    var selectorbtn = selector + " > button.ms-choice";
+                    $(selectorbtn).addClass("disabled");
+                    //$(selector).val("");
+                } else {
+                    var selector = ".motivorechazoddl" + $(this).data("id");
+                    $(selector).removeAttr("disabled");
+                    var selectorbtn = selector + " > button.ms-choice";
+                    $(selectorbtn).removeClass("disabled");
+                }
+            });
+        });
+</script>

@@ -1,0 +1,209 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de Areas de Procesamiento
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.AreaProcesamiento>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Mantenimiento de Areas de Procesamiento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Areas de Procesamiento</h2>
+@using (Html.BeginForm("Index", "AreaProcesamiento", FormMethod.Get))
+{
+    <label>Ingrese un nombre o descripción:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn btn-default btn-link" />*@
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+    @Html.ActionLink("+ Nueva Area", "NuevaArea", new { page = Model.PageNumber, ViewBag.search }, new { id = "openDialog", @class = "btn btn-primary" })
+
+}
+
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{     @*<div class="table-responsive">*@
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Sigla)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Estado)
+                </th>
+                <th width="50">Editar</th>
+                <th width="70">Examenes</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Sigla)
+                </td>
+                @*<td class="text-center">
+                        @Html.DisplayFor(modelItem => item.EstadoDesc)
+                    </td>*@
+                <td class="text-center">
+                    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+
+                    @if (item.Estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarArea", new { id = item.IdAreaProcesamiento, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                    @*@Html.ActionLink("Eliminar", "EliminarArea", new { id = item.IdAreaProcesamiento, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "AgregarExamenes", new { id = item.IdAreaProcesamiento }, new { @class = "btn btn-default btn-block fa fa-folder-open" })
+                </td>
+            </tr>
+        }
+    </table>
+    @*</div>*@
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+
+@*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/AreaProcesamiento.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+
+    <script type="text/javascript">
+
+                $("body").on("submit", "#frmNuevaArea", function (e) {
+                    var ok2=false;
+                    var nombre = $.trim($('#Nombre').val());
+                    var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+                    var nom=nombre.toUpperCase();
+                    if (statesAvailable.includes(nom)  ) {
+                        jAlert("Ya existe un Area de Procesamiento con ese nombre.", "¡Alerta!");
+                    }else {
+                        ok2=true;
+                    }
+                    if ( ok2)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            cache: false,
+                            url: $(this).attr("action"),
+                            data: $(this).serialize(),
+                            success: function (response) {
+
+                                var $resp = $(response);
+                                $("#btnCrear").addClass("hidden");
+                                $("#btnCerrar").removeClass("hidden");
+                                $("#btnCerrar").on("click", function () {
+                                    location.reload();
+                                    $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                                });
+                                jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                            }
+                        });
+
+                    }
+
+                    e.preventDefault();
+                    return false;
+                });
+
+
+                $("body").on("submit", "#frmEditarArea", function (e) {
+                    var ok2=false;
+                    var nombre = $.trim($('#Nombre').val());
+                    var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+                    var nom=nombre.toUpperCase();
+
+                    var someDataFromPartialSomehow = $("#someDataFromPartialSomehow").val();
+                    var nombreController=someDataFromPartialSomehow.toUpperCase();
+
+                    if (nom==nombreController) {
+                        ok2=true;
+                    }else {
+                        if (statesAvailable.includes(nom)  ) {
+                            jAlert("Ya existe un Area de Procesamiento con ese nombre.", "¡Alerta!");
+                        }else {
+                            ok2=true;
+                        }
+                    }
+
+                    if ( ok2)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            cache: false,
+                            url: $(this).attr("action"),
+                            data: $(this).serialize(),
+                            success: function (response) {
+
+                                var $resp = $(response);
+                                $("#btnGuardar").addClass("hidden");
+                                $("#btnCerrar").removeClass("hidden");
+                                $("#btnCerrar").on("click", function () {
+                                    location.reload();
+                                    $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                                });
+                                jAlert("Area de Procesamiento Editada Satisfactoriamente", "Aviso");
+                            }
+                        });
+                    }
+                    e.preventDefault();
+                    return false;
+                });
+    </script>
+
+
+
+
+
+
+
+
+
+
+}

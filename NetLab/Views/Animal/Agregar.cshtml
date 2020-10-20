@@ -1,0 +1,291 @@
+﻿@*  Descripción: Vista, muestra la pantalla para seleccionar e ingresar un nuevo animal.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.Animal.AnimalViewModels
+
+@{
+    ViewBag.Title = "Agregar Animal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Agregar Animal</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm("NuevoAnimal", "Animal", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <hr />
+                    <fieldset class="default mediumSize">
+                        <legend class="default">Datos Generales</legend>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Nombre, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Sexo, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Sexo.IdSexo, Model.Sexo.SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Origen, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Origen.IdOrigen, Model.Origen.SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div id="dvRefugio" class="form-group">
+                            @Html.LabelFor(model => model.Animal.Refugio, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Refugio, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Raza.Especie, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(e => e.Especie.IdEspecie, Model.Especie.Especies, new
+                           {
+                               @class = "form-control",
+                               onchange = $"onChangeEspecie('{@Url.Action("GetRazaPorEspecie")}');"
+                           })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Raza, new { @class = "control-label col-md-4" })
+                            <div id="dvRaza" class="col-md-8">
+                                @Html.DropDownListFor(e => e.Raza.IdRaza, Model.Raza.Razas, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.FechaNacimiento, new { @class = "control-label col-md-4" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.Animal.FechaNacimiento, new { id = "fechaNacimiento", @class = "form-control datepicker", style = "width:150px" })
+                                @Html.ValidationMessageFor(model => model.Animal.FechaNacimiento, "", new { @class = "msj-error" })
+                            </div>
+                            <div class="col-md-4 checkbox">
+                                <label><input id="noPrecisaFecha" type="checkbox" class="checkbox-inline"> No precisa</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.EdadAnio, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.EdadAnio, new { htmlAttributes = new { id="edadAnio", @class = "form-control", style = "max-width:80px" } })
+                                @Html.ValidationMessageFor(model => model.Animal.EdadAnio, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.EdadMes, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.EdadMes, new { htmlAttributes = new { id="edadMes", @class = "form-control", style = "max-width:80px" } })
+                                @Html.ValidationMessageFor(model => model.Animal.EdadMes, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+                        <br />
+                        <fieldset class="default mediumSize">
+                            <legend class="defaultSmall">Ubicación del Animal</legend>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdDepartamento, new { @class = "control-label col-md-4" })
+                                <div class="col-md-5">
+                                    @Html.Action("GetDepartamentos", "Ubigeo",
+                                    new
+                                    {
+                                        departamentoSelectId = "IdDepartamento",
+                                        provinciaSelectId = "IdProvincia",
+                                        distritoSelectId = "IdDistrito",
+                                        provinciaDivId = "dvProvincias",
+                                        distritoDivId = "dvDistritos"
+                                    })
+                                </div>
+                                <div class="col-md-3 checkbox">
+                                    <label><input id="noPrecisaUbigeoAnimal" name="noPrecisaUbigeoAnimal" type="checkbox" class="checkbox-inline"> No precisa</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdProvincia, new { @class = "control-label col-md-4" })
+                                <div id="dvProvincias" class="col-md-8">
+                                    @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                                    new
+                                    {
+                                        departamentoSelectId = "IdDepartamento",
+                                        provinciaSelectId = "IdProvincia",
+                                        distritoSelectId = "IdDistrito",
+                                        distritoDivId = "dvDistritos"
+                                    })
+                                    @Html.ValidationMessageFor(model => model.IdProvincia, "", new { @class = "msj-error" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdDistrito, new { @class = "control-label col-md-4" })
+                                <div id="dvDistritos" class="col-md-8">
+                                    @Html.Action("GetDistritosPorProvincia", "Ubigeo", new { distritoSelectId = "IdDistrito" })
+                                    @Html.ValidationMessageFor(model => model.IdDistrito, "", new { @class = "msj-error" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Animal.Direccion, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Animal.Direccion, new { htmlAttributes = new { @class = "form-control", style = "max-width:450px" } })
+                                    @Html.ValidationMessageFor(model => model.Animal.Direccion, "", new { @class = "msj-error" })
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                    <br />
+                    <br />
+                    <fieldset class="default mediumSize">
+                        <legend class="default">Datos del propietario / responsable</legend>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TipoDocumento, new { @class = "control-label col-md-4" })
+                            <div class="col-md-4">
+                                @Html.DropDownListFor(model => model.TipoDocumento.IdTipoDocumento, Model.TipoDocumento.SelectList, new {@class = "form-control"})
+                            </div>
+                            <div class="col-md-4 checkbox">
+                                <label><input id="noPrecisaPropietario" type="checkbox" class="checkbox-inline"> No precisa</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.NroDocumento, new { @class = "control-label col-md-4" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.Animal.Propietario.NroDocumento, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.NroDocumento, "", new { @class = "msj-error" })
+                            </div>
+                            <div id="dvValidarDocumento" class="col-md-4">
+                                <input id="validarDocumento" type="submit" value="Validar DNI" data-url="@Url.Action("ValidarPersona")" class="btn btn-default btn-link" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.ApellidoPaterno, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Propietario.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.ApellidoPaterno, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.ApellidoMaterno, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Propietario.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.ApellidoMaterno, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.Nombres, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Propietario.Nombres, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.Nombres, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Genero, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Genero.IdGenero, Model.Genero.SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.TelefonoFijo, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Propietario.TelefonoFijo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.TelefonoFijo, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Animal.Propietario.Celular1, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Animal.Propietario.Celular1, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Animal.Propietario.Celular1, "", new { @class = "msj-error" })
+                            </div>
+                        </div>
+                        <br />
+                        <fieldset class="default mediumSize">
+                            <legend class="defaultSmall">Ubicación del propietario / responsable</legend>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdDepartamento, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.Action("GetDepartamentos", "Ubigeo",
+                        new
+                        {
+                            departamentoSelectId = "DepartamentoProp",
+                            provinciaSelectId = "ProvinciaProp",
+                            distritoSelectId = "DistritoProp",
+                            provinciaDivId = "dvProvinciasProp",
+                            distritoDivId = "dvDistritosProp"
+                        })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdProvincia, new { @class = "control-label col-md-4" })
+                                <div id="dvProvinciasProp" class="col-md-8">
+                                    @Html.Action("GetProvinciasPorDepartamento", "Ubigeo",
+                        new
+                        {
+                            departamentoSelectId = "DepartamentoProp",
+                            provinciaSelectId = "ProvinciaProp",
+                            distritoSelectId = "DistritoProp",
+                            distritoDivId = "dvDistritosProp"
+                        })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdDistrito, new { @class = "control-label col-md-4" })
+                                <div id="dvDistritosProp" class="col-md-8">
+                                    @Html.Action("GetDistritosPorProvincia", "Ubigeo", new { distritoSelectId = "DistritoProp" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Animal.Propietario.DireccionActual, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Animal.Propietario.DireccionActual, new { htmlAttributes = new { @class = "form-control", style = "max-width:450px" } })
+                                    @Html.ValidationMessageFor(model => model.Animal.Propietario.DireccionActual, "", new { @class = "msj-error" })
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                    <br />
+                    <br />
+                    <div class="form-group">
+                        <div class="text-center">
+                            <input type="submit" value="Guardar y Continuar" class="btn btn-default btn-link" /> | @Html.ActionLink("Volver a la búsqueda", "Index", null, new { @class = "btn btn-default btn-link" })
+                        </div>
+                    </div>
+                </div>
+        }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Animal.js")
+    @Scripts.Render("~/Scripts/App/Ubigeo.js")
+}

@@ -1,0 +1,156 @@
+﻿@using NetLab.Helpers
+@model Model.Enfermedad
+<fieldset class="default">
+    <legend class="default">@ViewBag.Paciente</legend>
+    <div>
+        <button class="btn btn-primary col-xs-offset-5" id="btnGuardarDatosAdicionales" value="GuardarDatosAdicionales" onclick="clicbtnGuardarDatosAdicionales()"> <span class="fa fa-floppy-o "></span> Guardar</button>
+    </div>
+</fieldset>
+@using (Html.BeginForm("PreSaveOrden", "RecepcionMuestraKobo", FormMethod.Post, new { id = "frmPreSaveOrden" }))
+{
+    @Html.Hidden("GuidIdPaciente", (String)ViewBag.idPaciente);
+    @Html.Hidden("EESSOrigen", (String)ViewBag.idEstablecimientoOrigenEdit);
+    @Html.Hidden("idOrden", (String)ViewBag.idOrden);
+    <fieldset class="default">
+        <legend class="default">DATOS ADICIONALES</legend>
+        <div class="div-row">
+            @Html.Label("Fecha Muestra:", new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                @Html.TextBox("fechaObtencion", (string)ViewBag.FechaObtencion, new { @class = "form-control input-sm datepickerMaxValue2", Style = "width: 105px;", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+            </div>
+            <br /><br />
+            @Html.Label("Establecimiento Origen:", new { @class = "-label- col-xs-12 col-sm-5 col-md-5 col-lg-7" })
+            <div class="ui-autocomplete1 col-md-12">
+                @Html.TextBox("CodigoUnicoOrigenEdit", (string)ViewBag.nombreEstablecimientoOrigenEdit, new { @class = "form-control" })
+                @Html.Hidden("hddDatoEESSOrigenEdit", (string)ViewBag.idEstablecimientoOrigenEdit)
+            </div>
+            <br /><br />
+            @Html.Label("Tipo Muestra:", new { @class = "-label- col-xs-12 col-sm-3 col-md-3 col-lg-3" })
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                @*@Html.DropDownList("TipoMuestra", new List<SelectListItem>(ViewBag.tipoMuestraSel), new { @class = "form-control input-sm" })*@
+                @Html.DropDownList("TipoMuestraCovid", new SelectList(ViewBag.TipoMuestra, "Value", "Text", ViewBag.tipoMuestraSel), new { value = @ViewBag.idTipoMuestra, @class = "form-control" })
+            </div>
+            <br /><br />
+            @Html.Label("Nro Celular Paciente:", new { @class = "-label- col-xs-12 col-sm-5 col-md-5 col-lg-7" })
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                @Html.TextBox("nroCelularPaciente", (string)ViewBag.nroCelularPaciente, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="div-row">
+        </div>
+        @*<div class="div-row">
+                  @Html.Label("Observación", new { @class = "-label- col-xs-12 col-sm-3 col-md-1 col-lg-1" })
+                  @Html.TextArea("observacion", 2, 100, new { htmlAttributes = new { @class = "form-control  input-sm" } })
+            </div>*@
+    </fieldset>
+
+    <fieldset class="default">
+        <legend class="default">DATOS CLINICOS EPIDEMIOLÓGICOS</legend>
+        @if (Model != null)
+        {
+            foreach (var itemCategoriaDato in Model.categoriaDatoList.Where(itemCategoriaDato => itemCategoriaDato.OrdenDatoClinicoList != null && itemCategoriaDato.OrdenDatoClinicoList.Count != 0))
+            {
+                <h4>@Html.Raw(itemCategoriaDato.Nombre)</h4>
+                <table style="width: auto; border:hidden;border-right:hidden;">
+
+                    @Html.Hidden("nombreCategoriaDato", itemCategoriaDato.Nombre)
+                    @Html.Hidden("idCategoriaDatoPadre", itemCategoriaDato.IdCategoriaDato)
+
+                    @if (itemCategoriaDato.OrdenDatoClinicoList != null)
+                    {
+                        var columns = itemCategoriaDato.Orientacion;
+
+                        for (var i = 0; i < itemCategoriaDato.OrdenDatoClinicoList.Count; i++)
+                        {
+                            var item = itemCategoriaDato.OrdenDatoClinicoList[i];
+
+                            if (i % columns == 0)
+                            {
+                                <tr style="height: 40px; border:hidden; border-right:hidden;" class="trpadre">
+
+                                    <td style="padding-left: 40px; border:hidden; border-right:hidden;">
+                                        @Html.Raw(item.Dato.Prefijo)
+                                    </td>
+                                    @switch (item.Dato.IdTipo)
+                                    {
+                                        case (int)Enums.TipoCampo.COMBO:
+                                            <td style="border:hidden;  border-color:blue; border-right:hidden;">@Html.DatoCombo(item)</td>
+                                            break;
+                                        case (int)Enums.TipoCampo.TEXT:
+                                            <td style="border:hidden; border-right:hidden;">@Html.DatoTextBox(item)</td>
+                                            break;
+                                        case (int)Enums.TipoCampo.NUMERIC:
+                                            <td style="border:hidden;  border-color:blue; border-right:hidden;">@Html.DatoNumeric(item)</td>
+                                            break;
+                                        case (int)Enums.TipoCampo.DATE:
+                                            <td style="border:hidden;  border-color:blue; border-right:hidden;">@Html.DatoDate(item)</td>
+                                            break;
+                                        case (int)Enums.TipoCampo.TEXTAREA:
+                                            <td style="border:hidden;  border-color:blue; border-right:hidden;">@Html.DatoTextArea(item)</td>
+                                            break;
+                                        case (int)Enums.TipoCampo.CHECKBOX:
+                                            <td style="border:hidden;  border-color:blue; border-right:hidden;">@Html.DatoCheckBox(item)</td>
+                                            break;
+                                        default:
+                                            <td></td>
+                                            break;
+                                    }
+
+                                    @if (item.Dato.IdTipo == (int)Enums.TipoCampo.CHECKBOX || item.Dato.IdTipo == (int)Enums.TipoCampo.COMBO)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="padding-left: 15px; border:hidden; border-right:hidden;">
+                                            @{
+                                                var idCheckNoPrecisaPre = "checkPreDato" + item.Enfermedad.idEnfermedad + item.Dato.IdDato;
+                                                var idCheckNoPrecisa = "checkDato" + item.Enfermedad.idEnfermedad + item.Dato.IdDato;
+                                            }
+                                            <label>No Precisa</label>
+                                            <input type="checkbox" id=@Html.Raw(idCheckNoPrecisaPre) name="checkNoPrecisa@(item.Enfermedad.idEnfermedad)@(item.Dato.IdDato)" checked="@item.noPrecisa" class="checkboxNoPrecisa" data-inputid="@(item.Enfermedad.idEnfermedad)@(item.Dato.IdDato)" />
+
+                                        </td>
+                                                }
+                                    @Html.Hidden("prefijoDato", item.Dato.Prefijo)
+                                    @Html.Hidden("idEnfermedadDato", Model.idEnfermedad)
+                                    @Html.Hidden("idTipoDato", item.Dato.IdTipo)
+                                    @Html.Hidden("idDato", item.Dato.IdDato)
+                                    @Html.Hidden("idCategoriaDato", itemCategoriaDato.IdCategoriaDato)
+
+                                    @if (i == itemCategoriaDato.OrdenDatoClinicoList.Count - 1)
+                                    {
+                                        while ((i % columns) != 0)
+                                        {
+                                            <td style="border: hidden; border-right:hidden;"></td>
+                                            i++;
+                                        }
+                                    }
+                                </tr>
+                                                        }
+                                                    }
+                                                }
+                </table>
+                                                    }
+                                                }
+    </fieldset>
+                                                }
+@*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+<script type="text/javascript">
+    $(function () {
+        $(".datepickerMaxValue2").setDatePickerWithMaxValue();
+        $(".dateOnly").setDatePickerWithMaxValue();
+    });
+</script>
+<style type="text/css">
+    table {
+        font-family: sans-serif;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    td,
+    th {
+        border: hidden;
+    }
+</style>

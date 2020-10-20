@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Model.Institucion>
+
+@{
+    ViewBag.Title = "Mantenimiento de Instituciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Instituciones</h2>
+@using (Html.BeginForm("Index", "Institucion", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese un nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+    @Html.ActionLink(" Nuevo", "Crear", "", new { id = "openDialog", @class = "btn btn-primary fa fa-plus-square-o" })
+}
+<br />
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        <table class="table table-responsive" id="mydata">
+            <thead>
+                <tr>
+                    <th width="220">
+                        Nombre Institución
+                    </th>
+                    <th width="220">
+                        Descripción
+                    </th>
+                    <th width="40">
+                        Estado
+                    </th>
+                    <th width="40">Editar</th>
+                </tr>
+            </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreInstitucion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.descripcion)
+                        </td>
+                        <td align="center">
+                            @if (item.estado == 1)
+                        {
+                                <p style="color:#006f03;">Activo</p>
+                            }
+                            else
+                            {
+                                <p style="color:rgb(255,0,0);">Inactivo</p>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @Html.ActionLink(" ", "GetInstitucion", new { id = item.codigoInstitucion  }, new { id = "editDialog", @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" }) @*|*@
+                        </td>
+                    </tr>
+                }
+
+</table>
+    }
+}
+<div id="dialog-open" style="display: none">
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+    @Scripts.Render("~/Scripts/App/Institucion.js")
+}

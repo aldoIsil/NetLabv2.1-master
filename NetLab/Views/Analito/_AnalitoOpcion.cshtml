@@ -1,0 +1,123 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de Opciones por Analito.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.OpcionesAnalitoViewModels
+
+@{
+    ViewBag.Title = "Registro de Opciones por Analito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Opciones para el Componente :"@Model.Analito.Nombre"</h2>
+<br />
+<p>
+    @Html.ActionLink(" Agregar Opciones", "NuevaOpcion", new { Model.Analito.IdAnalito, IdOpcionParent = Model.Analito.IdAnalito }, new { id = "openDialog", @class = "btn btn-primary fa fa-plus-square-o" })
+</p>
+<br />
+<br />
+@if (Model != null && Model.Opciones.Count > 0)
+{
+    <table class="table" id="orden" style="width: 650px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Opciones.First().Orden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opciones.First().Glosa)
+            </th>
+            <th width="120px">
+                @Html.DisplayNameFor(model => model.Opciones.First().Tipo)
+            </th>
+            <th width="60px;">
+                Estado 
+            </th>
+            <th width="60px;">
+                Opcion Resultados
+            </th>
+            <th>Editar / Eliminar</th>
+        </tr>
+
+        @for (var index = 0; index < Model.Opciones.Count; index++)
+        {
+            var item = Model.Opciones[index];
+            string estado = "Activo";
+            var Sub = Model.Opciones.Where(model => model.IdAnalitoOpcionParent.Trim().Equals(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();  //(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+            var newOpcionesList = Model.Opciones.Where(model => !model.IdAnalitoOpcionParent.Trim().Equals(Model.Analito.IdAnalito.ToString().ToUpper())).ToList();
+            if (item.Estado == 0) { estado = "Inactivo"; }
+            <tr>
+                <td>
+                    <img src="~/img/001_31.png" style="cursor:pointer" idOpcionParent="@item.IdAnalitoOpcionResultado " />
+                </td>
+                <td>                    
+                    @Html.DisplayFor(modelItem => item.Orden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoRespuesta.Glosa)
+                </td>
+                <td>
+                    @estado
+                </td>
+                <td>                    
+                       @Html.ActionLink(" ", "NuevaOpcion", new { Model.Analito.IdAnalito, IdOpcionParent = item.IdAnalitoOpcionResultado }, new { id = "openDialog", @class = "btn btn-default btn-block fa fa-clipboard " })
+                       @*<button class="btn btn-default btn-block fa fa-clipboard" id="nvoOpcionResultado" hidden="hidden"></button>*@
+                    
+                </td>
+
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarOpcion", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoOpcion = item.IdAnalitoOpcionResultado}, new { @class = "btn btn-default fa fa-pencil-square-o editDialog" })  
+                    @Html.ActionLink(" ", "EliminarOpcion", new { idAnalito = Model.Analito.IdAnalito, IdAnalitoOpcion = item.IdAnalitoOpcionResultado }, new {@class = "btn btn-default fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+            <tr id="fila-@item.IdAnalitoOpcionResultado" style="display:none">
+                <td></td>
+                <td colspan="8">
+                    @Html.Action("DetalleOpciones", new { NewOpcionesList = newOpcionesList.ToList().AsEnumerable(), idOpcionParent = item.IdAnalitoOpcionResultado.ToString() })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+@Html.ActionLink("<< Regresar", "Index")
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AnalitoOpcion.js")
+
+<script type="text/javascript">
+        $(function () {
+            $("#orden tbody img").click(function () {
+                var idOpcionParent = $(this).attr("idOpcionParent"); 
+                var fila = $("#fila-" + idOpcionParent);
+                if (fila.css("display") == "none") {
+                    fila.css("display", "table-row");
+                    $(this).attr("src", "@Url.Content("~/img/remove.png")");
+                } else
+                {
+                    fila.css("display", "none");
+                    $(this).attr("src", "@Url.Content("~/img/001_31.png")");
+                }
+            });
+        });
+</script>
+
+
+}

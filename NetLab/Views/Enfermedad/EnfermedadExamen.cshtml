@@ -1,0 +1,91 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de enfermedades por examen.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.EnfermedadExamenViewModels
+
+@{
+    ViewBag.Title = "Registro de Enfermedades por Examen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Enfermedades para el Examen :</h2>
+<h2>"@Model.Examen.nombre"</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Enfermedades", "AgregarEnfermedad", new { Model.Examen.idExamen }, new { id = "openDialog", @class = "btn btn-primary" })
+</p>
+<br />
+@if (Model != null && Model.Enfermedades.Count > 0)
+{
+    <table class="table" style="width: 600px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Enfermedades.First().nombre)
+            </th>
+            <th>Eliminar</th>
+        </tr>
+
+        @for (var index = 0; index < Model.Enfermedades.Count; index++)
+        {
+            var item = Model.Enfermedades[index];
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td class="text-center" style="width:20px">
+                    @Html.ActionLink(" ", "EliminarEnfermedad", new { item.idEnfermedad, Model.Examen.idExamen, Orden = index + 1 }, new { @class = "btn btn-default btn-block fa fa-trash confirmDialog" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+<br />
+<br />
+<div>
+    @*opcion para retroceder a pagina anterior de historial*@
+
+    <a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+    @*@Html.ActionLink("  Salir", "Index")*@
+
+
+
+
+
+
+
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/EnfermedadExamen.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+
+
+
+}

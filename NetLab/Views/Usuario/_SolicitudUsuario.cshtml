@@ -1,0 +1,183 @@
+﻿@model Model.SolicitudUsuario
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h3 style="text-align:center">SOLICITUD DE ACCESO AL MODULO DIAGNOSTICO DEL SISTEMA DE INFORMACION DE LABORATORIOS NETLABv2</h3>
+<fieldset class="default">
+    <legend class="default">Datos del Usuario</legend>
+    <div class="div-row2">
+        @Html.LabelFor(model => model.usuario.documentoIdentidad, new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.documentoIdentidad)</span>
+            @Html.Hidden("txtDni", Model.usuario.documentoIdentidad, new { @id = "txtDniEditar", htmlAttributes = new { @class = "form-control" } })
+        </div>
+        @Html.Label("NOMBRE:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.nombres + " " + Model.usuario.apellidoPaterno + " " + Model.usuario.apellidoMaterno)</span>
+        </div>
+        @Html.Label("CORREO:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.correo)</span>
+        </div>
+        @Html.Label("TELEFONO:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.telefono)</span>
+        </div>
+    </div>
+</fieldset>
+<br />
+<fieldset class="default">
+    <legend class="default">Profesion y Cargo</legend>
+    <div class="div-row2">
+        @Html.Label("CARGO:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.cargo)</span>
+        </div>
+        @Html.Label("CONDICION LABORAL:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.condicionLaboral)</span>
+        </div>
+        @Html.Label("PROFESION:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario._profesion)</span>
+        </div>
+        @Html.Label("COLEGIATURA:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.codigoColegio)</span>
+        </div>
+        @Html.Label("TIPO USUARIO:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.TipoUsuario)</span>
+        </div>
+        @Html.Label("COMPONENTE:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.usuario.componenteUsuario)</span>
+        </div>
+    </div>
+</fieldset>
+<br />
+<fieldset class="default">
+    <legend class="default">Roles</legend>
+    @for (int i = 0; i < Model.rol.Count; i++)
+    {
+        <div class="div-row2">
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-4">
+                <span>@Html.Raw(Model.rol[i].nombre)</span>
+            </div>
+        </div><br />
+    }
+</fieldset>
+<br />
+<fieldset class="default">
+    <legend class="default">Examenes</legend>
+    @for (int i = 0; i < Model.examen.Count; i++)
+    {
+        <div class="div-row2">
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-4">
+                <span>@Html.Raw(Model.examen[i].nombre)</span>
+            </div>
+        </div><br />
+    }
+</fieldset>
+<br />
+<fieldset class="default">
+    <legend class="default">Datos del EESS/LAB</legend>
+    <div class="div-row2">
+        @Html.Label("SUB-SECTOR:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.nombreInstitucion)</span>
+        </div>
+        @Html.Label("DISA:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.nombreDisa)</span>
+        </div>
+        @Html.Label("RED:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.nombreRed)</span>
+        </div>
+        @Html.Label("MICRORED:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.nombreMicroRed)</span>
+        </div>
+        @Html.Label("RENIPRESS - EESS:", new { @class = " -label col-xs-12 col-sm-3 col-md-2 col-lg-1" })
+        <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+            <span>@Html.Raw(Model.Establecimiento)</span>
+        </div>
+    </div>
+</fieldset>
+@if (Model.estado != 1)
+{
+    <fieldset class="default">
+        <table style="width:900px;">
+            <tr>
+                <td>
+                    <span>Validado por: @Model.validador1</span>
+                </td>
+                <td>
+                    <span>Validado por: @Model.validador2</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Comentario: @Model.comentario1</span>
+                </td>
+                <td>
+                    <span>Comentario: @Model.comentario2</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Fecha: @Model.fechaVal1</span>
+                </td>
+                <td>
+                    <span>Fecha por: @Model.fechaVal2</span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+}
+
+@if (Model.estado != 3 && Model.firmante == false)
+{
+    <fieldset class="default">
+        <span class="input-group-addon">
+            <input type="radio" value="2" name="radiogroup" id="rbConforme">
+        </span>
+        <label type="text" class="form-control radioButtonWidth">Conforme</label>
+        <span class="input-group-addon">
+
+            <input type="radio" value="3" name="radiogroup" id="rbNoconforme">
+        </span>
+        <label type="text" class="form-control radioButtonWidth">No es Conforme</label>
+        <div class="col-sm-2 col-lg-offset-1">
+            <div class="input-group radioButtonWidthColec">
+                @Html.TextArea("txtComentario", "", new { @id = "txtComentario", @class = "comentWidth" })
+                <button class="btn btn-primary" onclick="ValidarSolicitud(@Model.idSolicitudUsuario); return false;"><span class="fa fa-floppy-o"></span> Guardar Solicitud</button>
+            </div>
+        </div>
+    </fieldset>
+}
+
+
+<center>
+        <a href="@Url.Action("ImprimirSolicitud", "Usuario")" class="btn btn-primary" target="_blank">
+            <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimir
+        </a>
+    </center>
+
+<div class="piePagina">
+    <span>Enviado el día @Model.fechaEnvio </span>
+</div>
+
+<style type="text/css">
+    .piePagina {
+        margin-top: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .piePagina span {
+            font-size: 13px;
+        }
+</style>

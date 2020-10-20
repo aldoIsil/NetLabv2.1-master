@@ -1,0 +1,79 @@
+﻿@*  Descripción: Vista, para mostrar la orden y las muestras ingresadas antes de ser finalizadas.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Orden
+
+@{
+    ViewBag.Title = "Preview Orden";
+}
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+
+<div class="form-horizontal">
+
+
+    <h2 style="text-align:center">Orden Nro @Html.Raw(Model.codigoOrden)</h2>
+    @Html.Hidden("codigoOrden", (String)Model.codigoOrden)
+
+    <fieldset class="default">
+
+        <legend class="default">Datos del Paciente</legend>
+
+        <div class="form-group">
+            @Html.Label("Nro Documento:", new { @class = "control-label col-xs-2" })
+            <div class="col-xs-3">
+                <span>@Html.Raw((String)Model.Paciente.NroDocumento)</span>
+            </div>
+            @Html.Label("Nombre:", new { @class = "control-label col-xs-2" })
+            <div class="col-xs-5">
+                <span>@Html.Raw((String)Model.Paciente.Nombres)</span>
+            </div>
+        </div>
+
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">EESS/LAB</legend>
+        <div class="form-group">
+            @Html.LabelFor(model => model.idProyecto, new { @class = "control-label col-xs-2" })
+            <div class="col-xs-3">
+                <span>@Html.Raw((String)Model.Proyecto.Nombre)</span>
+            </div>
+            @Html.LabelFor(model => model.idEstablecimiento, new { @class = "control-label col-xs-2" })
+            <div class="col-xs-3">
+                <span>@Html.Raw((String)Model.establecimiento.Nombre)</span>
+            </div>
+            @Html.LabelFor(model => model.nroOficio, new { @class = "control-label col-xs-1" })
+            <div class="col-xs-1">
+                <span>@Html.Raw((String)Model.nroOficio)</span>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">Examenes</legend>
+        <div id="dvTblExamen" class="col-xs-12">
+            @Html.Partial("_TblExamenNoEdit", (List<Model.OrdenExamen>)Model.ordenExamenList)
+        </div>
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">Muestras</legend>
+        <div id="dvTblOrdenMuestra" class="col-xs-12">
+            @Html.Partial("_TblOrdenMuestraNoEdit", (List<Model.OrdenMuestra>)Model.ordenMuestraList)
+        </div>
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">Materiales</legend>
+        <div id="dvTblMaterial" class="col-xs-12">
+            @Html.Partial("_TblMaterialNoEdit", (List<Model.OrdenMaterial>)Model.ordenMaterialList)
+        </div>
+    </fieldset>
+    <fieldset class="default">
+        <legend class="default">Observaciones</legend>
+        <div class="form-group">
+            @Html.Raw(Model.observacion)
+        </div>
+    </fieldset>
+
+</div>

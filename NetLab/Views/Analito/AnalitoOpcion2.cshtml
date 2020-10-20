@@ -1,0 +1,35 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda de Opciones por Analito.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+
+@model NetLab.Models.OpcionesAnalitoViewModels
+
+@{
+    ViewBag.Title = "Registro de Opciones por Analito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Opciones para el Componente :"@Model.Analito.Nombre"</h2>
+<br />
+<br />
+<br />
+<div id="divAnalitoOpcion">
+</div>
+<br />
+@Html.ActionLink("<< Regresar", "Index")
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/AnalitoOpcion.js")
+}

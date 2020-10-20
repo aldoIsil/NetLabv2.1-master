@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Model.ExamenResultadoInterpretacion>
+
+@{
+    ViewBag.Title = "Mantenimiento de Instituciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Analito = @ViewBag.Analito;
+    var idAnalito = @ViewBag.idAnalito;
+}
+<style type="text/css" media="all">
+    <!--
+    h2 {
+        display: inline;
+    }
+    -->
+</style>
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Interpretaciones para el Componente :</h2>
+<h2> @Analito</h2>
+<br /><br />
+<p>
+    @Html.ActionLink("+ Agregar Interpretacion", "NuevaInterpretacion", new { idAnalito }, new { id = "openDialogInterpretacion", @class = "btn btn-primary" })
+</p>
+<br />
+<br />
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Glosa Padre</th>
+                <th>Glosa Hijo</th>
+                <th>Interpretación</th>
+                <th>Editar</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.GlosaParent)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Glosa)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Interpretacion)</td>
+                    <td>
+                        @Html.ActionLink(" ", "ObtenerAnalitoInterpretacionPorId", new { idInterpretacion = item.idInterpretacion }, new { id = "editDialogInterpretacion", @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                    </td>
+                </tr>
+
+
+            }
+        </table>
+    }
+}
+
+<a class="btn btn-default" href="javascript:window.history.back();">&laquo; Retroceder</a>
+
+@Html.ActionLink("Salir", "Index")
+
+<div id="dialog-open" style="display: none">
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Analito.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}

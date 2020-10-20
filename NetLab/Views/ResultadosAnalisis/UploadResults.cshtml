@@ -1,0 +1,56 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model IEnumerable<Model.CitometriaResultadoMasivoProcesado>
+@using System.Data;
+
+<h2>Cargar Resultados</h2>
+
+@using (Html.BeginForm("Upload", "ResultadosAnalisis", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+
+    <fieldset class="default">
+        <legend class="default">Selección de Resultados:</legend>
+        <div id="dvBusquedaUsuario2">
+            <div class="form-group">
+                <div class="form-group">
+                    <input type="file" id="dataFile" name="upload" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Procesar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <br />
+}
+
+@{
+    if (Model != null)
+    {
+        <table class="table table-responsive table-bordered">
+            <thead>
+                <tr>
+                    <th>Nro Muestra</th>
+                    <th>Observación</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CodigoMuestra</td>
+                    <td>@item.Observacion</td>
+                    <td>@item.Estado</td>
+
+    </tr>
+            }
+        </table>
+    }
+}

@@ -1,0 +1,242 @@
+﻿@*  Descripción: Vista, muestra la pantalla la busqueda de analitos
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.Analito>
+
+@{
+    ViewBag.Title = "Mantenimiento de Analitos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Componentes</h2>
+@using (Html.BeginForm("Index", "Analito", FormMethod.Get))
+{
+    <label>Ingrese un nombre o descripción:</label>
+    @Html.TextBox("search", (string)ViewBag.search)
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+    <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+    @Html.ActionLink("+ Nuevo Componente", "NuevoAnalito", new { page = Model.PageNumber, ViewBag.search }, new { id = "openDialog", @class = "btn btn btn-primary" })
+
+}
+<br />
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>Unidad</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Descripcion)
+                </th>
+                <th width="80px">Tipo</th>
+                <th width="65px">Estado</th>
+                <th width="65px">Valores Normales</th>
+                <th width="65px">Opción Resultados</th>
+                <th width="75px">Editar </th>
+                <th width="75px">Interpretación</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            string estado = "Activo";
+            if (item.Estado == 0) { estado = "Inactivo"; }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Unidad.Glosa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoRespuesta.Glosa)
+                </td>
+                <td>
+                    @*@estado*@
+
+                    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+
+                    @if (item.Estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+                </td>
+                <td>
+                    @if (item.Tipo != 2)
+                    {
+                        @Html.ActionLink(" ", "AnalitoValor", new { id = item.IdAnalito }, new { @class = "btn btn-default btn-block fa fa-asterisk" })
+                    }
+                </td>
+                <td>
+                    @if (item.Tipo == 6)
+                    {
+                        @Html.ActionLink(" ", "AnalitoOpcion", new { id = item.IdAnalito }, new { @class = "btn btn-default btn-block fa fa-clipboard " })
+                        @*<button class="btn btn-default btn-block fa fa-clipboard" id="nvoOpcionResultado" hidden="hidden"></button>*@
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "EditarAnalito", new { id = item.IdAnalito, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                    @*@Html.ActionLink("Eliminar", "EliminarAnalitoItem", new { id = item.IdAnalito, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "AnalitoInterpretacion", new { idAnalito = item.IdAnalito }, new { @class = "btn btn-default btn-block fa fa-clipboard " })
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{  //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Analito.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+
+    <script>
+
+        $("body").on("submit", "#frmNuevoAnalito", function (e) {
+
+            var ok2=false;
+            var nombre = $.trim($('#Analito_Nombre').val());
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+            var nom=nombre.toUpperCase();
+            if (statesAvailable.includes(nom)  ) {
+                jAlert("Ya existe un Componente con ese nombre.", "¡Alerta!");
+            }else {
+                ok2=true;
+            }
+            if (ok2) {
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+
+                        $("#btnCrear").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+
+                        jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                    }
+                });
+            }
+            e.preventDefault();
+            return false;
+        });
+
+        $("body").on("submit", "#frmEditarAnalito", function (e) {
+            var ok2=false;
+
+            var nombre = $.trim($('#Analito_Nombre').val());
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+            var nom=nombre.toUpperCase();
+
+            var someDataFromPartialSomehow = $("#someDataFromPartialSomehow").val();
+            var nombreController=someDataFromPartialSomehow.toUpperCase();
+            if (nom==nombreController) {
+                ok2=true;
+            }else {
+                if (statesAvailable.includes(nom)  ) {
+                    jAlert("Ya existe un Componente con ese nombre.", "¡Alerta!");
+                }else {
+                    ok2=true;
+                }
+            }
+            if (ok2) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        var $resp = $(response);
+                        $("#btnGuardar").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+                        jAlert("Componente Editado Satisfactoriamente", "Aviso");
+                    }
+                });
+            }
+            e.preventDefault();
+            return false;
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+<style type="text/css">
+    .form-group {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    #Analito_Tipo {
+        text-transform: uppercase;
+    }
+</style>

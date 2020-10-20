@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="Flash" class="flash_alert eflash" style="display:none;">@ViewData["errors"]</div>
+<div id="wrapper-module" style="position: relative;">
+    @Html.Hidden("errorexcel", ViewData["errors"])
+    <div id="module">
+        <div class="header">
+            <div class="title head">
+                <h2>
+                    Procesar Excel
+                </h2>
+            </div>
+        </div>
+        <div class="content" id="create-page">
+            @using (Html.BeginForm("Importar", "ProcesoDesatendido", FormMethod.Post, new { enctype = "multipart/form-data", id = "directmailform", name = "directmailform" }))
+            {
+                <div id="pageinfo">
+                    <div class="sectioninfo">
+                        <table width='80%'>
+                            <tr>
+                                <th>
+                                    <label>
+                                        Select file:
+                                    </label>
+                                </th>
+                                <td>
+                                    <input type="file" id="fileUpload" name="fileUpload" size="23" style="width: 80%;" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row footer">
+                    <input type="submit" id="submitload" value="Importar" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var CheckCampaignURL = '@Url.Action("CheckCampaignName", "DirectMail")';
+    function ValidateLoad() {
+        var campaignname = $("#campaignname").val();
+        $.ajax({
+            type: "POST",
+            url: CheckCampaignURL + "?campaignName=" + campaignname,
+            data: str,
+            success: function (msg) {
+                if ($("input:file").val() == "") {
+                    alert("Debes seleccionar un archivo para continuar ...");
+                    return false;
+                    //event.preventDefault();
+                }
+                else {
+                    var file = $("input:file").val().split('.');
+                    var fileext = file[file.length - 1];
+                    //                        if (file[file.length - 1] != "xlsx" || fileext != "xls" || fileext != "csv") {
+                    //                            if (file[file.length - 1] != "xlsx") {
+                    //                                alert("File is not in the expected format.");
+                    //                                return false;
+                    //                                //event.preventDefault();
+                    //                            } else {
+                    //                                //return true;
+                    //                                $("#load").click(function () { $("#directmailform").submit(); });
+                    //                            }
+                    //                            alert("File is not in the expected format.");
+                    //                            return false;
+                    //                            //event.preventDefault();
+                    //                        }
+                    //                        else {
+                    //                            //$("#load").click(function () { $("#directmailform").submit(); });
+                    //                            $("#submitload").click();
+                    //                        }
+
+                    if (fileext == "xls") {
+                        $("#submitload").click();
+                    }
+                        //                        else if (fileext == "csv") {
+                        //                            $("#submitload").click();
+                        //                        }
+                    else if (fileext == "xlsx") {
+                        $("#submitload").click();
+                    }
+                    else {
+                        alert("File is not in the expected format.");
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $(".eflash").hide();
+        var error = $("#errorexcel").val();
+        if (error != '' || error.indexOf("empty") >= 0) {
+            $(".eflash").show();
+        }
+    });
+</script>

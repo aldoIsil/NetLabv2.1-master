@@ -1,0 +1,118 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda y mantenimiento de los Roles.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.Rol>
+
+@{
+    ViewBag.Title = "Mantenimiento de Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+
+<h2 class="text-primary">Roles</h2>
+@using (Html.BeginForm("Index", "Rol", FormMethod.Get))
+{
+    <label>Ingrese un Nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search)
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+    @Html.ActionLink("+ Nuevo Rol", "NuevoRol", new { page = ViewBag.page, ViewBag.search }, new { id = "openDialog", @class = "btn btn-primary" })
+
+
+}
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Descripción
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>Opciones</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.descripcion)
+                </td>
+                <td class="text-center">
+                    @*@if (item.Estado == 1)
+                        {
+                            @Html.Label("Activo")
+                        }
+                        else
+                        {
+                            @Html.Label("Inactivo")
+                        }*@
+
+
+
+                    @if (item.Estado == 1)
+                    {                    @*Alexander Buchelli - inicio - fecha 13/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "Menues", new { id = item.idRol }, new { @class = "btn btn-default btn-block fa fa-cog" })
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarRol", new { id = item.idRol, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+                    @* | @Html.ActionLink("Eliminar", "EliminarRol", new { id = item.idRol, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+
+<input type="hidden" value="@ViewBag.nombreRoles" id="nombreroles" />
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/Rol.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}
+
+

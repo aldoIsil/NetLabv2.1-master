@@ -1,0 +1,46 @@
+﻿@* Descripción: Vista para mostrar el poup que permite agregar un material adicional.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenMuestra>
+
+<style type="text/css">
+    .texto {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+</style>
+
+<table id="tableOrdenMuestra" class="table">
+    <tr>
+        <th width="100">Código de Muestra</th>
+        <th width="500">Tipo de Muestra</th>
+        <th width="80">Fecha Obtención</th>
+        <th width="60">Hora Obtención</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        <tbody id="tbodyOrdenMuestra">
+            @foreach (var item in Model)
+            {
+                var idMuestra = item.idOrdenMuestra;
+                <tr>
+                    <td>
+                        <span>@Html.Raw(item.MuestraCodificacion.codificacion)</span>
+                        @*@Html.TextBox("codificacion" + idMuestra, item.MuestraCodificacion.codificacion, new { @class = "form-control input-sm codigoMuestraRecepcion", style = "max-width:120px" })*@
+                        @Html.Hidden("idMuestra", idMuestra)
+                    </td>
+                    <td class="texto">
+                        @Html.DisplayFor(modelItem => item.TipoMuestra.nombre)
+                    </td>
+                    @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                    <td style="text-align: center; vertical-align: middle">@Html.TextBox("fechaMuestra" + idMuestra, item.fechaColeccionToString, new { @class = "form-control  input-sm datepickerMaxValue dateOnly", style = "max-width:120px", autocomplete = "off" })</td>
+                    <td style="text-align: center; vertical-align: middle">@Html.TextBox("horaMuestra" + idMuestra, item.horaColeccionToString, new { @class = "timepicker form-control input-sm", style = "max-width:80px" })</td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
+

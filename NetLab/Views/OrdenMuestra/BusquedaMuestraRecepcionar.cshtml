@@ -1,0 +1,448 @@
+﻿@*  Descripción: Vista, muestra y configura la pantalla de busqueda de muestras para recepecion y referenciar a otro laboratorio o establecimiento.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.ViewData.OrdenRecepcionVd>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+
+@*Alexander Buchelli - inicio - fecha 24/08/17 - se quitaron estilos propios para redimensionar columnas con las clases bootstrap, se agrego la clase table responsive*@
+
+
+
+@{
+    ViewBag.Title = "Recepción de Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool checkedFRegistro = true;
+    bool checkedFColeccion = false;
+
+    if (ViewBag.esFechaRegistro == 1)
+    {
+        checkedFRegistro = true;
+    }
+    if (ViewBag.esFechaRegistro == 2)
+    {
+        checkedFColeccion = true;
+    }
+    var classDatePicker = "form-control datepickerDesde datePickerWidth";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@using (Html.BeginForm("BusquedaMuestraRecepcionar", "OrdenMuestra", FormMethod.Post))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Muestras por Recibir</legend>
+        <div id="dvBusquedaUsuario2">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3 divWidth">
+                        <div class="input-group radioButtonWidthReg">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaRegistro", "1", checkedFRegistro)
+                            </span>
+                            <label for="esFechaRegistro" type="text" class="form-control radioButtonWidth">Fecha de Solicitud de la Orden</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="input-group radioButtonWidthColec">
+                            <span class="input-group-addon">
+                                @Html.RadioButton("esFechaRegistro", "2", checkedFColeccion, new { @id = "esFechaColeccion" })
+                            </span>
+                            <label for="esFechaColeccion" type="text" class="form-control radioButtonWidth">Fecha de Obtención de la Muestra</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Desde: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Hasta: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2 " })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { id = "datepickerHasta", @class = "form-control datepickerHasta datePickerWidth", autocomplete = "off" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Estado:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+
+                        @Html.DropDownList("estadoOrden", new List<SelectListItem>
+                          {
+                            new SelectListItem{ Text="Todos", Value = "0" },
+                            new SelectListItem{ Text="Muestras Enviadas por UTM", Value = "1", Selected = true },
+                            new SelectListItem{ Text="Muestras Enviadas por ROM", Value = "2" },
+                             new SelectListItem{ Text="Rechazo en Lab.", Value = "4" }
+                          }, (string)ViewBag.estadoOrden, new { @class = "form-control cmbxBusqueda col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    </div>
+                    <div>
+                        @Html.Label("Código de Muestra:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                        <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                            @Html.TextBox("idMuestra", (string)ViewBag.idMuestra, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("N° Oficio/Código Documento:", new { @class = "-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroOficio", (string)ViewBag.nroOficio, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    @Html.Label("Código Orden:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("codigoOrden", (string)ViewBag.codigoOrden, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    @*button*@
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("N° Documento/DNI:", new { @class = "-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control cmbxBusqueda ValidateLength" })
+                    </div>
+                    @Html.Label("Apellido Paterno:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("apellidopaterno", (string)ViewBag.apellidopaterno, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Apellido Materno:", new { @class = "-label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("apellidomaterno", (string)ViewBag.apellidomaterno, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                    @Html.Label("Nombres:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("nombres", (string)ViewBag.nombres, new { @class = "form-control cmbxBusqueda" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-md-offset-5 col-lg-3 col-lg-offset-5">
+                        <br />
+                        <button class="btn btn-primary" id="btnBuscar" value="Buscar" type="submit" onclick="return FechaValidaBusqueda('datepickerDesde', 'datepickerHasta');"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                        <button class="btn btn-primary" id="btnRecepcionMasiva" value="Recepcion"> <span class="fa fa-list-ol"></span> Recepción Masiva</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    if (ViewBag.MostrarMensaje)
+    {
+        <span>*Su búsqueda tiene @ViewBag.TotalRegistros resultados. Para visualizar todos los resultados descargue el archivo excel en el siguiente enlace.</span>
+        <br />
+    }
+    <a href="@(Url.Action("ExportarResultadosExcel", "OrdenMuestra", null, Request.Url.Scheme))" class="lnkForm"><img src="~/img/excel_download.gif" /> Descargar Excel</a>
+    <br />
+    @*agregada clase para hacer la tabla responsive*@
+    <div class="table-responsive">
+        <table class="table" id="dtorden">
+            <thead>
+                <tr>
+                    <th>
+                        <input type='checkbox' name="chkAll" id="chkAll" />
+                    </th>
+                    @*<th></th>*@
+                    <th>
+                        Fecha de Solicitud
+                    </th>
+                    <th>
+                        Código de Orden
+                    </th>
+                    <th>
+                        Código de Muestra
+                    </th>
+                    <th>
+                        Tipo Orden
+                    </th>
+                    <th>
+                        EESS/LAB Origen
+                    </th>
+                    <th>
+                        Documento Referencia
+                    </th>
+                    <th>
+                        Documento Identidad
+                    </th>
+                    <th>
+                        Género
+                    </th>
+                    <th>
+                        Fecha Nacimiento
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    @*<th>
+                            Levantar Observaciones
+                        </th>*@
+                </tr>
+            </thead>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.EXISTE_PENDIENTE == 1)
+                        {
+                            <input type='checkbox' name='id' id="chkSelect" value='@item.idOrden' />
+                        }
+                    </td>
+                    @*<td style="text-align:center"> <img src="~/img/001_31.png" style="cursor:pointer" CodigoOrden="@item.idOrden" /></td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaSolicitudStr)
+                    </td>
+                    <td>
+                        <button type="button" class="btn-link" onclick="VerOrden('@item.idOrden','BusquedaMuestraRecepcionar','OrdenMuestra','@item.codigo')" data-toggle="modal"
+                                data-target="#VerOrden2" data-idOrden="@item.idOrden" data-Origen="BusquedaMuestraRecepcionar" data-Controlador="OrdenMuestra" data-Codigo="@item.codigo">
+                            @Html.DisplayFor(modelItem => item.codigo)
+                        </button>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.codigoMuestra)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.tipoOrden)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreEstablecimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nroOficio)
+                    </td>
+                    <td>
+                        @Html.Raw(item.tipoDocumento) @Html.DisplayFor(modelItem => item.nroDocumento)
+                    </td>
+                    <td>
+                        @Html.Raw(item.nombreGenero)
+                    </td>
+                    <td>
+                        @if (item.fechaNacimiento != null)
+                        {
+                            @Html.Raw(item.fechaNacimiento.Value.ToShortDateString())
+                        }
+                    </td>
+                    <td>
+                        @*En Proceso*@
+                        @if (item.EXISTE_RECHAZOLAB == 1)
+                        {
+                            @Html.ActionLink("Rechazo en Lab.", "VerRechazo", new { id = item.idOrden, codigo = item.codigo }, new { @class = "recepcionadoDialog btn btn-danger btn-block", id = item.idOrden, codigo = item.codigo })
+                        }
+                        @*@if (item.EXISTE_ORDENRECHAZO == 1)
+                            {
+                                @Html.ActionLink("Levantar Observaciones", "ShowLevantarObservacion", new { id = item.idOrden, codigo = item.codigo }, new { @class = "recepcionadoDialog btn btn-danger btn-block", id = item.idOrden, codigo = item.codigo })
+                            }*@
+                        @if (item.EXISTE_RECIBIDO == 1)
+                        {
+                            @Html.ActionLink("Muestras Enviadas por ROM", "OrdenMuestraRecepcionada", new { id = item.idOrden, codigo = item.codigo }, new { @class = "recepcionadoDialog btn btn-success btn-block", id = item.idOrden, codigo = item.codigo })
+                            @*@Html.ActionLink("Agregar Examen", " ", new { id = item.idOrden, codigo = item.codigo, genero = item.genero }, new { @class = "editDialog btn btn-warning btn-block", id = item.idOrden, codigo = item.codigo, genero = item.genero })*@
+                        }
+                        else
+                        {
+                            if (item.EXISTE_PENDIENTE == 1)
+                            {
+                                @Html.ActionLink("Muestras Enviadas por UTM", "RecepcionarMuestra", new { id = item.idOrden, codigo = item.codigo, genero = item.genero }, new { @class = "editDialog btn btn-warning btn-block", id = item.idOrden, codigo = item.codigo, genero = item.genero })
+                            }
+                        }
+                    </td>
+                    @*@if (item.EXISTE_RECHAZOLAB == 1)
+                        {
+                            <td>
+                                <button type="button" class="btn btn-warning" onclick="LevantarObservacionClick('@item.idOrden')" data-toggle="modal"
+                                        data-target="#LevantarObservacion" data-idOrden="@item.idOrden">
+                                    Levantar Observaciones
+                                </button>
+                            </td>
+                        }*@
+                </tr>
+                @*<tr id="fila-@item.idOrden" style="display:none">
+                        <td></td>
+                        <td colspan="11">
+                            @Html.Action("DetalleOrden", new { IdOrden = item.idOrden, CodigoOrden = item.codigo })
+                        </td>
+                    </tr>*@
+            }
+
+        </table>
+    </div>
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+<div class="modal Adapterscreen-modal fade" id="VerOrden2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataVerOrden2" class="modal-body">
+                <div class="container-fluid">
+
+                </div>
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal Adapterscreen-modal fade" id="LevantarObservacion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content" role="document">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NetLab - Instituto Nacional de Salud</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div id="DataLevantarObservacion" class="modal-body">
+                <div class="container-fluid">
+
+                </div>
+            </div>
+
+            <br />
+            <!-- Modal footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-hidden" style="visibility: hidden">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/OrdenMuestra.js?updated={0}", new Random().Next(0, 999))))
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#dtorden').DataTable({
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                "iDisplayLength": 50
+                //"paging": false,
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+}
+
+
+<style type="text/css" media="all">
+    /*.idLaboratorioDestino {
+                    width: 200px !important;
+                }*/
+
+    /*.cmbxBusqueda {
+                    width: 230px !important;
+                }*/
+
+    .datePickerWidth {
+        width: 100px !important;
+    }
+
+    /*.form-group {
+                        margin-bottom: 6px;
+                    }*/
+
+    .radioButtonWidthReg {
+        width: 250px !important;
+    }
+
+    .radioButtonWidthColec {
+        width: 275px !important;
+    }
+
+    .divWidth {
+        width: 260px !important;
+    }
+
+    .lnkForm img {
+        height: 26px;
+    }
+
+
+    /*.radioButtonWidthReg{
+        width: 180px !important;
+    }
+
+    .radioButtonWidthColec{
+        width: 200px !important;
+    }
+
+    .divWidth{
+        width: 190px !important;
+    }*/
+
+    /**Alexander Buchelli - fin*/
+
+    /*.selMotivoRechazo {
+                    width: 200px;
+                    height: 20px;
+                    max-height: 20px;
+                }
+
+                .SumoSelect {
+                    width: 300px;
+                }
+
+
+                    .SumoSelect > .optWrapper > .options {
+                        max-height: 145px;
+                    }*/
+</style>
+
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>*@
+

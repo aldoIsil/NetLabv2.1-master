@@ -1,0 +1,18 @@
+﻿@* Descripción: Vista, muestra la pantalla indicando la finalización de la sesión.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@{
+    ViewBag.Title = "Caducidad de Sesión";
+}
+<script>
+    window.setTimeout(function () {
+        window.location.href = "@Url.Action("Index", "Login")";
+    }, 4000);
+</script>
+<br/><br/>
+<div class="alert alert-warning"><h2><i class="fa fa-user-times fa-3x"></i> 
+    Su sesión ha caducado. Se le redirigirá a la pantalla de Inicio de Sesión.</h2>
+</div>
+

@@ -1,0 +1,8 @@
+﻿@*  Descripción: Vista, muestra el combo de las razas por animal.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.Animal.RazaViewModels
+
+@Html.DropDownList("Raza.IdRaza", Model.Razas, new { id = "Raza_IdRaza", @class = "form-control" })

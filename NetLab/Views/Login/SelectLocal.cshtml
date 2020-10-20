@@ -1,0 +1,350 @@
+﻿@* Descripción: Vista para seleccionar la institucion, disa, red, microred y establecimiento  del usuario.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using Model;
+@{
+    ViewBag.Title = "Login";
+
+    var instituciones = ViewBag.instituciones as List<Institucion>;
+    var disas = ViewBag.disas as List<DISA>;
+    var redes = ViewBag.redes as List<Red>;
+    var microredes = ViewBag.microredes as List<MicroRed>;
+    var establecimientos = ViewBag.establecimientos as List<Establecimiento>;
+    var localModel = ViewBag.Locales as Local;
+}
+
+@*Alexander Buchelli - inicio - fecha 24/08/17 - se quitaron estilos propios para redimensionar columnas con las clases bootstrap*@
+
+
+<br />
+<h2>        &nbsp; &nbsp; &nbsp; &nbsp;              Seleccione un ESTABLECIMIENTO,LABORATORIO o ÁREA</h2>
+<br />
+<div align="center" id="divLogin">
+
+    <form id="frmInstituciones" method="post" action="@(Url.Action("SelectMain", "Login", null, Request.Url.Scheme))">
+        <input type="hidden" id="hdnTipo" name="hdnTipo" value="0" />
+        <input type="hidden" id="hdnInstitucion" name="hdnInstitucion" value="0" />
+        <div class="form-group">
+            <label for="selInstituciones" class="-label- col-xs-12 col-sm-3 col-md-2 col-lg-2"> SUB SECTOR:</label>
+            <div class="-label- col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+
+                @*<label for="selInstituciones" class="col-md-2 control-label"> SUB-SECTOR: </label>
+                    <div class="col-md-6">*@
+
+                @* Descripción: Vista Se carga y se muestra el valor seleccionado de la Institucion en el Dropdownlist.
+                    Author: Terceros.
+                    Fecha Creacion: 01/01/2017
+                    Fecha Modificación: 02/02/2017.
+                    Modificación: Se agregaron comentarios.*@
+                @if (instituciones != null && instituciones.Count > 0)
+                {
+                    <select id="selInstituciones" name="selInstituciones" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10">
+                        @foreach (Institucion item in instituciones)
+                        {
+                            if (item.IdInstitucion == localModel.IdInstitucion.ToString())
+                            {
+                                <option value="@item.IdInstitucion" selected="selected"> @item.nombreInstitucion</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdInstitucion"> @item.nombreInstitucion</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selInstituciones" name="selInstituciones" class=" -label- col-xs-12 col-sm-10 col-md-10 col-lg-10"></select>
+                }
+            </div>
+        </div>
+
+
+
+        @*@if (instituciones != null && instituciones.Count > 0)
+                    {
+                        <select id="selInstituciones" name="selInstituciones" class="form-control">
+                            @foreach (Institucion item in instituciones)
+                            {
+                                if (item.IdInstitucion == localModel.IdInstitucion.ToString())
+                                {
+                                    <option value="@item.IdInstitucion" selected="selected"> @item.nombreInstitucion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdInstitucion"> @item.nombreInstitucion</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="selInstituciones" name="selInstituciones" class="form-control"></select>
+                    }
+            </div>
+                    </div>*@
+
+
+
+
+
+
+
+        <br /><br />
+
+        <input type="hidden" id="hdnDisa" name="hdnDisa" value="0" />
+        <div class="form-group">
+            <label for="seldisa" class="-label- col-xs-12 col-sm-3 col-md-2 col-lg-2"> DISA/DIRESA/GERESA:</label>
+            <div class="-label- col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+                @*<label for="seldisa" class="col-md-2 control-label"> DISA/DIRESA/GERESA:</label>
+                    <div class="col-md-6">*@
+
+
+
+                @*  Descripción: Vista Se carga y se muestra el valor seleccionado de la DISA en el Dropdownlist.
+                    Author: Terceros.
+                    Fecha Creacion: 01/01/2017
+                    Fecha Modificación: 02/02/2017.
+                    Modificación: Se agregaron comentarios.*@
+                @if (disas != null && disas.Count > 0)
+            {
+                    <select id="seldisa" name="seldisa" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10">
+                        @foreach (var item in disas)
+
+
+
+
+                        {
+                            if (item.IdDISA == localModel.IdDisa)
+                            {
+                                <option value="@item.IdDISA" selected="selected"> @item.NombreDISA</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdDISA"> @item.NombreDISA</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="seldisa" name="seldisa" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10"></select>
+
+                    @*<select id="seldisa" name="seldisa" class="form-control"></select>*@
+
+                }
+            </div>
+
+        </div>
+
+        <br />
+
+        <input type="hidden" id="hdnRed" name="hdnRed" value="0" />
+        <div class="form-group">
+            <label for="selRed" class="-label- col-xs-12 col-sm-3 col-md-2 col-lg-2"> RED:</label>
+            <div class="-label- col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+                @*<label for="selRed" class="col-md-2 control-label"> RED:</label>
+                    <div class="col-md-6">*@
+
+
+                @* Descripción: Vista Se carga y se muestra el valor seleccionado de la Red en el Dropdownlist.
+                    Author: Terceros.
+                    Fecha Creacion: 01/01/2017
+                    Fecha Modificación: 02/02/2017.
+                    Modificación: Se agregaron comentarios.*@
+                @if (redes != null && redes.Count > 0)
+            {
+                    <select id="selRed" name="selRed" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10">
+
+                        @*<select id="selRed" name="selRed" class="form-control">*@
+
+
+                        @foreach (var item in redes)
+                {
+                    if ((item.IdRed + item.IdDISA) == localModel.IdRed)
+                    {
+                                <option value="@(item.IdRed+item.IdDISA)" selected="selected"> @item.NombreRed</option>
+                            }
+                            else
+                            {
+                                <option value="@(item.IdRed+item.IdDISA)"> @item.NombreRed</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selRed" name="selRed" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10"></select>
+
+
+                    @*<select id="selRed" name="selRed" class="form-control"></select>*@
+
+
+                }
+            </div>
+
+        </div>
+
+        <br />
+
+        <input type="hidden" id="hdnMicroRed" name="hdnMicroRed" value="0" />
+        <div class="form-group">
+            <label for="selmicrored" class="-label- col-xs-12 col-sm-3 col-md-2 col-lg-2"> MICRO RED:</label>
+            <div class="-label- col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+                @*<label for="selmicrored" class="col-md-2 control-label"> MICRO RED:</label>
+                    <div class="col-md-6">*@
+
+
+                @* Descripción: Vista Se carga y se muestra el valor seleccionado de la MicroRed en el Dropdownlist.
+                    Author: Terceros.
+                    Fecha Creacion: 01/01/2017
+                    Fecha Modificación: 02/02/2017.
+                    Modificación: Se agregaron comentarios.*@
+                @if (microredes != null && microredes.Any())
+            {
+                    <select id="selmicrored" name="selmicrored" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10">
+
+
+                        @*<select id="selmicrored" name="selmicrored" class="form-control">*@
+
+
+
+                        @foreach (var item in microredes)
+                {
+                    if ((item.IdMicroRed + item.IdRed + item.IdDISA) == localModel.IdMicroRed)
+                    {
+                                <option value="@(item.IdMicroRed+item.IdRed+item.IdDISA)" selected="selected"> @item.NombreMicroRed</option>
+                            }
+                            else
+                            {
+                                <option value="@(item.IdMicroRed+item.IdRed+item.IdDISA)"> @item.NombreMicroRed</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selmicrored" name="selmicrored" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10"></select>
+
+
+
+                    @*<select id="selmicrored" name="selmicrored" class="form-control"></select>*@
+
+
+                }
+            </div>
+
+        </div>
+
+
+        <br />
+
+
+        <input type="hidden" id="hdnEstablecimiento" name="hdnEstablecimiento" value="0" />
+        <div class="form-group">
+            <label for="selEstablecimiento" class="-label- col-xs-12 col-sm-3 col-md-2 col-lg-2">EESS/LAB/ÁREA:</label>
+            <div class="-label- col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+
+                @*<label for="selEstablecimiento" class="col-md-2 control-label">EESS/LAB:</label>
+                    <div class="col-md-6">*@
+
+
+                @* Descripción: Vista Se carga y se muestra el valor seleccionado de Establecimiento en el Dropdownlist.
+                    Author: Terceros.
+                    Fecha Creacion: 01/01/2017
+                    Fecha Modificación: 02/02/2017.
+                    Modificación: Se agregaron comentarios.*@
+                @if (establecimientos != null && establecimientos.Any())
+            {
+                    <select id="selEstablecimiento" name="selEstablecimiento" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10">
+                        @*<select id="selEstablecimiento" name="selEstablecimiento" class="form-control">*@
+
+                        @foreach (var item in establecimientos)
+                {
+                    if (item.IdEstablecimiento == localModel.IdEstablecimiento)
+                    {
+                                <option value="@item.IdEstablecimiento" selected="selected">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdEstablecimiento">@item.CodigoUnico.Substring(3) - @item.Nombre</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="selEstablecimiento" name="selEstablecimiento" class="-label- col-xs-12 col-sm-10 col-md-10 col-lg-10"></select>
+
+
+                    @*<select id="selEstablecimiento" name="selEstablecimiento" class="form-control"></select>*@
+
+
+                }
+            </div>
+            <br /><br /><br />
+
+            <button class="btn btn-primary -label- col-xs-12 col-sm-10 col-md-10 col-lg-10" id="btnEstablecimiento" href="#">Seleccionar</button>
+
+            @*<button class="btn btn-primary" id="btnEstablecimiento" href="#">Seleccionar</button>
+                <br />*@
+
+
+            <br /><br /><br />
+            @if (ViewBag.seleccionFault == 1)
+            {
+
+                @*<div class="alert alert-danger msj-error ">
+                        <strong>¡Seleccione un EESS/LAB/ÁREA!</strong>
+                    </div>*@
+
+                <span class="alert alert-danger">¡Seleccione un EESS/LAB/ÁREA!</span>
+
+
+                @*<span class="msj-error">Seleccione un EESS/LAB</span>*@
+            }
+        </div>
+    </form>
+
+
+</div>
+
+<style type="text/css">
+    /*.form-group {
+        padding-top: 30px;
+    }
+
+    /* form-control {
+        width: 75% !important;
+    }
+         */
+    /*.fg-btn {
+        text-align: justify;
+        padding-right: 164px;
+    }
+
+    .control-label {
+        font-size: 15px !important;
+        margin-top: 5px;
+        width: 300px !important;
+    }*/
+    /*
+    .linksGroup div {
+        padding-top: 40px;
+    }*/
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Login.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+}
+
+
+@*Alexander Buchelli - fin*@

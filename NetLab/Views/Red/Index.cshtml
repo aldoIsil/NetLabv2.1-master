@@ -1,0 +1,316 @@
+﻿@*  Descripción: Vista, muestra la pantalla de busqueda  y mantenimiento de las Redes
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.RedMant>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+@{
+    ViewBag.Title = "Mantenimiento de Redes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+<h2 class="text-primary">RED</h2>
+@using (Html.BeginForm("Index", "Red", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese un nombre :</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+    @Html.ActionLink("+ Nuevo", "NuevoRedMant", new { page = ViewBag.page, ViewBag.search }, new { id = "openDialog", @class = "btn btn-primary" })
+}
+<br />
+
+
+@if (Model != null && Model.TotalItemCount > 0)
+{   //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th width="25">
+                    DISA/DIRESA/GERESA
+                </th>
+                <th width="220">
+                    NOMBRE DE RED
+                </th>
+                <th width="40" style="text-align:center;">
+                    ESTADO
+                </th>
+                <th width="50">Editar</th>
+
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombredisa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombrered)
+                </td>
+                @*<td>
+                        @if (item.Estado == 1)
+                        {
+                            @Html.Label("Activo")
+                        }
+                        else
+                        {
+                            @Html.Label("Inactivo")
+                        }
+                    </td>*@
+                @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+
+                <td class="text-center">
+                    @if (item.Estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+                </td>
+
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarRedMant", new { iddisa = item.idDisa, idred = item.idred, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" }) @*|*@
+                    @*@Html.ActionLink("Eliminar", "EliminarDisaMant", new { iddisa = item.idDisa, idred = item.idred, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+@*@@if (Model != null)
+    { //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina*@
+@*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+@*}*@
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/RedMant.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @*@*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+    <script type="text/javascript">
+
+    $("body").on("submit", "#formAgregarRedMant", function (e) {
+
+            var ok = false;
+
+
+            var ok2=false;
+
+            var ok3=false;
+
+            var ok4=false;
+
+            var iddisa = $.trim($('#idEnfermedad').val());
+
+            var idred = $.trim($('#idred').val());
+
+            var nombrered= $.trim($('#nombrered').val());
+
+
+
+            if (iddisa === '') {
+                jAlert("Seleccione una DISA.", "¡Alerta!");
+
+            }else {
+                ok=true;
+            }
+
+
+            if (idred === '') {
+                jAlert("Ingrese un Id de Red.", "¡Alerta!");
+
+            }else {
+                ok2=true;
+            }
+
+
+            if (nombrered === '') {
+                jAlert("Ingrese un nombre de Red.", "¡Alerta!");
+
+            }else {
+                ok3=true;
+            }
+
+
+
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+
+
+        var nom=iddisa.toUpperCase().trim()+idred.toUpperCase().trim();
+
+
+            if (statesAvailable.includes(nom)  ) {
+                jAlert("Ya existe una red con esta disa y ID.", "¡Alerta!");
+
+            }else {
+                ok4=true;
+            }
+
+
+
+
+
+
+            if (ok && ok2 && ok3 && ok4)
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+
+                        $("#btnCrear").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+
+                        jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+
+
+    $("body").on("submit", "#formEditarRedMant", function (e) {
+
+        var ok = false;
+
+
+        var ok2=false;
+
+        var ok3=false;
+
+
+
+        var nombrered= $.trim($('#nombrered').val());
+
+
+
+
+
+
+        if (nombrered === '') {
+            jAlert("Ingrese un nombre de Red.", "¡Alerta!");
+
+        }else {
+            ok=true;
+        }
+
+
+
+
+        var statesAvailable = @Html.Raw(@ViewBag.nombresredLista);
+
+        var nombreredInicial=$("#someDataFromPartialSomehownombrered").val().toUpperCase();
+
+        var nom=nombrered.toUpperCase();
+
+        if (nombreredInicial==nom) {
+            ok2=true;
+        }else {
+            if (statesAvailable.includes(nom)  ) {
+                jAlert("Ya existe una red con este nombre.", "¡Alerta!");
+
+            }else {
+                ok2=true;
+            }
+        }
+
+
+
+
+
+
+
+
+        if (ok && ok2)
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: $(this).attr("action"),
+                data: $(this).serialize(),
+                success: function (response) {
+
+                    var $resp = $(response);
+
+                    $("#btnGuardar").addClass("hidden");
+                    $("#btnCerrar").removeClass("hidden");
+                    $("#btnCerrar").on("click", function () {
+                        location.reload();
+                        $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                    });
+
+                    jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                }
+            });
+
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}

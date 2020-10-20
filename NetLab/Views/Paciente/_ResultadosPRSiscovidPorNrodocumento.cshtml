@@ -1,0 +1,95 @@
+﻿@model PagedList.IPagedList<Model.Paciente>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Resultado de Prueba Rápida de Paciente";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    var tipo = ViewBag.Tipo;
+}
+
+
+<h3 class="text-primary">Resultado de Prueba Rápida de Paciente</h3>
+<br />
+@*@if (tipo == 1)
+{
+    <button type="button" class="btn btn-outline-primary" id="btnImprimir">Imprimir</button>
+}*@
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table id="dtPacienteBusqueda" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                @if (tipo == 1)
+                {
+                    <th></th>
+                }        
+                <th>
+                    Documento Paciente
+                </th>
+                <th>
+                    Resultado
+                </th>
+                <th>
+                    Fecha Resultado
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+                {
+            <tr>
+                @if (tipo == 1)
+                {
+                    <td>
+                        <a href="@(Url.Action( "ImprimirResultadosKobos", "ReporteResultados", new { id = item.estatus }))" target="_blank" class="lnkForm">
+                            <img src="~/img/imgPdf.gif" />
+                        </a>
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resultado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaValidacion)
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">@ViewBag.notFound</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/datatables.js")
+    @Scripts.Render("~/Scripts/datatables.min.js")
+    @Styles.Render("~/Content/datatables.min.css")
+    @Styles.Render("~/Content/TablaCSS.css")
+
+    @Scripts.Render("~/Scripts/dataTables.bootstrap.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap.min.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap4.js")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Scripts/dataTables.foundation.js")
+    @Scripts.Render("~/Scripts/dataTables.foundation.min.js")
+    @Scripts.Render("~/Scripts/dataTables.jqueryui.js")
+    @Scripts.Render("~/Scripts/dataTables.jqueryui.min.js")
+    @Scripts.Render("~/Scripts/datatables.js")
+    @Scripts.Render("~/Scripts/datatables.min.js")
+    @Scripts.Render("~/Scripts/dataTables.semanticui.js")
+    @Scripts.Render("~/Scripts/dataTables.semanticui.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#dtPacienteBusqueda').DataTable({
+                "scrollY": "600px",
+                "scrollX": "200px",
+                "scrollCollapse": true
+            });
+            $('.dataTables_length').addClass('bs-select');
+            });
+    </script>
+}

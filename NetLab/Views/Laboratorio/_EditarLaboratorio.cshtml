@@ -1,0 +1,114 @@
+﻿@*  Descripción: Vista, muestra la pantalla para editar informacion de laboratorios.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+
+@model NetLab.Models.LaboratorioViewModels
+    
+@using (Html.BeginForm("EditarLaboratorio", "Laboratorio", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmEditarLaboratorio", enctype = "multipart/form-data", onsubmit = "javascript:return submitValidation();" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Laboratorio.IdLaboratorio)
+    @Html.HiddenFor(model => model.Laboratorio.Estado)
+
+    <div class="form-horizontal">
+        <h4>Laboratorio</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Nombre, new {@class = "control-label col-md-4"})
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Nombre, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Laboratorio.Nombre, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Direccion, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Direccion, new {htmlAttributes = new {@class = "form-control", @rows = 4}})
+                @Html.ValidationMessageFor(model => model.Laboratorio.Direccion, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Laboratorio.Website, new {@class = "control-label col-md-4"})
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Laboratorio.Website, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Laboratorio.Website, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Logo, new {@class = "control-label col-md-4"})
+            <div class="col-md-7 divFileLogo">
+                @Html.TextBoxFor(model => model.Logo, new { id="logo", type="file" })
+                @Html.ValidationMessageFor(model => model.Logo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">    
+            @Html.Label("Logo actual", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @if (Model.Laboratorio.Logo == null)
+                {
+                    @Html.Label("No presenta")
+                }
+                else
+                {
+                    <div style="height: 100px">
+                        <img src='@Url.Action( "ShowLogo", "Laboratorio", new { id = Model.Laboratorio.IdLaboratorio })' alt="" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sello, new {@class = "control-label col-md-4"})
+            <div class="col-md-7 divFileSello">
+                @Html.TextBoxFor(model => model.Sello, new { id = "sello", type = "file" })
+                @Html.ValidationMessageFor(model => model.Sello, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Sello actual", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @if (Model.Laboratorio.Sello == null)
+                {
+                    @Html.Label("No presenta")
+                }
+                else
+                {
+                    <div style="height: 100px">
+                        <img src='@Url.Action( "ShowSello", "Laboratorio", new { id = Model.Laboratorio.IdLaboratorio })' alt="" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                <input type="submit" value="Guardar" class="btn-link" />
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarLaboratorio");
+</script>
+

@@ -1,0 +1,10 @@
+﻿@* Descripción: Vista mostrar combobox de los tipo de muestra.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.TipoMuestra>
+
+@Html.DropDownList("idTipoMuestra",
+new MultiSelectList(Model, "idTipoMuestra", "nombre"), 
+new { value = "0", @class = "form-control sizeChosen" })

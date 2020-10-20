@@ -1,0 +1,49 @@
+﻿@* Descripción: Vista para mostrar la informacion seleccionada para cada enfermedad, en esta ventana solo podrá visualizar la informacion.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenExamen>
+
+<style type="text/css">
+    .enfermedad {
+        width: 60px;
+        height: 30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<table class="table" width="1200">
+    <tr>
+        <th width="300">Enfermedad</th>
+        <th width="300">Examen</th>
+        <th width="300">Tipos de Muestra</th>
+    </tr>
+
+    @if (Model != null)
+    {
+        
+        foreach (var item in Model)
+        {
+            <tr>
+                @{var nombreEnfermedad = item.Enfermedad.Snomed + " - " + item.Enfermedad.nombre;}
+                <td>@Html.Raw(nombreEnfermedad)</td>    
+                <td>@Html.DisplayFor(modelItem => item.Examen.nombre)</td>
+                <td>
+                    @{String enfermedadExamenStr = ""; }
+                    @foreach (Model.OrdenMuestra itemMuestra in item.ordenMuestraList)
+                    {
+                        //Juan Muga - inicio
+                        enfermedadExamenStr = enfermedadExamenStr + (itemMuestra.TipoMuestra == null ? string.Empty : itemMuestra.TipoMuestra.nombre) + ", ";
+                        //Juan Muga - fin
+                    }
+                    @{enfermedadExamenStr = enfermedadExamenStr.Substring(0, enfermedadExamenStr.Length - 2); }
+                    @Html.Raw(enfermedadExamenStr)
+                </td>
+
+            </tr>
+            }
+        }
+</table>

@@ -1,0 +1,35 @@
+.dpui-loading {
+    background-color: rgba(0,0,0,.1);
+}
+
+.dpui-loading-inner {
+    z-index: 100000000;
+    height: 50px;
+    width: 200px;
+    background-color: #026eb7;
+    border-radius: 5px;
+    box-shadow: 0 0 0px rgba(0,0,0,.5);
+}
+
+.dpui-loading-gif {
+    width: 200px;
+    height: 0px;
+    font-size: 100px;
+    color: #fff;
+    background-image: url('../img/carga.gif');
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .dpui-loading-gif div, .dpui-loading-gif i, .dpui-loading-gif img, .dpui-loading-gif p, .dpui-loading-gif span {
+        display: none;
+    }
+
+.dpui-loading-text {
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    color: #fff;
+}

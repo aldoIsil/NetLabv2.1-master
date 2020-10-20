@@ -1,0 +1,249 @@
+﻿
+@{
+    ViewBag.Title = "RegistroRecepcionMasivaROM";
+}
+
+<style type="text/css">
+    .clearboth {
+        clear: both;
+        padding-top: 5px;
+    }
+</style>
+@using (Html.BeginForm("FinalizarProceso", "OrdenMuestra", FormMethod.Post, new { id = "frmFinalizarProceso" }))
+{
+    <input type="hidden" id="labvirusrespid" name="labvirusrespid" value="@ViewBag.LabVirusRespId" />
+    <input type="hidden" id="labvirusrespnombre" name="labvirusrespnombre" value="@ViewBag.LabVirusRespNombre" />
+    <div>
+        <fieldset class="default">
+            <legend class="default">Recepción Masiva</legend>
+            <div class="div-row clearboth">
+                @Html.Label("Número de Oficio:", new { @class = "col-xs-12 col-md-1" })
+                <div class="col-xs-12 col-md-4">
+                    @Html.TextBox("NroOficio", null, new { @class = "form-control" })
+                </div>
+                @*<div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+        </div>*@
+                <div class="col-xs-12 col-md-7">
+                    <div class="row clearboth">
+                        @Html.Label("Fecha Recepción:", new { @class = "col-xs-12 col-md-2", @style = "padding-left: 0px !important;" })
+                        <div class="col-xs-12 col-md-3">
+                            @Html.TextBox("FechaRecepcion", null, new { @class = "form-control  input-sm datepickerMaxValue dateOnly col-md-1 obligatorio-fecha", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                        </div>
+                        @Html.Label("Fecha Recepción ROM INS:", new { @class = "col-xs-12 col-md-3" })
+                        <div class="col-xs-12 col-md-3">
+                            @Html.TextBox("FechaRecepcionROMINS", null, new { @class = "form-control  input-sm datepickerMaxValue dateOnly col-md-1 obligatorio-fecha", autocomplete = "off", placeholder = "dd/mm/yyyy" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="div-row clearboth">
+                <div class="col-xs-12 col-md-1">
+                    @Html.Label("EESS/LAB Destino:")
+                </div>
+                <div class="col-xs-12 col-md-4">
+                    <input class="form-control autocomplete obligatorio-select" id="establecimientodestinoid-au" name="establecimientodestinoid-au" placeholder="Seleccione el Establecimiento de destino" />
+                    @Html.Hidden("EstablecimientoDestinoId")
+                </div>
+                <div class="col-xs-12 col-md-1">
+                    @Html.Label("EESS/LAB Envío:")
+                </div>
+                <div class="col-xs-12 col-md-5">
+                    <input class="form-control autocomplete obligatorio-select" id="establecimientoenvioid-au" name="establecimientoenvioid-au" placeholder="Seleccione el Establecimiento de envio" />
+                    @Html.Hidden("EstablecimientoEnvioId")
+                </div>
+            </div>
+            <div class="div-row clearboth">
+                @Html.Label("Código de Muestra:", new { @class = "col-xs-12 col-md-1" })
+                <div class="col-xs-12 col-md-4">
+                    @Html.TextBox("CodigoMuestra", null, new { @class = "form-control", @id = "CodigoMuestra" })
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="row clearboth">
+                        <div class="col-xs-12 col-md-4">
+                            <button class="btn btn-primary" id="btnRecepcionar" value="Recepcionar">Recepcionar</button>
+                        </div>
+                        <div class="col-xs-12 col-md-8">
+                            <span id="msjeErrorCodigo" style="display:none; color:red;">Esta muestra ya ha sido recepcionada.</span>
+                            <span id="msjeErrorVacio" style="display:none; color:red;">Datos incompletos.</span>
+                            <span id="msjeErrorInvalido" style="display:none; color:red;">No se ha podido recepcionar esta muestra.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="default">
+            <legend class="default">
+                Listado
+            </legend>
+            <div class="table-responsive div-row-width">
+                @*<div id="divListaMuestras" style="padding-top:10px; display:none;"></div>*@
+                <div>
+                    <div class="table-responsive">
+                        <table class="table" id="tableidrecepcion">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-2">Código de Muestra</th>
+                                    <th class="col-md-2">Código Lineal</th>
+                                    <th class="col-md-1">Paciente</th>
+                                    <th class="col-md-2">Motivos de Rechazo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <div class="row clearboth">
+                            <div class="col-xs-12 col-md-4">
+                                <button class="btn btn-primary" id="btnExportar" value="Exportar">Exportar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+    @section Scripts {
+        <script type="text/javascript">
+        $(function () {
+            SetDatePickerMaxValue();
+            ClickAgregarRecepcion();
+
+            $("#CodigoMuestra").keyup(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnRecepcionar").click();
+                }
+            });
+
+            $("#establecimientodestinoid-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Content("/Comun/ObtenerEstablecimientosPorNombre")',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: { nombre: request.term, ExamenVA: "", tipoRegistro: 1 },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EstablecimientoDestinoId").val(i.item.value);
+                    $("#establecimientodestinoid-au").val(i.item.label);
+                },
+                minLength: 3
+            });
+
+            setTimeout(function() {
+                $("#establecimientodestinoid-au").val($("#labvirusrespnombre").val());
+                $("#EstablecimientoDestinoId").val($("#labvirusrespid").val());
+            }, 250);
+
+            $("#establecimientoenvioid-au").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Content("/Orden/GetEstablecimientosNew")',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        dataType: "json",
+                        //data: JSON.stringify({
+                        //    nombre: request.term
+                        //}),
+                        data: { Prefix: request.term },
+                        success: function (respdatos) {
+                            response($.map(respdatos, function (item) {
+                                return { label: item.Nombre, value: item.IdEstablecimiento };
+                            }));
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#EstablecimientoEnvioId").val(i.item.value);
+                    $("#establecimientoenvioid-au").val(i.item.label);
+                    //RevisarDatosObligatorios();
+                },
+                minLength: 3
+            });
+
+
+        });
+
+        function SetDatePickerMaxValue() {
+            $(".datepickerMaxValue").setDatePickerWithMaxValue();
+        }
+
+        function ClickAgregarRecepcion() {
+            $("#btnRecepcionar").click(function (e) {
+                e.preventDefault();
+                $("#msjeErrorCodigo").hide();
+                $("#msjeErrorVacio").hide();
+                $("#msjeErrorInvalido").hide();
+                $("#msjeerror").hide();
+                var fr = $("#FechaRecepcion").val();
+                var destino = $("#EstablecimientoDestinoId").val();
+                var envio = $("#EstablecimientoEnvioId").val();
+                var codigoMuestra = $("#CodigoMuestra").val();
+                console.log("fr: ", fr);
+                console.log("destino: ", destino);
+                console.log("envio: ", envio);
+                console.log("codigoMuestra: ", codigoMuestra);
+                if (fr == undefined || fr == "" || destino == "" || envio == "" || codigoMuestra == "") {
+                    $("#msjeErrorVacio").show();
+                } else {
+                    $.ajax({
+                        url: "/OrdenMuestra/VerificarMuestraPorRecepcionar",
+                        type: "GET",
+                        cache: false,
+                        //data: JSON.stringify({}),
+                        data: {
+                            codigoMuestra: $("#CodigoMuestra").val()
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            if (response) {
+                                $("#msjeErrorCodigo").show();
+                            } else {
+                                AgregarRecepcion();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function AgregarRecepcion() {
+            $.ajax({
+                url: "/OrdenMuestra/RecepcionarMuestraROM",
+                type: "POST",
+                cache: false,
+                //data: JSON.stringify({}),
+                data: {
+                    nroOficio: $("#nroOficio").val(),
+                    fechaRecepcion: $("#FechaRecepcion").val(),
+                    fechaRecepcionRomINS: $("#FechaRecepcionROMINS").val(),
+                    EstablecimientoDestinoId: $("#EstablecimientoDestinoId").val(),
+                    EstablecimientoEnvioId: $("#EstablecimientoEnvioId").val(),
+                    CodigoMuestra: $("#CodigoMuestra").val()
+                },
+                success: function (response) {
+                    //$("#divListaMuestras").html(response);
+                    //$("#divListaMuestras").show();
+                    //$("#tableidrecepcion").append(response);
+                    console.log("response recepcionar: ", response);
+                    if (response.length > 0) {
+                        $('#tableidrecepcion > tbody:last-child').append(response);
+                    } else {
+                        $("#msjeErrorInvalido").show();
+                    }
+                }
+            });
+        }
+        </script>
+    }

@@ -1,0 +1,10 @@
+﻿@model List<Model.Institucion>
+<select id="selInstituciones" name="selInstituciones" class="form-control">
+    <option value="0">Seleccione una Institución</option>
+    @foreach (Model.Institucion item in Model)
+    {
+        <option value="@item.codigoInstitucion">@item.nombreInstitucion</option>
+    }
+</select>
+@Html.Hidden("hdninstitucioncount", Model.Count)
+@Html.Hidden("hdnfirstinstitucion", Model.First().codigoInstitucion)

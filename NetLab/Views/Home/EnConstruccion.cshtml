@@ -1,0 +1,63 @@
+﻿@*  Descripción: Vista para mostrarel mensaje de pagina en costrucción.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    ViewBag.Title = "Build Page";
+}
+
+
+
+<div class="jumbotron" style="background-color: #ffffff">
+    <h2 class="welMsg"><img src="~/img/construccion.jpg" alt="" style="height: 150px;">&nbsp; &nbsp; @ViewBag.Message </h2>
+</div>
+
+<div class="row">
+   
+</div>
+
+
+<script type="text/javascript">
+    window.onload = function () {
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    };
+</script>
+
+<style type="text/css">
+    .left {
+        text-align: left !important;
+    }
+
+    .divEstadoMuestras {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .selEstado {
+        width: 100px;
+    }
+
+    .accordion-inner {
+        padding: 10px;
+    }
+
+    .tblDatosRecepcion {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .divEstadoMuestras td, .divEstadoMuestras th {
+        text-align: center; 
+    }
+
+    .tblDatosRecepcion, .tblDatosRecepcion td, .tblDatosRecepcion th {
+        border: 1px solid black; 
+        padding: 3px;
+    }
+
+</style>

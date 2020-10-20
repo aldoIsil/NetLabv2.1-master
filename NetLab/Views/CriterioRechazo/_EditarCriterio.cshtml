@@ -1,0 +1,68 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la edicion de datos de Criterios de Rechazo
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.CriterioRechazo.CriterioViewModels
+
+@using (Html.BeginForm("EditarCriterio", "CriterioRechazo", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmEditarCriterio" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Criterio.Glosa, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Criterio.Glosa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Criterio.Glosa, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoCriterio, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.DropDownListFor(model => model.TipoCriterio.IdTipoCriterio, Model.TipoCriterio.SelectList, new { @class = "form-control", style = "width:150px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.Criterio.EstadoCheck, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Criterio.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <input type="hidden" id="someDataFromPartialSomehow" value="@Model.Criterio.Glosa" />
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary" />
+                    <input type="button" value="Regresar" id="btnCerrar" class="btn btn-primary hidden" />*@
+
+
+                <button type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Guardar</button>
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+            </div>
+        </div>
+    </div>
+}
+<div id="examenDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmEditarCriterio");
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

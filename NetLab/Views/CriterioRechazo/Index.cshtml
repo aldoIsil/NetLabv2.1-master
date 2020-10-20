@@ -1,0 +1,213 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la busqueda de datos de Criterios de Rechazo
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@model PagedList.IPagedList<Model.CriterioRechazo>
+
+@{
+    ViewBag.Title = "Mantenimiento de Criterios de Rechazo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<h2 class="text-primary">Criterios de Rechazo</h2>
+@using (Html.BeginForm("Index", "CriterioRechazo", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese un nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+
+    <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+    @Html.ActionLink("+ Nuevo Criterio de Rechazo", "NuevoCriterio", new { page = Model.PageNumber, ViewBag.search }, new { id = "openDialog", @class = "btn btn btn-primary" })
+
+
+}
+
+
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+
+
+    @*<div class="table-responsive">*@
+    <table id="mydata" class="table table-responsive" @*style="width: 800px"*@>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Glosa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().DescripcionTipo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Estado)
+                </th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DescripcionTipo)
+                </td>
+                @*<td class="text-center">*@
+                @*@Html.DisplayFor(modelItem => item.EstadoDesc)*@
+                <td class="text-center">
+
+
+                    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+                    @if (item.Estado == 1)
+                    {
+                        <p style="color:#006f03;">Activo</p>
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+                    }
+                </td>
+
+                <td class="text-center" style="width: 60px">
+                    @Html.ActionLink(" ", "EditarCriterio", new { id = item.IdCriterioRechazo, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+
+
+                    @*@Html.ActionLink("Eliminar", "EliminarCriterio", new { id = item.IdCriterioRechazo, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+            </tr>
+        }
+    </table>
+    @*</div>*@
+}
+else
+{
+    @Html.EmptyTable()
+}
+@if (Model != null)
+{
+    //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+
+@*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/CriterioRechazo.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+
+
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+
+
+    <script type="text/javascript">
+
+
+                $("body").on("submit", "#frmNuevoCriterio", function (e) {
+                    var nombre = $.trim($('#Criterio_Glosa').val());
+                    var ok2=false;
+                    var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+                    var nom=nombre.toUpperCase();
+
+                    if (statesAvailable.includes(nom)  ) {
+                        jAlert("Ya existe un criterio de rechazo con ese nombre.", "¡Alerta!");
+                    }else {
+                        ok2=true;
+                    }
+
+                    if (ok2 )
+                    {
+                        $.ajax({
+                            type: "POST",
+                            cache: false,
+                            url: $(this).attr("action"),
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                var $resp = $(response);
+                                $("#btnCrear").addClass("hidden");
+                                $("#btnCerrar").removeClass("hidden");
+                                $("#btnCerrar").on("click", function () {
+                                    location.reload();
+                                    $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                                });
+
+                                jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                            }
+                        });
+                    }
+
+                    e.preventDefault();
+                    return false;
+                });
+                $("body").on("submit", "#frmEditarCriterio", function (e) {
+
+                    var nombre = $.trim($('#Criterio_Glosa').val());
+                    var ok2=false;
+                    var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+                    var nom=nombre.toUpperCase();
+
+                    var someDataFromPartialSomehow = $("#someDataFromPartialSomehow").val();
+                    var nombreController=someDataFromPartialSomehow.toUpperCase();
+
+                    if (nom==nombreController) {
+                        ok2=true;
+                    }else {
+
+                        if (statesAvailable.includes(nom)  ) {
+                            jAlert("Ya existe un criterio de rechazo con ese nombre.", "¡Alerta!");
+                        }else {
+                            ok2=true;
+                        }
+
+                    }
+
+                    if (ok2 )
+                    {
+                        $.ajax({
+                            type: "POST",
+                            cache: false,
+                            url: $(this).attr("action"),
+                            data: $(this).serialize(),
+                            success: function (response) {
+
+                                var $resp = $(response);
+
+                                $("#btnGuardar").addClass("hidden");
+                                $("#btnCerrar").removeClass("hidden");
+                                $("#btnCerrar").on("click", function () {
+                                    location.reload();
+                                    $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                                });
+
+                                jAlert("Criterio de rechazo Asignado Satisfactoriamente", "Aviso");
+                            }
+                        });
+
+                    }
+
+                    e.preventDefault();
+                    return false;
+                });
+    </script>
+
+
+
+}
+

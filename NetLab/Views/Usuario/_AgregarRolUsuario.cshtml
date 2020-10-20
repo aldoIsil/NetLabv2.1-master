@@ -1,0 +1,126 @@
+﻿@model PagedList.IPagedList<Model.Rol>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarRol", new { ViewBag.idUsuario }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+ 
+    @*<div class="row">
+
+        @Html.Label("Ingrese filtro de búsqueda:", new { @class = "control-label col-md-3" })
+        @Html.TextBox("search", (string)ViewBag.search, new { @class = "form-control col-md-2 txtBusqueda" })
+
+        <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+    
+    </div>*@
+}
+@*<br />*@
+@using (Html.BeginForm("GuardarRol", "Usuario", new { ViewBag.idUsuario }, FormMethod.Post, new { @id = "formAgregarRolUsuario" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model != null)
+    {
+        <table class="table table-responsive" id="TableRol">
+            <thead>
+                <tr>
+                    <th>
+                        <input type='checkbox' name="chkAll" id="chkAll" />
+                    </th>
+                    <th>Menú/Rol</th>
+
+                </tr>
+
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="roles" value="@item.idRol" class="chkRolAgregar" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                </tr>
+            }
+        </table>
+
+
+
+        @*<input id="btnCerrar" type="submit" value="Volver a la Lista" class="btn-link" />
+
+            <input type="Submit" value="Guardar" class="btn btn-primary" id="guardarRoles" />*@
+
+
+        <button type="submit" value="Volver a la Lista" id="btnCerrar" class="btn btn-default"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+        <button type="submit" value="Guardar" class="btn btn-primary" id="guardarRoles"><span class="fa fa-floppy-o"></span> Guardar</button>
+
+
+        @*@Html.PagedListPager(Model, page => Url.Action("AgregarRol", new { page, ViewBag.search, ViewBag.idUsuario }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))*@
+    }
+    else
+    {
+        @*<input id="btnVolverRolUsuario2" type="submit" value="Volver a la Lista" class="btn-link" />*@
+
+        <button type="submit" value="Volver a la Lista" id="btnVolverRolUsuario2" class="btn btn-default"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+    }
+}
+
+
+
+<style type="text/css" media="all">
+    .txtBusqueda {
+        width: 200px !important;
+    }
+</style>
+
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});
+$(document).ready(function () {
+
+
+    var table = $('#TableRol').DataTable({
+
+        "bFilter": true,
+        "paging": true,
+        //"bInfo" : false,
+        "scroll": true,
+        "scrollCollapse": true,
+        aLengthMenu: [
+[10, 25, 50, 100, -1],
+[10, 25, 50, 100, "Todos"]
+        ],
+        //          iDisplayLength: -1,
+        //          "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>' 
+
+    });
+
+    $('a.toggle-vis').on('click', function (e) {
+        e.preventDefault();
+
+        // Get the column API object
+        var column = table.column($(this).attr('data-column'));
+
+        // Toggle the visibility
+        column.visible(!column.visible());
+    });
+});
+
+ </script>
+
+
+@section Scripts {
+
+    @Scripts.Render("~/Scripts/datatables.js")
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+}

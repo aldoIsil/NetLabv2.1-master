@@ -1,0 +1,207 @@
+﻿@using NetLab.Helpers
+@model NetLab.Models.Reportes.ReporteResultadoViewModels
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Reporte de Resultados</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/resultados.css" />
+</head>
+<body>
+    <div style="text-align: center">
+        <div class="block">
+            <div class="column-left" style="height: 100px">
+                <img src="~/img/logoMinsa.png" alt="" style="max-width: 100%; max-height: 100%" />
+            </div>
+            <div class="column-center" style="font-size: medium; text-align: center; height: 100px">
+                <span style="text-decoration: underline">REPORTE DE RESULTADOS</span>
+                <br />
+                <span>N° SOLICITUD: @Model.Orden.NroSolicitud</span>
+            </div>
+            <div class="column-right" style="height: 100px">
+                @if (Model.Laboratorio.Logo != null)
+                {
+                    <img src='@Url.Action("ShowLogo", "Laboratorio", new {id = Model.Laboratorio.IdLaboratorio})' alt="" style="max-width: 100%; max-height: 100%" />
+                }
+            </div>
+            <div class="block">
+                <hr />
+            </div>
+            <div class="block">
+                <div class="column-left">
+                    <div class="row">
+                        <span><b>PACIENTE: </b></span><label>@Model.Orden.Paciente</label>
+                    </div>
+                    <div class="row">
+                        <span><b>INSTITUCION QUE SOLICITA: </b></span><span>@Model.Orden.Establecimiento</span>
+                    </div>
+                </div>
+                <div class="column-center">
+                    <div class="row">
+                        <span><b>EDAD: </b></span><label>@Model.Orden.FechaNacimiento.ToAgeString()</label>
+                    </div>
+                    <div class="row">
+                        <span><b>FECHA DE SOLICITUD: </b></span><span>@Model.Orden.FechaSolicitud.ToShortDateString()</span>
+                    </div>
+                    <div class="row">
+                        <span><b>MEDICO TRATANTE: </b></span>@Model.Orden.MedicoTratante<span></span>
+                    </div>
+                </div>
+                <div class="column-right">
+                    <div class="row">
+                        <span><b>SEXO: </b></span><span>@Model.Orden.Genero</span>
+                    </div>
+                    <div class="row">
+                        <span><b>DOC.REFERENCIA: </b></span><span>@Model.Orden.NroOficio</span>
+                    </div>
+                </div>
+            </div>
+            <div class="block">
+                <hr />
+            </div>
+            <div class="block">
+                <table>
+                    <tr>
+                        <th>ID Muestra</th>
+                        <th>Tipo Muestra</th>
+                        <th>Fecha - Hora de Colección</th>
+                        <th>Fecha - Hora de Recepción</th>
+                    </tr>
+                    @foreach (var muestra in Model.Muestras)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => muestra.IdMuestra)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => muestra.TipoMuestra)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => muestra.FechaColeccion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => muestra.FechaColeccion)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <br />
+            <br />
+            <div class="block">
+                <table style="width: 900px">
+                    <tr style="background-color: lightgray">
+                        <th>EXAMEN</th>
+                        <th>RESULTADO</th>
+                        <th>VALORES DE REFERENCIA</th>
+                        <th>OBSERVACIONES</th>
+                    </tr>
+                    @foreach (var examen in Model.Examenes)
+                    {
+                        <tr>
+                            <td colspan="5" style="text-align: left">
+                                <div class="column-left">
+                                    <div class="row" style="text-align: center">
+                                        <span>@Html.DisplayFor(modelItem => examen.Examen)</span>
+                                    </div>
+                                </div>
+                                <div class="column-center">
+                                    <div class="row" style="text-align: center">
+                                        <span>Enfermedad: </span><span>@Html.DisplayFor(modelItem => examen.Enfermedad)</span>
+                                    </div>
+                                </div>
+                                <div class="column-right">
+                                    <div class="column2-left">
+                                        <div class="row" style="text-align: center">
+                                            <span>Metodo: </span><span>@Html.DisplayFor(modelItem => examen.Metodo)</span>
+                                        </div>
+                                    </div>
+                                    <div class="column2-right">
+                                        <div class="row" style="text-align: center">
+                                            <span>Fecha Liberación: </span><span>@Html.DisplayFor(modelItem => examen.FechaLiberacion)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        foreach (var analito in examen.Detalle)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => analito.Analito)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => analito.Resultado)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => analito.ValorInferior) - @Html.DisplayFor(modelItem => analito.ValorSuperior)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => analito.Observacion)
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+            <div style="height: 80px"></div>
+            <div class="block">
+                <div class="column2-left">
+                    @if (Model.Laboratorio.Sello != null)
+                    {
+                        <div style="display: inline-block">
+                            <img src='@Url.Action("ShowSello", "Laboratorio", new {id = Model.Laboratorio.IdLaboratorio})' alt="" width="100" height="100" />
+                        </div>
+                    }
+                    <div style="display: inline-block">
+                        <hr style="width: 200px" />
+                        <div>@Model.Orden.Validador.Nombre</div>
+                        <div>@Model.Orden.Validador.Cargo</div>
+                        <div>@Model.Orden.Validador.Colegio</div>
+                    </div>
+                </div>
+                <div class="column2-right">
+                    @if (Model.Laboratorio.Sello != null)
+                    {
+                        <div style="display: inline-block">
+                            <img src='@Url.Action("ShowSello", "Laboratorio", new {id = Model.Laboratorio.IdLaboratorio})' alt="" width="100" height="100" />
+                        </div>
+                    }
+                    <div style="display: inline-block">
+                        <hr style="width: 200px" />
+                        <div>@Model.Orden.Liberador.Nombre</div>
+                        <div>@Model.Orden.Liberador.Cargo</div>
+                        <div>@Model.Orden.Liberador.Colegio</div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 40px"></div>
+            <div class="block">
+                <div class="column2-left">
+                </div>
+                <div class="column2-right" style="text-align: right">
+                    <span>Fecha - Hora de Consulta: </span><span>@DateTime.Now.ToShortDateString()</span> - <span>@DateTime.Now.ToLongTimeString()</span>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="block">
+                <div>
+                    <span>PROCESADO EN EL LABORATORIO: </span><span>@Model.Laboratorio.Nombre</span>
+                </div>
+                <div>
+                    <span>DIRECCION: </span><span>@Model.Laboratorio.Direccion</span>
+                </div>
+                <div>
+                    <a href="@Model.Laboratorio.Website">@Model.Laboratorio.Website</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

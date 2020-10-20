@@ -1,0 +1,67 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el registro de nueas areas de procesamiento
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.AreaProcesamiento
+
+@using (Html.BeginForm("NuevaArea", "AreaProcesamiento", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { id = "frmNuevaArea" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sigla, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Sigla, new { htmlAttributes = new { @class = "form-control", style = "width:100px" } })
+                @Html.ValidationMessageFor(model => model.Sigla, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Crear" id="btnCrear" class="btn btn-primary" />
+
+                    <input type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden" />*@
+
+
+
+                <button type="submit" value="Crear" id="btnCrear" class="btn btn-primary"><span class="fa fa-check-square-o"></span> Crear</button>
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new {ViewBag.page, ViewBag.search})*@
+
+
+
+</div>
+<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmNuevaArea");
+</script>

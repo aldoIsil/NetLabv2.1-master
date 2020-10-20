@@ -1,0 +1,83 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el ingreso de criterios a los tipo de muestra / Criterio Rechazo.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.CriterioRechazo>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarCriterio", new { ViewBag.idTipoMuestra }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn btn-primary" />*@
+    <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+}
+<br />
+
+
+
+@using (Html.BeginForm("AgregarCriterio", "TipoMuestra", new { ViewBag.idTipoMuestra }, FormMethod.Post, new { @id = "formAgregarCriterio" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    <table id="TableCriterioRechazo" class="table">
+
+        <tr>
+            <th>
+                <input type='checkbox' name="chkAll" id="chkAll" />
+            </th>
+            <th>Criterio de Rechazo</th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 20px">
+                    <input type="checkbox" name="criterios" value="@item.IdCriterioRechazo" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Glosa)
+                </td>
+            </tr>
+        }
+    </table>
+
+
+
+
+
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+        @*<label id="btnGuardarCriterio" class="btn btn-primary">Grabar</label>
+
+            <input type="button" value="Regresar" id="btnCerrar" class="btn btn-primary hidden" />*@
+
+
+        <button id="btnGuardarCriterio" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Grabar</button>
+
+        @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+                @*<input id="btnGuardarCriterio" type="Submit" value="Guardar" class="btn-link"/>*@
+                @*<input id="btnGuardarCriterio" type="Submit" value="Guardar" class="btn-link" onclick="return ExisteElementoSeleccionado();" />*@
+    }
+}
+
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarCriterio", new { page, ViewBag.search, ViewBag.idTipoMuestra }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>

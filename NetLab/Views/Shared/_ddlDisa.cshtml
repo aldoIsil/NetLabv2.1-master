@@ -1,0 +1,10 @@
+﻿@model List<Model.DISA>
+<select id="seldisa" name="seldisa" class="form-control">
+    <option value="0">Seleccione un elemento</option>
+    @foreach (var item in Model)
+    {
+        <option value="@item.IdDISA">@item.NombreDISA</option>
+    }
+</select>
+@Html.Hidden("hdndisacount", Model.Count)
+@Html.Hidden("hdnfirstdisa", Model.Any() ? Model.First().IdDISA : "")

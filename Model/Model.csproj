@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E588952-5389-42E5-8ED8-C42B9E38F6D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Model</RootNamespace>
+    <AssemblyName>Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="MVC Foolproof Validation">
+      <HintPath>..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalitoOpcionResultado.cs" />
+    <Compile Include="Archivo.cs" />
+    <Compile Include="CargoUsuarioEstablecimiento.cs" />
+    <Compile Include="Catalogo.cs" />
+    <Compile Include="CCSeguimiento.cs" />
+    <Compile Include="ConfiguracionMaterialControlCalidad.cs" />
+    <Compile Include="ConfiguracionPanelControlCalidad.cs" />
+    <Compile Include="Contactar.cs" />
+    <Compile Include="Correo.cs" />
+    <Compile Include="DetalleCatalogo.cs" />
+    <Compile Include="DisaMant.cs" />
+    <Compile Include="DTO\InsumoDTO.cs" />
+    <Compile Include="Enums\ReporteEnums.cs" />
+    <Compile Include="Enums\TipoLocal.cs" />
+    <Compile Include="Enums\TipoProcesoMasivo.cs" />
+    <Compile Include="Enums\TipoRechazoAlta.cs" />
+    <Compile Include="Enums\TipoValidacionResultado.cs" />
+    <Compile Include="ExamenMetodo.cs" />
+    <Compile Include="AreaProcesamientoExamen.cs" />
+    <Compile Include="AreaProcesamiento.cs" />
+    <Compile Include="Analito.cs" />
+    <Compile Include="AnalitoValorNormal.cs" />
+    <Compile Include="Animal.cs" />
+    <Compile Include="AnimalEspecie.cs" />
+    <Compile Include="AnimalRaza.cs" />
+    <Compile Include="Anotations\Columna.cs" />
+    <Compile Include="CriterioRechazo.cs" />
+    <Compile Include="CategoriaDato.cs" />
+    <Compile Include="CepaBancoSangre.cs" />
+    <Compile Include="Dato.cs" />
+    <Compile Include="DatoCategoriaDato.cs" />
+    <Compile Include="DatoClinico.cs" />
+    <Compile Include="DTO\PacienteDTO.cs" />
+    <Compile Include="DTO\UbigeoDTO.cs" />
+    <Compile Include="DTO\UsuarioDTO.cs" />
+    <Compile Include="Enfermedad.cs" />
+    <Compile Include="EnfermedadCategoriaDato.cs" />
+    <Compile Include="EnfermedadExamen.cs" />
+    <Compile Include="Enums\TipoRegistroOrden.cs" />
+    <Compile Include="Enums\TipoCampo.cs" />
+    <Compile Include="Enums\Genero.cs" />
+    <Compile Include="Establecimiento.cs" />
+    <Compile Include="ExamenLaboratorio.cs" />
+    <Compile Include="ExamenResultado.cs" />
+    <Compile Include="ExamenResultadoDetalle.cs" />
+    <Compile Include="ExamenUsuario.cs" />
+    <Compile Include="ExcelDTO\ExcelDTO.cs" />
+    <Compile Include="ExcelResultadoTbGenotype.cs" />
+    <Compile Include="IngresoResultadosPEEC.cs" />
+    <Compile Include="Institucion.cs" />
+    <Compile Include="Laboratorio.cs" />
+    <Compile Include="Liberados.cs" />
+    <Compile Include="Local.cs" />
+    <Compile Include="MicroRed.cs" />
+    <Compile Include="MicroRedMant.cs" />
+    <Compile Include="MuestraPreRecepcion.cs" />
+    <Compile Include="MuestraResultado.cs" />
+    <Compile Include="MuestrasODKCoronavirus.cs" />
+    <Compile Include="OrdenMuestrasRechazo.cs" />
+    <Compile Include="OrdenMuestraRom.cs" />
+    <Compile Include="OrdenResultado.cs" />
+    <Compile Include="OrdenSolicitante.cs" />
+    <Compile Include="ConfiguracionEvalControlCalidad.cs" />
+    <Compile Include="PlantillaEnfermedadExamen.cs" />
+    <Compile Include="PlantillaEstablecimiento.cs" />
+    <Compile Include="PresentacionTipoMuestra.cs" />
+    <Compile Include="RedMant.cs" />
+    <Compile Include="ReportesDTO\ReporteDTO.cs" />
+    <Compile Include="Resultados.cs" />
+    <Compile Include="ResultAnalito.cs" />
+    <Compile Include="SolicitudExamen.cs" />
+    <Compile Include="TableModel\Entidades.cs" />
+    <Compile Include="TableModel\ViewModels.cs" />
+    <Compile Include="Temp\TempModel.cs" />
+    <Compile Include="TipoDato.cs" />
+    <Compile Include="Examen.cs" />
+    <Compile Include="ExamenAnalito.cs" />
+    <Compile Include="ExamenTipoMuestra.cs" />
+    <Compile Include="General.cs" />
+    <Compile Include="Lista.cs" />
+    <Compile Include="ListaDato.cs" />
+    <Compile Include="ListaDetalle.cs" />
+    <Compile Include="Material.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="MenuRol.cs" />
+    <Compile Include="Metodo.cs" />
+    <Compile Include="OpcionDato.cs" />
+    <Compile Include="Orden.cs" />
+    <Compile Include="OrdenDatoClinico.cs" />
+    <Compile Include="OrdenExamen.cs" />
+    <Compile Include="OrdenExamenOrdenMuestra.cs" />
+    <Compile Include="OrdenMaterial.cs" />
+    <Compile Include="OrdenMuestra.cs" />
+    <Compile Include="OrdenMuestraRecepcion.cs" />
+    <Compile Include="OrdenResultadoAnalito.cs" />
+    <Compile Include="Paciente.cs" />
+    <Compile Include="Plantilla.cs" />
+    <Compile Include="PlantillaCategoriaDato.cs" />
+    <Compile Include="PlantillaMaterial.cs" />
+    <Compile Include="Presentacion.cs" />
+    <Compile Include="PresentacionMuestra.cs" />
+    <Compile Include="PresentacionReactivo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proyecto.cs" />
+    <Compile Include="ProyectoEstablecimiento.cs" />
+    <Compile Include="Reactivo.cs" />
+    <Compile Include="Rol.cs" />
+    <Compile Include="MuestraCodificacion.cs" />
+    <Compile Include="TipoMuestra.cs" />
+    <Compile Include="RolMenu.cs" />
+    <Compile Include="TipoMuestraCriterioRechazo.cs" />
+    <Compile Include="TipoMuestraPresentacion.cs" />
+    <Compile Include="Disa.cs" />
+    <Compile Include="TramaEnvioResultado.cs" />
+    <Compile Include="Ubigeo.cs" />
+    <Compile Include="Usuario.cs" />
+    <Compile Include="UsuarioLaboratorio.cs" />
+    <Compile Include="UsuarioEstablecimiento.cs" />
+    <Compile Include="UsuarioResultado.cs" />
+    <Compile Include="UsuarioAreaProcesamiento.cs" />
+    <Compile Include="UsuarioRol.cs" />
+    <Compile Include="ValidaResult.cs" />
+    <Compile Include="ViewData\DatoVd.cs" />
+    <Compile Include="ViewData\AnalitoVd.cs" />
+    <Compile Include="ViewData\MuestraResultadoVd.cs" />
+    <Compile Include="ViewData\MaterialVd.cs" />
+    <Compile Include="ViewData\ExamenVd.cs" />
+    <Compile Include="ViewData\OportunidadResultado.cs" />
+    <Compile Include="ViewData\OrdenExamenResultadosVd.cs" />
+    <Compile Include="ViewData\OrdenMaterialVd.cs" />
+    <Compile Include="ViewData\OrdenRecepcionDetalleVd.cs" />
+    <Compile Include="ViewData\OrdenRecepcionVd.cs" />
+    <Compile Include="ViewData\OrdenIngresarResultadoVd.cs" />
+    <Compile Include="ViewData\OrdenResultadoAnalitoVd.cs" />
+    <Compile Include="ViewData\OrdenResultadoDetalle.cs" />
+    <Compile Include="ViewData\OrdenVd.cs" />
+    <Compile Include="ViewData\PacienteVd.cs" />
+    <Compile Include="ViewData\ResultadoControlCalidadVd.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

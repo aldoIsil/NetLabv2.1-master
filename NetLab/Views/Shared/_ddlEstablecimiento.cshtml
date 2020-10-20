@@ -1,0 +1,14 @@
+﻿@model List<Model.Establecimiento>
+<select id="selEstablecimientos" name="selEstablecimientos" class="form-control">
+    <option value="0">Seleccione un Establecimiento</option>
+    @foreach (var item in Model)
+    {
+        <option value="@item.IdEstablecimiento">@item.Nombre</option>
+    }
+</select>
+@Html.Hidden("hdneesscount", Model.Count)
+@Html.Hidden("hdnfirsteess", Model.First().IdEstablecimiento)
+<script type="text/javascript">
+    //console.log(2);
+    //$("#selEstablecimientos").chosen({ placeholder_text_single: "Seleccione un Establecimiento", no_results_text: "No existen coincidencias" });
+</script>

@@ -1,0 +1,17 @@
+﻿@*  Descripción: Vista, muestra la pantalla con el combo de la provincia por departamento cargado.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model NetLab.Models.ProvinciaViewModels
+
+@Html.DropDownList(
+    Model.ProvinciaSelectId,
+    Model.Provincias, "- Seleccione la provincia -",
+    new
+    {
+        id = Model.ProvinciaSelectId,
+        @class = "form-control",
+        onchange = $"onChangeProvincia('{Model.DepartamentoSelectId}','{Model.ProvinciaSelectId}','{Model.DistritoSelectId}','" +
+                   $"{Model.DistritoDivId}','{Model.UrlDistritosPorProvincia}');"
+    })

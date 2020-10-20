@@ -1,0 +1,172 @@
+﻿@using Model
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<div style="display:none;">
+        <select id="hdnInstituciones" name="hdnInstituciones" class="form-control">
+            <option value="-1">Seleccione un Sub Sector</option>
+            @foreach (Institucion item in (List<Institucion>)ViewBag.Instituciones)
+            {
+                <option value="@item.codigoInstitucion">@item.nombreInstitucion</option>
+            }
+        </select>
+    </div>*@
+<h3>Obtención de Muestras</h3>
+<div style="margin-top:40px;">
+    @using (Ajax.BeginForm("GetReporteData", "Reporte", new AjaxOptions { UpdateTargetId = "chartdivid" }))
+    {
+        @Html.Hidden("nombrefiltro")
+        @Html.Hidden("tipoReporte", Enums.TipoReporte.OportunidadObtencionMuestras)
+        <div class="form-group">
+            
+                @Html.Label("Fecha Desde: ", new { @class = "control -label col-md-2" })
+                <div class="col-md-2">
+                    @Html.TextBox("fechaDesde", DateTime.Now.AddMonths(-1), new { @id = "fechaDesde", @class = "form-control datepickerDesde datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })
+                </div>
+                @Html.Label("Fecha Hasta: ", new { @class = "control -label col-md-2" })
+                <div class="col-md-2">
+                    @Html.TextBox("fechaHasta", DateTime.Now, new { @id = "fechaHasta", @class = "form-control datepickerHasta datePickerWidth inFechaRec1 dateOnly datepickerMaxValue", autocomplete = "off" })
+                </div>
+            
+        </div>
+        <div style="clear: both;">
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Enfermedad:</label>
+            <div class="col-md-6">
+                @*@Html.DropDownList("tipoEnfermedad", new List<SelectListItem>()
+                    {
+                        new SelectListItem { Text="Tuberculosis", Value="1", Selected=true },
+                        new SelectListItem { Text="VIH", Value="2" }
+                    }, new { @class = "form-control" })*@
+                <select id="selEnfermedad" name="selEnfermedad" class="form-control">
+                    <option value="-1">Seleccione una Enfermedad</option>
+                    @foreach (Enfermedad item in (List<Enfermedad>)ViewBag.Enfermedades)
+                    {
+                        <option value="@item.idEnfermedad">@item.nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Seleccione Tipo Búsqueda:</label>
+            <div class="col-md-6" id="divtipobusqueda">
+                <input type="radio" name="tipobusqueda" value="1" />Por Jurisdicción<br />
+                <input type="radio" name="tipobusqueda" value="2" />Por Establecimiento<br />
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+        <div id="divTipoBusquedaEstablecimiento" style="display:none;">
+            <div class="form-group">
+                <input type="hidden" id="hdnEstablecimiento" name="hdnEstablecimiento" value="0" />
+                <label class="col-md-2 control-label">EESS:</label>
+                <div class="col-md-6" id="divddlestablecimiento">
+                    <select id="selEstablecimientos" name="selEstablecimientos" class="form-control">
+                        <option value="-1">Seleccione un Establecimiento</option>
+                        @foreach (Establecimiento item in (List<Establecimiento>)ViewBag.Establecimientos)
+                        {
+                            <option value="@item.IdEstablecimiento">@item.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+        </div>
+            <!--Inicio Filtros Jurisdiccion-->
+        <div id="divTipoBusquedaJurisdiccion" style="display:none;">
+            <input type="hidden" id="hdnInstitucion" name="hdnInstitucion" value="0" />
+            <div class="form-group">
+                <label for="selInstituciones" class="col-md-2 control-label"> SUB SECTOR:</label>
+                <div class="col-md-6" id="divddlinstituciones">
+                    <select id="selInstituciones" name="selInstituciones" class="form-control">
+                        <option value="0">Seleccione una Institución</option>
+                            @foreach (Institucion item in (List<Institucion>)ViewBag.Instituciones)
+                            {
+                                <option value="@item.codigoInstitucion">@item.nombreInstitucion</option>
+                            }
+                    </select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+
+            <input type="hidden" id="hdnDisa" name="hdnDisa" value="0" />
+            <div class="form-group">
+                <label for="seldisa" class="col-md-2 control-label"> DISA/DIRESA/GERESA:</label>
+                <div class="col-md-6" id="divddldisa">
+                    <select id="seldisa" name="seldisa" class="form-control"></select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+
+            <input type="hidden" id="hdnRed" name="hdnRed" value="0" />
+            <div class="form-group">
+                <label for="selRed" class="col-md-2 control-label"> RED:</label>
+                <div class="col-md-6" id="divddlred">
+                    <select id="selRed" name="selRed" class="form-control"></select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+
+            <input type="hidden" id="hdnMicroRed" name="hdnMicroRed" value="0" />
+            <div class="form-group">
+                <label for="selmicrored" class="col-md-2 control-label"> MICRO RED:</label>
+                <div class="col-md-6" id="divddlmicrored">
+                    <select id="selmicrored" name="selmicrored" class="form-control"></select>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+        </div>
+            <!--Fin Filtros-->
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <input id="btnsubmit" type="submit" value="Buscar" class="btn-link" />
+                </div>
+            </div>
+    }
+</div>
+<div id="chartdivid">
+
+</div>
+@*Esta linea de jquery deberia estar en layout*@
+@section scripts {
+    @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Dropdownlists.js?updated={0}", new Random().Next(0, 999))))
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            $("#EESSAutocomplete").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: URL_BASE + "Catalogo/GetEESS",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Nombre, value: item.CodigoUnico };
+                            }))
+                        }
+                    })
+                },
+                select: function (e, i) {
+                    e.preventDefault();
+                    $("#hdnEstablecimiento").val(i.item.value);
+                    $("#EESSAutocomplete").val(i.item.label);
+                },
+                minLength: 1
+            });
+        });
+    </script>
+}

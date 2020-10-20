@@ -1,0 +1,80 @@
+﻿@* Descripción: Vista para mostrar la informacion seleccionada para cada enfermedad.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.OrdenExamen>
+
+<style type="text/css">
+    .texto {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+</style>
+
+
+<table id="tableExamen" class="table" style="table-layout: auto">
+    <tr>
+        <th width="150">Enfermedad</th>
+        <th width="450">Examen</th>
+        <th width="150">Tipos de Muestra</th>
+        @*<th width="50">Eliminar</th>*@
+    </tr>
+
+    @if (Model != null)
+    {
+        // int idEnfermedad = 0;
+
+        <tbody id="tbodyExamen">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @{var nombreEnfermedad = item.Enfermedad.Snomed + " - " + item.Enfermedad.nombre;}
+                    <td class="texto">@Html.Raw(nombreEnfermedad)</td>
+                    <td class="texto">@Html.DisplayFor(modelItem => item.Examen.nombre)</td>
+                    <td class="texto">
+                        @{String enfermedadExamenStr = ""; }
+                        @foreach (Model.OrdenMuestra itemMuestra in item.ordenMuestraList)
+                        {
+                            //if (itemMuestra.idTipoMuestra == item.IdTipoMuestra)
+                            //{
+                            //    enfermedadExamenStr = enfermedadExamenStr + itemMuestra.TipoMuestra.nombre + ", ";
+                            //}
+                            //Juan Muga - inicio
+                            //enfermedadExamenStr = enfermedadExamenStr + itemMuestra.TipoMuestra.nombre + ", ";
+                            if (itemMuestra.TipoMuestra != null)
+                            {
+                                enfermedadExamenStr = enfermedadExamenStr + itemMuestra.TipoMuestra.nombre + ", ";
+                            }
+                            //Juan Muga - fin
+                        }
+                        @{enfermedadExamenStr = enfermedadExamenStr.Equals("") ? "" : enfermedadExamenStr.Substring(0, enfermedadExamenStr.Length - 2); }
+                        @Html.Raw(enfermedadExamenStr)
+                    </td>
+                    <td style="display:none">
+                        @if (item.Examen.PruebaRapida == 1)
+	                    {
+		                    <input type="hidden" id="pr" value="1" />
+	                    }
+                    </td>
+                    @*<td>*@
+                        @*<span class="@item.Enfermedad.idEnfermedad" id="@item.IdTipoMuestra" style="font-size: 9px; padding-top: 2px">
+                            <a class="eliminarExamen btn btn-default btn-block fa fa-trash" id="@Html.Raw(item.Examen.idExamen)" title="Eliminar Examen">
+
+                            </a>
+                        </span>*@
+
+                        @*<button class="btn btn-default btn-sm" id="btnShowPopupEnfermedadExamen" title="Eliminar Examen">
+                                @*<span class="glyphicon glyphicon-plus "></span> Agregar
+                                <span class="@item.Enfermedad.idEnfermedad" style="font-size: 9px; padding-top: 2px">
+                                    <a class="eliminarExamen btn-link" id="@Html.Raw(item.Examen.idExamen)" title="Eliminar Examen">
+                                        Eliminar
+                                    </a>
+                                </span>
+                            </button>*@
+                    @*</td>*@
+                </tr>
+                            }
+        </tbody>
+                            }
+</table>

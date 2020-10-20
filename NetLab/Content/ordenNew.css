@@ -1,0 +1,363 @@
+﻿
+fieldset {
+    border: 1px groove #ddd !important;
+    box-shadow: 0 0 0 0 #000;
+    margin: 0 0 1em !important;
+    padding: 0 0.4em 0 !important;
+}
+
+    fieldset.form {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 0.4em 1.4em !important;
+    margin: 0 auto !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+    max-width: 1130px;
+}
+
+legend.form {
+    font-size: 1.1em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    height: 15px;
+    border-bottom: none;
+}
+
+.div-row {
+    display: flex;
+    padding-left: 10px;
+    min-height: 20px;
+    width: 1100px;
+}
+
+.div-row2 {
+    display: flex;
+    padding-left: 10px;
+    min-height: 20px;
+    width: 1100px;
+}
+
+.div-row-width {
+     float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 1100px;
+}
+/*
+legend {
+    display: block;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: none;
+}*/
+
+
+
+.allWidth {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.control-label {
+    font-size: 10px;
+    width: 110px;
+    text-align: justify;
+}
+
+.control-label2 {
+    font-size: 10px;
+    width: 120px;
+    text-align: right;
+}
+
+.control-label3 {
+    font-size: 10px;
+    width: 120px;
+    text-align: right;
+}
+
+   
+ 
+    
+.control-text {
+        height: 30px;
+        padding: 5px 12px;
+        font-size: 10px;
+        line-height: 1.5;
+        border-radius: 3px;
+        width: 130px;
+}
+
+    
+
+.labelProyectoEstablecimiento {
+    width: 160px;
+}
+
+.formProyectoEstablecimiento {
+    width: 160px;
+}
+
+.labelCodigoEstablecimientoFrecuente {
+    width: 200px;
+}
+
+.formCodigoEstablecimientoFrecuente {
+    width: 160px;
+}
+
+.labelNoPrecisa {
+    font-size: 10px;
+    width: 60px;
+    text-align: left;
+}
+
+.obligatorio {
+    float: left; 
+}
+
+.obligatorio span{
+    color: red; 
+    margin-left: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.label-proyecto-width {
+    text-align: left;
+    width: 50px;
+}
+
+.control-proyecto-width {
+    width: 170px;
+}
+
+.label-nrooficio-width {
+    margin-left: 10px;
+    text-align: left;
+    width: 120px;
+}
+
+    .control-nrooficio-width {
+    width: 100px;
+}
+
+.label-noprecisa-width {
+    margin-left: 5px;
+    text-align: left;
+    width: 50px;
+}
+
+.label-establecimiento-width {
+    margin-left: 10px;
+    text-align: left;
+    width: 105px;
+}
+
+.label-establecimientofrecuente-width {
+    margin-left: 10px;
+    text-align: left;
+    width: 130px;
+}
+
+.control-establecimiento-width {
+    width: 160px;
+}
+
+.control-establecimiento-show-width {
+    width: 400px;
+}
+
+.control-establecimientofrecuente-width {
+    width: 155px;
+}
+
+
+
+
+/*PACIENTE*/
+.label-nroDocumento-width{
+    text-align: left;
+    width: 120px;
+}
+
+.label-nombres-width{
+    text-align: left;
+    width: 60px;
+}
+
+.control-nroDocumento-width{
+    text-align: left;
+    width: 80px;
+}
+
+.control-nombres-width{
+    text-align: left;
+    width: 300px;
+}
+
+.control-nombres3-width{
+    text-align: left;
+    width: 150px;
+}
+
+.control-nombres2-width{
+    text-align: left;
+    width: 375px;
+}
+
+    .label-departamento-width {
+    text-align: justify;
+    width: 90px;
+}
+
+    .label-medico-width {
+    text-align: left;
+    width: 80px;
+}
+
+    .label-fechaSolicitud-width {
+        padding-left: 10px;
+    text-align: left;
+    width: 120px;
+}
+
+    .label-observaciones-width {
+        padding-left: -3px;
+    text-align: justify;
+    width: 80px;
+}
+
+.label-provincia-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 70px;
+}
+
+.label-distrito-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 65px;
+}
+
+.label-direccion-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 70px;
+}
+
+.control-departamento-width {
+    width: 110px;
+}
+
+.control-provincia-width {
+    width: 150px;
+}
+
+.control-distrito-width {
+    width: 160px;
+}
+
+.control-direccion-width {
+    width: 150px;
+}
+
+.control-direccion2-width {
+    width: 250px;
+}
+
+.control-direccion3-width {
+    width: 200px;
+}
+
+.label-celular-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 70px;
+}
+
+.label-correo-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 110px;
+}
+
+.label-tiposeguro-width {
+    padding-left: 10px;
+    text-align: left;
+    width: 120px;
+}
+
+.control-telefono-width {
+    width: 110px;
+}
+
+.control-telefono2-width {
+    width: 150px;
+}
+
+.control-telefono3-width {
+    width: 80px;
+}
+
+.control-correo-width {
+    width: 200px;
+}
+
+.control-correo2-width {
+    width: 170px;
+}
+
+.control-ocupacion-width {
+    width: 110px;
+}
+
+.control-ocupacion2-width {
+    width: 330px;
+}
+
+.control-tiposeguro-width {
+    width: 105px;
+}
+
+.control-otroseguro-width {
+    padding-left: 10px;
+    width: 260px;
+}
+
+.control-tiposeguro2-width {
+    width: 50px;
+}
+
+.control-otroseguro2-width {
+    padding-left: 4px;
+    width: 260px;
+}
+
+
+.control-medico-width {
+    width: 160px;
+}
+
+    .control-fechaSolicitud-width {
+        padding-left: 10px;
+    width: 95px;
+}
+
+    .control-observaciones-width {
+        padding-left: 10px;
+    width: 60px;
+
+ /*   .divObservacion {
+    padding-left: 25px;
+}
+
+.divObservacion textarea {
+    max-width: 500px !important;
+    width: 500px !important;
+}
+
+     */
+}

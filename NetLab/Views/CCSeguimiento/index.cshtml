@@ -1,0 +1,181 @@
+﻿@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+
+@model PagedList.IPagedList<Model.CCSeguimientoCab>
+@{
+    ViewBag.Title = "Seguimiento Informativo de Realización de Control de Calidad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var classDatePicker = "form-control datepickerDesde datePickerWidth";
+}
+@using (Html.BeginForm("index", "CCSeguimiento", FormMethod.Get))
+{
+    <fieldset class="default">
+        <legend class="default">Búsqueda de Seguimientos</legend>
+        <div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Fecha Desde: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("fechaDesde", (string)ViewBag.fechaDesde, new { id = "datepickerDesde", @class = classDatePicker, autocomplete = "off" })
+                    </div>
+                    @Html.Label("Fecha Hasta: ", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2 " })
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                        @Html.TextBox("fechaHasta", (string)ViewBag.fechaHasta, new { id = "datepickerHasta", @class = "form-control datepickerHasta datePickerWidth", autocomplete = "off" })
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Enfermedad:", new { @class = "control-label col-md-2" })
+                    <input type="hidden" id="hdnEnfermedad" name="hdnEnfermedad" value="0" />
+                    <div class="col-md-3">
+                        <select id="idEnfermedad" name="idEnfermedad" class="sizeChosen form-control ">
+                            <option value=""></option>
+                        </select>
+                        @if (ViewBag.enfermedades != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idEnfermedad").val(@ViewBag.enfermedades).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+
+                    @Html.Label("Examen:", new { @class = "control-label col-md-2" })
+                    <input type="hidden" id="hdnExamen" name="hdnExamen" value="0" />
+                    <div class="col-md-3">
+                        <select id="idExamen" name="idExamen" class="sizeChosen form-control">
+                            <option value=""></option>
+                            @if (ViewBag.examen != null)
+                            {
+                                <option value=@ViewBag.examen>@ViewBag.examen</option>
+                            }
+                        </select>
+                        @if (ViewBag.examen != null)
+                        {
+                            <script type="text/javascript">
+                                $("#idExamen").val(@ViewBag.examen).trigger("liszt:updated");
+                            </script>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.Label("Establecimiento:", new { @class = "control -label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.TextBox("CodigoUnico", "", new { @class = "form-control" })
+                        @Html.Hidden("hddDato", (string)ViewBag.CodigoUnico)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                @Html.ActionLink("Nuevo", "NuevoSeguimiento", "", new { id = "openDialog", @class = "btn btn btn-primary glyphicon glyphicon-tint" })
+            </div>
+        </div>
+    </fieldset>
+}
+
+<br />
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table id="mydata" class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Establecimiento</th>
+                <th>Enfermedad</th>
+                <th>Examen</th>
+                <th>Ejecuta Control Calidad</th>
+                <th>Ejecuta Diagnósticos</th>
+                <th>Cumplió Control Calidad</th>
+                <th>Usuario Registro</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        @{
+            foreach (var item in Model)
+            {
+        <tr>
+            <td>@Html.DisplayFor(m => item.NombreEstablecimiento)</td>
+            <td>@Html.DisplayFor(m => item.NombreEnfermedad)</td>
+            <td>@Html.DisplayFor(m => item.NombreExamen)</td>
+            <td>
+                @if (item.ejecutacc == 1)
+                    {
+                        <p>SI</p>
+                        }
+                        else
+                        {
+                        <p>NO</p>
+                        }
+            </td>
+            <td>
+                @if (item.ejecutadx == 1)
+                    {
+                    <p>SI</p>
+                }
+                else
+                {
+                    <p>NO</p>
+                }
+            </td>
+            <td>
+                @if (item.cumpliocc == 1)
+                    {
+                    <p>SI</p>
+                }
+                else
+                {
+                    <p>NO</p>
+                }
+            </td>
+            <td>@Html.DisplayFor(m => item.NombreUsuario)</td>
+            <td>
+                @Html.ActionLink(" ", "EditarSeguimiento", new { id = item.idseguimiento, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" })
+            </td>
+            <td>
+                @Html.ActionLink(" ", "EliminarSeguimiento", new { id = item.idseguimiento, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog btn btn-default btn-block fa fa-trash-o" })
+            </td>
+        </tr>
+            }
+        }
+    </table>
+            }
+            else
+            {
+                @Html.EmptyTable()
+            }
+
+<br />
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿Está seguro de eliminar el registro seleccionado?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/Seguimiento.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render(Url.Content(string.Format("~/Scripts/App/NetLab.js?updated={0}", new Random().Next(0, 999))))
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+}
+<style type="text/css" media="all">
+    .datePickerWidth {
+        width: 100px !important;
+    }
+</style>
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/sumoselect.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>

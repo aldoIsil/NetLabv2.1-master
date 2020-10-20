@@ -1,0 +1,123 @@
+﻿@*  Descripción: Vista, muestra y carga los datos para seleccionar uno o mas Materiales.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios, ventana no utilizada.*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+    #cmbEstablecimiento, #cmbEnfermedad, #cmbExamen, #cmbTipoMuestra, #cmbMaterial {
+        width: 900px;
+    }
+
+    .form-horizontal {
+        padding-left: 15px;
+    }
+
+        .form-horizontal h2 {
+            margin-left: -15px;
+        }
+
+        .form-horizontal legend {
+            margin-left: -15px;
+        }
+
+    .cont-line {
+        width: 100%;
+        display: block;
+    }
+
+    .block-line {
+        display: table-cell;
+        padding: 5px 30px;
+        width: 315px;
+    }
+
+    #nombrePaciente {
+        position: absolute;
+        padding-top: 30px;
+    }
+
+    #btnBuscarPaciente {
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 20px;
+    }
+
+    #dvTblTipoMuestra table, #dvTblMaterial table, #dvTblDatoClinico table {
+        width: 550px !important;
+    }
+
+        #dvTblTipoMuestra table input, #dvTblMaterial table input, #dvTblDatoClinico input {
+            width: 120px !important;
+        }
+</style>
+
+
+<div class="form-horizontal">
+
+    <form role="form" action="/NetLab/Orden/Guardar" method="post">
+        <fieldset>
+
+
+            <!--Enfermedad-->
+            <legend>Datos de los Materiales</legend>
+            <div class="cont-line">
+                <div class="block-line">
+                    <div class="form-group">
+                        @Html.Label("Enfermedad:")
+                        <div id="dvCmbExamen">
+                            @Html.TextBox("enfermedad")
+                        </div>
+
+                        @Html.Label("Material")
+                        <div>
+                            <select id="cmbMaterial" name="cmbMaterial"><option value=""></option></select>
+                        </div>
+
+                        @Html.Label("Orden Grabado:")
+                        <div id="dvCmbExamen">
+                            @Html.TextBox("orden grabado")
+                        </div>
+
+                        @Html.Label("Cantidad:")
+                        <div id="dvCmbExamen">
+                           @Html.TextBox("cantidad")
+                        </div>
+
+                     </div>
+
+                </div>
+            </div>
+
+
+
+
+
+        </fieldset>
+
+        <label id="AgregarDatosMaterial" class="btn-link">Agregar</label>
+        <label id="CerrarPopUp" class="btn-link">Cancelar</label>
+    </form>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Orden.js")
+}
+
+
+
+

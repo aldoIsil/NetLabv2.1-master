@@ -1,0 +1,357 @@
+﻿@*  Descripción: Vista, para listar la informacion de las Redes y dar mantenimiento a sus registros.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.MicroRedMant>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+@{
+    ViewBag.Title = "Mantenimiento de MicroRedes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+
+<h2 class="text-primary">MICRORED</h2>
+
+@using (Html.BeginForm("Index", "MicroRed", FormMethod.Get))
+{
+    <label style="font-size: small">Ingrese un nombre:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+
+    @Html.ActionLink("+ Nuevo", "NuevoMicroRedMant", new { page = ViewBag.page, ViewBag.search }, new { id = "openDialog", @class = "btn btn-primary " })
+}
+<br />
+
+
+@if (Model != null && Model.TotalItemCount > 0)
+{   //Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el id my data y thead para reconocer cuales son las cabeceras para el datatable, se eliminaron divs con la clase responsive y se puso al table class
+
+    <table class="table table-responsive" id="mydata">
+        <thead>
+            <tr>
+                <th width="25">
+                    DISA/GERESA/DIRESA
+                </th>
+                <th width="220">
+                    RED
+                </th>
+                <th width="220">
+                    MICRORED
+                </th>
+                <th width="40" style="text-align:center;">
+                    ESTADO
+                </th>
+                <th width="50">Editar</th>
+
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombredisa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombrered)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombremicrored)
+                </td>
+                <td>
+                    @if (item.estado == 1)
+                    {                    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se cambio el IF para poder editar el color de las celdas para que estas sean verdes cuando esta  "activo"- y rojas cuando este "inactivo"*@
+
+                        @*@Html.Label("Activo")*@
+                        <p style="color:#006f03;">Activo</p>
+
+                    }
+                    else
+                    {
+                        <p style="color:rgb(255,0,0);">Inactivo</p>
+
+                        @*@Html.Label("Inactivo")*@
+                    }
+                </td>
+
+
+                <td class="text-center">
+                    @Html.ActionLink(" ", "EditarMicroRedMant", new { iddisa = item.iddisa, idred = item.idred, idmicrored = item.idmicrored, page = Model.PageNumber, ViewBag.search }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o editDialog" }) @*|*@
+                    @*@Html.ActionLink("Eliminar", "EliminarDisaMant", new { iddisa = item.iddisa, idred = item.idred, item.idmicrored, page = Model.PageNumber, ViewBag.search }, new { @class = "confirmDialog" })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}
+else
+{
+    @Html.EmptyTable()
+}
+
+@if (Model != null)
+{ //Alexander Buchelli - inicio - fecha 7/12/18 -Se comento el boton de selector de pagina
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.search }))*@
+}
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿ Está seguro de eliminar el registro seleccionado ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/App/MicroRedMant.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @*Alexander Buchelli - inicio - fecha 7/12/18 -Se agrego el Js que invoca al id "mydata" para el uso del js de datatables*@
+    @Scripts.Render("~/Scripts/App/tabladata.js")
+
+
+
+    <script type="text/javascript">
+
+
+        $("body").on("submit", "#formAgregarMicroRedMant", function (e) {
+
+        var ok = false;
+
+
+        var ok2=false;
+
+        var ok3=false;
+
+        var ok4=false;
+
+        var ok5=false;
+
+        var iddisa = $.trim($('#idEnfermedad').val());
+
+        var idred = $.trim($('#idRed').val());
+
+        var idmicrored= $.trim($('#idmicrored').val());
+
+        var nombremicrored=$.trim($('#nombremicrored').val());
+
+        if (iddisa === '') {
+            jAlert("Seleccione una DISA.", "¡Alerta!");
+
+        }else {
+            ok=true;
+        }
+
+
+        if (idred === '') {
+            jAlert("Seleccione una de Red.", "¡Alerta!");
+
+        }else {
+            ok2=true;
+        }
+
+
+        if (idmicrored === '') {
+            jAlert("Ingrese un codigo de  MicroRed.", "¡Alerta!");
+
+        }else {
+            ok3=true;
+        }
+
+        if (nombremicrored === '') {
+            jAlert("Ingrese un nombre de MicroRed.", "¡Alerta!");
+
+        }else {
+            ok4=true;
+        }
+
+
+
+        var statesAvailable = @Html.Raw(@ViewBag.nombresLista);
+
+
+
+            var nom=iddisa.toUpperCase().trim()+idred.toUpperCase().trim()+idmicrored.toUpperCase().trim();
+
+
+        if (statesAvailable.includes(nom)  ) {
+            jAlert("Ya existe una Microred con esta disa/dir/ger y IDred.", "¡Alerta!");
+
+        }else {
+            ok5=true;
+        }
+
+
+
+
+
+
+        if (ok && ok2 && ok3 && ok4 && ok5)
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: $(this).attr("action"),
+                data: $(this).serialize(),
+                success: function (response) {
+
+                    var $resp = $(response);
+
+                    $("#btnCrear").addClass("hidden");
+                    $("#btnCerrar").removeClass("hidden");
+                    $("#btnCerrar").on("click", function () {
+                        location.reload();
+                        $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                    });
+
+                    jAlert("Los datos fueron registrados correctamente.", "Aviso");
+                }
+            });
+
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+
+
+
+
+
+
+        $("body").on("submit", "#formEditarMicroRedMant", function (e) {
+
+            var ok = false;
+
+
+            var ok2=false;
+
+            var ok3=false;
+
+
+
+            var nombremicrored= $.trim($('#nombremicrored').val());
+
+
+
+
+
+
+            if (nombremicrored === '') {
+                jAlert("Ingrese un nombre de MicroRed.", "¡Alerta!");
+
+            }else {
+                ok=true;
+            }
+
+
+
+
+            var statesAvailable = @Html.Raw(@ViewBag.nombreListaMicrored);
+
+            var nombreredInicial=$("#someDataFromPartialSomehownombremicrored").val().toUpperCase().trim();
+
+            var nom=nombremicrored.toUpperCase();
+
+            if (nombreredInicial==nom) {
+                ok2=true;
+            }else {
+                if (statesAvailable.includes(nom)  ) {
+                    jAlert("Ya existe una Microred con este nombre.", "¡Alerta!");
+
+                }else {
+                    ok2=true;
+                }
+            }
+
+
+
+
+
+
+
+
+            if (ok && ok2)
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+
+                        var $resp = $(response);
+
+                        $("#btnGuardar").addClass("hidden");
+                        $("#btnCerrar").removeClass("hidden");
+                        $("#btnCerrar").on("click", function () {
+                            location.reload();
+                            $("#dialog-edit").closest(".ui-dialog").find(".ui-dialog-titlebar-close").click();
+                        });
+
+                        jAlert("Los datos fueron Editados correctamente.", "Aviso");
+                    }
+                });
+
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}

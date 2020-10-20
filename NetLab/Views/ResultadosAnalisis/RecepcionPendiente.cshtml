@@ -1,0 +1,132 @@
+﻿@*  Descripción: Vista, Permite mostrar un popup para la recepcion de Muestras con estado Pendieten de Recepcion.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using System.Globalization
+@model Model.ViewData.OrdenIngresarResultadoVd
+@{
+    var k = 0;
+}
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label></label><br />
+            <span>@Model.nombreProyecto</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>EESS/LAB de Origen</label><br />
+            <span>@Model.nombreEstablecimiento</span>
+        </div>
+    </div>
+    <!--Establecimiento-->
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Fecha de Solicitud</label><br />
+            <span>@Model.fechaRegistro.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)</span>
+        </div>
+    </div>
+</div>
+<div class="cont-line">
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Tipo - Nro. Documento</label><br />
+            <span>@Model.tipoDocumento @Model.nroDocumento</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Nombres y Apellidos Paciente</label><br />
+            <span>@Model.nombrePaciente</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Edad</label><br />
+            <span>@Model.edadPaciente</span>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("RecepcionPendiente", "ResultadosAnalisis", FormMethod.Post, new { @id = "formPendienteRecepcion" }))
+{
+    <div class="table-wrapper-scroll-x my-custom-scrollbar">
+        <table id="tblResultados">
+            <thead>
+                <tr>
+                    <th width="100px">Código Muestra</th>
+                    <th>Tipo de Muestra</th>
+                    @*<th>Materiales</th>*@
+                    <th>Exámen</th>
+                    <th>Descripción</th>
+                    <th>Fecha-Hora Obtención</th>
+                    <th>Secuencia Obtención</th>
+                    @*<th width="60px">Conforme</th>
+                        <th width="370px">Criterio Rechazo</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.muestrasPendientesRecepcion)
+            {
+                k++;
+                var nombre = "ost_" + k;
+                <tr>
+                    <td>
+                        @item.codificacion
+                    </td>
+                    <td>
+                        @item.tipoMuestra
+                    </td>
+                    <td>
+                        @*@item.presentacion @item.reactivo @item.volumen ml*@
+                        @item.nombreExamen
+                        <input type="hidden" name="codigoMuestra[]" value="@item.idOrdenMuestraRecepcion" />
+
+                    </td>
+                    <td>
+                        @item.ExamenComun
+                    </td>
+                    <td>
+                        @item.fechaHoraColeccion
+
+                    </td>
+                    <td>
+                        <input type="text" name="secuenciaMuestra[]" value="@item.secuenObtencion" />
+
+                    </td>
+                    @*<td>
+                            <input type="checkbox" name="conforme_@item.idOrdenMuestraRecepcion" class="conformeMuestra" checked />
+                        </td>
+                        <td>
+                            <div class="selMotivoRechazoDiv" style="display: none;">
+                                @Html.DropDownList("criterioRechazo_" + @item.idOrdenMuestraRecepcion, (List<SelectListItem>) ViewBag.listaCriterios[item.idTipoMuestra], new { @id = "selMotivoRechazo" + nombre, @multiple = "multiple", @class = "selMotivoRechazo" })
+                            </div>
+                        </td>*@
+                </tr>
+            }
+            </tbody>
+        </table>
+        <br />
+    </div>
+        <div id="divFechaRecepcion" class="hidden">
+            Fecha y Hora : <label id="fechaRecepcion">@Model.fechaRecepcion</label>
+            @{
+                if (Model.error != null && Model.error.Length > 0)
+                {
+                    <label id="error">@Model.error</label>
+                }
+            }
+        </div>
+        <br />
+        <div class="linksForm">
+
+            <input type="button" id="btnlnkPendienteRecepcion" value="Grabar" class="btn btn-primary" />
+            @*<label id="lnkPendienteRecepcion" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Grabar</label>*@
+            <label id="CerrarPopUp" class="btn btn-default btn-md" data-dismiss="modal"><span class="fa fa-times"></span> Cerrar</label>
+        </div>
+
+        }
+        <script type="text/javascript">
+        </script>

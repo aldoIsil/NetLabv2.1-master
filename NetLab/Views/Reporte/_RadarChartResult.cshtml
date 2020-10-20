@@ -1,0 +1,113 @@
+﻿@model List<Model.ReportesDTO.MotivoRechazoDatos>
+<br />
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Establecimiento</th>
+                <th scope="col">Codigo Orden</th>
+                <th scope="col">Enfermedad</th>
+                <th scope="col">Criterio de Rechazo</th>
+                <th scope="col">Tipo de Criterio de Rechazo</th>
+                <th scope="col"># Muestras Rechazadas</th>
+                <th scope="col">Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Establecimiento</td>
+                <td>@item.CodigoOrden</td>
+                <td>@item.Enfermedad</td>
+                <td>@item.CriterioRechazo</td>
+                <td>@item.TipoCriterioRechazo</td>
+                <td>@item.CantidadMuestras</td>
+                <td>@item.IdUsuarioRegistro</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <!--       Chart.js Canvas Tag -->
+        <canvas id="radarChart"></canvas>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+
+        var canvas = document.getElementById("radarChart");
+        var ctx = canvas.getContext('2d');
+        var options = {
+            responsive: true,
+            maintainAspectRadio: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Radar Chart'
+            },
+            scale: {
+                reverse: false,
+                ticks: {
+                    max: 5,
+                    min: 0,
+                    beginAtZero: false,
+                },
+                pointLabels: {
+                    callback: function (pointLabel) {
+                        if (pointLabel.length > 10)
+                            return pointLabel.substring(0, 10) + '...';
+                        else
+                            return pointLabel
+                    }
+                }
+
+            },
+            scaleOverride: true,
+            scaleSteps: 5,
+            scaleStepWidth: 20,
+            scaleStartValue: 100,
+        };
+
+        console.log(@Html.Raw(ViewBag.DataSet));
+        var radarChartData = {
+            labels: @Html.Raw(ViewBag.Labels),//["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+
+            datasets: @Html.Raw(ViewBag.DataSet),
+            //datasets: [
+            //    {
+            //label: "My First dataset",
+            //        backgroundColor: "rgba(179,181,198,0.2)",
+            //        borderColor: "rgba(179,181,198,1)",
+            //        pointBackgroundColor: "rgba(179,181,198,1)",
+            //        pointBorderColor: "#fff",
+            //        pointHoverBackgroundColor: "#fff",
+            //        pointHoverBorderColor: "rgba(179,181,198,1)",
+            //        data: [65, 59, 90, 81, 56, 55, 40]
+            //    },
+            //    {
+            //label: "My Second dataset",
+            //        backgroundColor: "rgba(255,99,132,0.2)",
+            //        borderColor: "rgba(255,99,132,1)",
+            //        pointBackgroundColor: "rgba(255,99,132,1)",
+            //        pointBorderColor: "#fff",
+            //        pointHoverBackgroundColor: "#fff",
+            //        pointHoverBorderColor: "rgba(255,99,132,1)",
+            //        data: [28, 48, 40, 19, 96, 27, 100]
+            //    }
+            //]
+        };
+
+        var myRadarChart = new Chart(ctx, {
+            type: 'radar',
+            data: radarChartData,
+            options: options
+        });
+
+    });
+</script>

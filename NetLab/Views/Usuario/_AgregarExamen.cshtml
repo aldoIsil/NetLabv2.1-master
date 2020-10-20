@@ -1,0 +1,97 @@
+﻿@model PagedList.IPagedList<Model.Examen>
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarExamen", new { ViewBag.idUsuario }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search, new { style = "width:250px" })
+    
+    <button class="btn btn-primary" type="submit" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+}
+<br />
+@using (Html.BeginForm("AgregarExamen", "Usuario", new { ViewBag.idUsuario, ViewBag.ddlTipoUsuario }, FormMethod.Post, new { @id = "formAgregarExamen" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        @Html.Label("Tipo Usuario:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+        <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+            @Html.DropDownList("ddlTipoUsuario", new List<SelectListItem>
+                            {
+                            //new SelectListItem{ Text="Seleccionar", Value = "0" , Selected = true },
+                            new SelectListItem{ Text="Procesamiento", Value = "1"},
+                            new SelectListItem{ Text="Verificación", Value = "2" },
+                            new SelectListItem{ Text="Mixto", Value = "3" },
+                            new SelectListItem{ Text="Consulta", Value = "4" }
+                            }, (string)ViewBag.ddlTipoUsuario, new { @class = "form-control cmbxBusqueda" })
+        </div>
+        @Html.Label("Enfermedad:", new { @class = "control -label col-xs-12 col-sm-8 col-md-2 col-lg-2" })
+        <div class="col-xs-12 col-sm-8 col-md-3 col-lg-3">
+            @Html.DropDownList("ddlEnfermedad", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="Seleccionar", Value = "0" , Selected = true },
+                            new SelectListItem{ Text="Tuberculosis", Value = "1"},
+                            new SelectListItem{ Text="VIH", Value = "2" },
+                            new SelectListItem{ Text="Virus Respiratorio", Value = "3" },
+                            }, (string)ViewBag.ddlTipoUsuario, new { @class = "form-control cmbxBusqueda" })
+        </div>
+    </div>
+    <div class="row">
+       
+    </div>
+    if (Model != null && Model.TotalItemCount > 0)
+    {
+
+        <div class="table-responsive">
+            <table class="table" id="ExamenTable">
+                <tr>
+                    <th>
+                        <input type='checkbox' name="chkAll" id="chkAll" />
+                    </th>
+                    <th>CPT</th>
+                    <th>LOINC</th>
+                    <th>Examen</th>
+                    <th>Enfermedad</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="examenes" value="@item.idExamen" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cpt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Loinc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreEnfermedad)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <button class="btn btn-primary" id="btnGuardarExamen"><span class="fa fa-floppy-o"></span> Grabar</button>
+
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+        @*<button id="btnGuardarExamen" class="btn btn-primary">Grabar</button>
+            <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+    }
+}
+
+@Html.PagedListPager(Model, page => Url.Action("AgregarExamen", new { page, ViewBag.search, ViewBag.idUsuario }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>

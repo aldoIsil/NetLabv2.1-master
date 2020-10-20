@@ -1,0 +1,18 @@
+﻿@* Descripción: Vista para visualizar informacion de los datos clinicos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Enfermedad>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        String idDiv = "tabs-" + item.idEnfermedad;
+        <div id=@Html.Raw(idDiv) >
+            <h4>@Html.Raw(item.nombre)</h4>
+            @Html.Partial("_TblDatoClinicoNoEdit", (Model.Enfermedad)item)
+        </div>
+    }
+}

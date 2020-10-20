@@ -1,0 +1,10 @@
+﻿@model List<Model.MicroRed>
+<select id="selmicrored" name="selmicrored" class="form-control">
+    <option value="0">Seleccione una Micro Red</option>
+    @foreach (var item in Model)
+    {
+        <option value="@item.IdMicroRed">@item.NombreMicroRed</option>
+    }
+</select>
+@Html.Hidden("hdnmicroredcount", Model.Count)
+@Html.Hidden("hdnfirstmicrored", Model.First().IdMicroRed)

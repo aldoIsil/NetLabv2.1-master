@@ -1,0 +1,165 @@
+﻿@*  Descripción: Vista, Permite mostrar el link para seleccionar la prueba e ingresar los resultados.
+    Author: Sotero Bustamante.
+    Fecha Creacion: 21/10/2017
+    Fecha Modificación: 21/10/2017.
+    Modificación: Se agregaron esta vista.*@
+@using System.Globalization
+@model Model.ViewData.OrdenIngresarResultadoVd
+
+<h4 class="center">Orden de Análisis N° @Model.codigoOrden</h4>
+<div class="cont-line">
+    <div style="text-align: center;">
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Proyecto</label><br />
+                <span>@Model.nombreProyecto</span>
+            </div>
+        </div>
+
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>EESS/LAB de Origen</label><br />
+                <span>@Model.nombreEstablecimiento</span>
+            </div>
+        </div>
+        <!--Establecimiento-->
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Fecha de Solicitud</label><br />
+                <span>@Model.fechaRegistro.ToString(CultureInfo.CreateSpecificCulture("es-PE")).Substring(0, 10)</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cont-line">
+    <div style="text-align: center;">
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Tipo - Nro. Documento</label><br />
+                <span>@Model.tipoDocumento @Model.nroDocumento</span>
+            </div>
+        </div>
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Nombres y Apellidos Paciente</label><br />
+                <span>@Model.nombrePaciente</span>
+            </div>
+        </div>
+        <div class="block-line headerRegRes">
+            <div class="form-group">
+                <label>Edad</label><br />
+                <span>@Model.edadPaciente</span>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="linksForm">
+    <button class="btn btn-info" id="lnkRegistrarResultados"><span class="glyphicon glyphicon-floppy-disk"></span> Grabar </button>
+    <button class="btn btn-default" id="CerrarPopUpIngresoResultados"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+
+</div>
+
+
+
+
+@using (Html.BeginForm("RegistroResultadosVerificador", "ValidacionResultados", FormMethod.Post, new { @id = "formRegistroResultadosVerificador" }))
+{
+    <input type="hidden" name="idOrden" value="@Model.idOrden" />
+    <input type="hidden" id="jsonvalues" name="jsonvalues" />
+    <input type="hidden" id="observacionesjsonvalues" name="observacionesjsonvalues" />
+    <table id="tblOrdenExamen">
+        <thead>
+        <tr>
+            <th width="15px"></th>
+            <th width="100px">Enfermedad</th>
+            <th width="250px">Examen</th>
+            <th>Código Muestra</th>
+            <th>Tipo de Muestra</th>
+            <th width="70px">Fecha-Hora Obtención</th>
+            <th width="70px">Fecha-Hora Recepción ROM</th>
+            <th width="70px">Fecha-Hora Recepción LAB</th>
+            <th>Método</th>
+            <th>Plataforma</th>
+            <th>Motivo No conforme</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (Model.ViewData.OrdenExamenResultadosVd examen in ViewBag.examenes)
+            {
+            <tr class="@examen.IdOrdenExamen">
+                <td><input type="checkbox" name="resultados" value="@examen.IdOrdenExamen" onclick="verDetalleVerificador();" /></td>
+                <td>@examen.NombreEnfermedad</td>
+                <td>@examen.Item.nombre</td>
+                <td>@examen.CodigoMuestra</td>
+                <td>@examen.Muestra.tipoMuestra </td>
+                <td>@examen.Muestra.fechaColeccion.ToString("dd/MM/yy HH:mm")</td>
+                <td>@examen.Muestra.fechaRecepcion.ToString("dd/MM/yy HH:mm")</td>
+                <td>@examen.Muestra.fechaRecepcionP.ToString("dd/MM/yy HH:mm")</td>
+                <td>
+                    <input type="hidden" name="ordenExamen[]" value="@examen.IdOrdenExamen" />
+                    <input type="hidden" name="estatusOrdenExamen[]" value="@examen.estatusE" />
+                    @if (examen.Metodos.Count > 0)
+                    {
+                        <select id="@examen.IdOrdenExamen" name="metodo[]" class="form-control">
+                            <option value="-1">Seleccione</option>
+                            @foreach (var metodo in examen.Metodos)
+                            {
+                                var selectedMetodo = "";
+                                if (examen.IdExamenMetodo == metodo.IdExamenMetodo || examen.Metodos.Count == 1)
+                                {
+                                    selectedMetodo = "selected";
+                                }
+                                <option value="@metodo.IdExamenMetodo" @selectedMetodo>
+                                    @metodo.Glosa
+                                </option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        @Html.Raw("No especificado")
+                    }
+                </td>
+                <td>
+                    @if (examen.Plataformas.Count > 0)
+                    {
+                        <select id="ListaPlataforma" name="ListaPlataforma" class="form-control">
+                            <option value="-1">Seleccione</option>
+                            @foreach (var plataforma in examen.Plataformas)
+                            {
+                                var selectedPlataforma = "";
+                                if (examen.idPlataforma == plataforma.idPlataforma || examen.Plataformas.Count == 1)
+                                {
+                                    selectedPlataforma = "selected";
+                                }
+                                <option value="@plataforma.idPlataforma" @selectedPlataforma>
+                                    @plataforma.Plataforma
+                                </option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="ListaPlataforma" name="ListaPlataforma" class="form-control">
+                            <option value="0">Ninguno</option>
+                        </select>
+                    }
+                </td>
+                <td>
+                    @examen.Muestra.MotivoNoConforme
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+
+    <div id="divDetalle">
+    </div>
+
+    <br />
+}
+
+
+

@@ -1,0 +1,133 @@
+﻿@* Descripción: Vista para construir la tabla y mostrar informacion de los datos clinicos.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers
+@model Model.Enfermedad
+
+@if (Model != null)
+{
+    foreach (var itemCategoriaDato in Model.categoriaDatoList.Where(itemCategoriaDato => itemCategoriaDato.OrdenDatoClinicoList != null && itemCategoriaDato.OrdenDatoClinicoList.Count != 0))
+    {
+        <h4>@Html.Raw(itemCategoriaDato.Nombre)</h4>
+
+        <table style="width: auto; border:hidden;border-right:hidden">
+
+            @Html.Hidden("nombreCategoriaDato", itemCategoriaDato.Nombre)
+            @Html.Hidden("idCategoriaDatoPadre", itemCategoriaDato.IdCategoriaDato)
+
+            @if (itemCategoriaDato.OrdenDatoClinicoList != null)
+            {
+                var columns = itemCategoriaDato.Orientacion;
+
+                for (var i = 0; i < itemCategoriaDato.OrdenDatoClinicoList.Count; i++)
+                {
+                    var item = itemCategoriaDato.OrdenDatoClinicoList[i];
+
+                    if (i % columns == 0)
+                    {
+                        @:<tr style="height: 40px; border:hidden; border-right:hidden">
+                    }
+
+                    <td style="padding-left: 40px; border:hidden; border-right:hidden">
+                        @Html.Raw(item.Dato.Prefijo)
+                    </td>
+                    switch (item.Dato.IdTipo)
+                    {
+                        case (int)Enums.TipoCampo.COMBO:
+                            <td style="border:hidden;  border-color:blue; border-right:hidden">@Html.DatoCombo(item)</td>
+                            break;
+                        case (int)Enums.TipoCampo.TEXT:
+                            <td style="border:hidden; border-right:hidden">@Html.DatoTextBox(item)</td>
+                            break;
+                        case (int)Enums.TipoCampo.NUMERIC:
+                            <td style="border:hidden;  border-color:blue; border-right:hidden">@Html.DatoNumeric(item)</td>
+                            break;
+                        case (int)Enums.TipoCampo.DATE:
+                            <td style="border:hidden;  border-color:blue; border-right:hidden">@Html.DatoDate(item)</td>
+                            break;
+                        case (int)Enums.TipoCampo.TEXTAREA:
+                            <td style="border:hidden;  border-color:blue; border-right:hidden">@Html.DatoTextArea(item)</td>
+                            break;
+                        case (int)Enums.TipoCampo.CHECKBOX:
+                            <td style="border:hidden;  border-color:blue; border-right:hidden">@Html.DatoCheckBox(item)</td>
+                            break;
+                        default:
+                            <td></td>
+                            break;
+                    }
+
+                    if (item.Dato.IdTipo == (int)Enums.TipoCampo.CHECKBOX
+                        || item.Dato.IdTipo == (int)Enums.TipoCampo.COMBO)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td style="padding-left: 15px; border:hidden; border-right:hidden">
+                            @{
+                                var idCheckNoPrecisaPre = "checkPreDato" + item.Enfermedad.idEnfermedad + item.Dato.IdDato;
+                                var idCheckNoPrecisa = "checkDato" + item.Enfermedad.idEnfermedad + item.Dato.IdDato;
+                            }
+                            @if (item.noPrecisa)
+                            {
+                                <label>No Precisa</label>
+                                <input type="checkbox" id=@Html.Raw(idCheckNoPrecisaPre) name="checkNoPrecisaPre" checked="checked" class="checkboxNoPrecisa" />
+                                <input type="hidden" id=@Html.Raw(idCheckNoPrecisa) value="true" name="checkNoPrecisa@(item.Enfermedad.idEnfermedad)@(item.Dato.IdDato)" />
+                            }
+                            else
+                            {
+                                <label>No Precisa</label>
+                                <input type="checkbox" id=@Html.Raw(idCheckNoPrecisaPre) name="checkNoPrecisaPre" class="checkboxNoPrecisa" />
+                                <input type="hidden" id=@Html.Raw(idCheckNoPrecisa) value="false" name="checkNoPrecisa@(item.Enfermedad.idEnfermedad)@(item.Dato.IdDato)" />
+                            }
+                        </td>
+                        }
+                                @Html.Hidden("prefijoDato", item.Dato.Prefijo)
+                                @Html.Hidden("idEnfermedadDato", Model.idEnfermedad)
+                                @Html.Hidden("idTipoDato", item.Dato.IdTipo)
+                                @Html.Hidden("idDato", item.Dato.IdDato)
+                                @Html.Hidden("idCategoriaDato", itemCategoriaDato.IdCategoriaDato)
+
+                                if (i == itemCategoriaDato.OrdenDatoClinicoList.Count - 1)
+                                {
+                                    while ((i % columns) != 0)
+                                    {
+                                        @:
+                                        <td style="border: hidden; border-right:hidden"></td>
+                                        i++;
+                                    }
+                                }
+
+                                if ((i % columns) == (columns - 1))
+                                {
+                                    @:</tr>
+                                }
+                              }
+                           }
+        </table>
+                                    }
+                                }
+@*Juan Muga - permitir ingreso manual en datepicker - sacar onkeydown="return false;"*@
+<script type="text/javascript">
+$(function () {
+//alert(1);
+$(".datepickerExtension").setDefaultDatePicker();
+SetDateOnly();
+});
+</script>
+
+
+<style type="text/css">
+    table {
+        font-family: sans-serif;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    td,
+    th {
+        border: hidden;
+    }
+</style>

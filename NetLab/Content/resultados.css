@@ -1,0 +1,87 @@
+﻿body {
+    font-size: x-small;
+}
+
+
+/*.footer {
+    position: fixed;
+    top: 330mm;
+    height: auto;
+    width: auto;
+    text-align: right;
+    margin: 11mm 17mm 17mm 17mm;    
+}*/
+
+.pagenum:before {
+    content: counter(page);
+}
+
+.column-left {
+    float: left;
+    width: 30%;
+    height: 100px;
+    line-height: 100px;
+    margin-left: 0px;
+}
+
+.column-right {
+    float: right;
+    width: 30%;
+    height: 100px;
+    line-height: 100px;
+}
+
+.column2-left {
+    float: left;
+    width: 50%;
+}
+
+.column2-right {
+    float: right;
+    width: 50%;
+}
+
+.column-center {
+    display: inline-block;
+    width: 40%;
+}
+
+.block {
+    width: 900px;
+    display: inline-block;
+}
+
+.row {
+    margin: 5px;
+    text-align: left;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: center;
+}
+
+.header {
+    position: fixed;
+    text-align: left;
+    width: 100%;
+    background-repeat: repeat-x;
+    background-image: url(../img/degrade_head.png);
+}
+
+/*
+}*/
+
+div#footer {
+    position:fixed;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    color:#CCC;
+    background:#333;
+    padding:8px;
+}

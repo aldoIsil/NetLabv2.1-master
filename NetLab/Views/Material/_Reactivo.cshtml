@@ -1,0 +1,10 @@
+﻿@*  Descripción: muestra y carga combo con los reacrivos
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model IEnumerable<Model.Reactivo>
+
+@Html.DropDownList("idReactivo",
+new MultiSelectList(Model, "idReactivo", "glosa"),
+new { value = "0", @class = "form-control sizeChosen" })

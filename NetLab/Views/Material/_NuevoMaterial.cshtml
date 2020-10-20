@@ -1,0 +1,125 @@
+﻿@*  Descripción: Vista, muestra la pantalla de 
+    ingreso de datos para un nuevo material
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.Material
+
+<link rel="stylesheet" href="~/Content/chosen.css">
+
+@using (Html.BeginForm("NuevoMaterial", "Material", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "frmNuevoMaterial" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Material</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        
+        <!--Tipo Muestra-->
+        <div class="form-group">
+            
+                @Html.Label("TipoMuestra:", htmlAttributes: new { @class = "control-label col-md-4" })
+
+            
+            <div class="col-md-7">
+                <div id="dvPopupExamen">
+                    <select id="idExamen" name="idExamen" class="sizeChosen form-control input-sm">
+                        <option value=""></option>
+
+                        @if (ViewBag.valueExamenPreSeleccionada != null)
+                    {
+                            <option value=@ViewBag.valueExamenPreSeleccionada>@ViewBag.textoExamenPreSeleccionada</option>
+                    }
+                    </select>
+                    @if (ViewBag.valueExamenPreSeleccionada != null)
+                {
+                        <script type="text/javascript">
+                         $("#idExamen").val('@ViewBag.valueExamenPreSeleccionada').trigger("liszt:updated");
+
+                         $.ajax(
+                           {
+                               url: URL_BASE + "Orden/GetTiposMuestraByIdExamen?idExamen=@ViewBag.valueExamenPreSeleccionada",
+                               cache: false,
+                               method: "GET"
+                           }).done(function (msg) {
+                               $("#dvPopupTipoMuestra").html(msg);
+                               $("#idTipoMuestra").chosen({ placeholder_text_single: "Seleccione el Tipo de Muestra", no_results_text: "No existen coincidencias" });
+                           }
+                           );
+                        </script>
+                    }
+                </div>
+
+            </div>
+            </div>
+
+        <!-- Presentacion-->
+        <div class="form-group">
+           
+                @Html.Label("Presentación:", htmlAttributes: new { @class = "control-label col-md-4" })
+
+            
+            <div class="col-md-7">
+                <div id="dvPopupPresentacion">
+                    @Html.Partial("_Presentacion", new List<Model.Presentacion>())
+                </div>
+            </div>
+            </div>
+
+
+        <!--reactivo-->
+        <div class="form-group">
+           
+                @Html.Label("Reactivo:", htmlAttributes: new { @class = "control-label col-md-4" })
+
+
+            <div class="col-md-7">
+                <div id="dvPopupReactivo">
+                    @Html.Partial("_Reactivo", new List<Model.Reactivo>())
+                </div>
+            </div>
+            </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.volumen, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(model => model.volumen, new { @class = "form-control", @style = "width: 100px", @type = "number", @min = "0", @step = "0.01", @value = "0" })
+                @Html.ValidationMessageFor(model => model.volumen, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                <input type="submit" value="Crear" id="btnGrabar" class="btn btn-primary" />
+                <input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />
+            </div>
+        </div>
+    </div>
+
+
+}
+<div id="examenDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+@*<script type="text/javascript">
+    $.validator.unobtrusive.parse("#frmNuevoMaterial");
+</script>*@
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/App/Material.js")
+
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-min.css' />
+    <link rel='stylesheet' href='~/Content/dpLoading-2.x-skin-grey-min.css' />
+    <script src='~/Scripts/dpLoading-2.x-min.js'></script>
+    <link rel="stylesheet" href="~/Content/chosen.css">
+}

@@ -1,0 +1,285 @@
+﻿@*  Descripción: Vista, muestra la pantalla para el CRUD de Pacientes.
+    Muestra el resultado de la busqueda del paciente y te permite ingresar a la pagina
+    de creacion/edición de pacientes o crear una orden o seleccionar una plantilla.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Paciente>
+@using PagedList.Mvc;
+@using NetLab.Helpers;
+
+@{
+    ViewBag.Title = "Mantenimiento de Pacientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var reniec = ViewBag.reniec;
+}
+<style>
+    #CodigoUnicoOrigen.ui-autocomplete-loading {
+        background-image: url('../../img/loading.gif');
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+</style>
+<link rel="stylesheet" href="~/Content/chosen.css">
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/multiple-select.css" />
+
+<link rel="stylesheet" href="~/Scripts/jquery.alerts/jquery.alerts.css">
+<link rel="stylesheet" href="~/Content/font-awesome.css">
+@*    Alexander Buchelli - inicio - fecha 24/08/17 - cambio de clases propias a clases de bootstrap *@
+<h3 class="text-primary">Búsqueda y Registro de Pacientes</h3>
+@{var funcion = "Index";  }
+@if (ViewBag.RegistroOrdenRecepcion == 1)
+{
+    funcion = "SearchRecepcion";
+}
+@if (!string.IsNullOrEmpty(ViewBag.textoRegistro))
+{
+    <input type="hidden" value="@ViewBag.textoRegistro" id="textoRegistro" />
+}
+@using (Html.BeginForm(funcion, "Paciente", FormMethod.Get))
+{
+    <div id="dvBusquedaUsuario" @*style="height: 23px"*@>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Tipo de Documento:", new { @class = "col-xs-12 col-sm-12 col-md-12 col-lg-4" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.DropDownList("tipoDocumento", (List<SelectListItem>)ViewBag.tipoDocumentoList, new { @class = "form-control input-sm" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Documento:", new { @class = "col-xs-12 col-sm-12 col-md-12 col-lg-4" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @*@Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control  numericOnly", autocomplete = "off" })*@
+                @Html.TextBox("nroDocumento", (string)ViewBag.nroDocumento, new { @class = "form-control", autocomplete = "off" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Apellido Paterno:", new { @class = "col-xs-12 col-sm-12 col-md-12 col-lg-4" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("apellidoPaterno", (string)ViewBag.apellidoPaterno, new { @class = "form-control input-sm", autocomplete = "off" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1">
+                @Html.Label("Apellido Materno:", new { @class = "col-xs-12 col-sm-12 col-md-12 col-lg-4" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                @Html.TextBox("apellidoMaterno", (string)ViewBag.apellidoMaterno, new { @class = "form-control", autocomplete = "off" })
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  col-sm-offset-5 col-md-offset-5 col-lg-offset-5">
+                @*<input type="submit" id="btnBuscar" value="Buscar" class="btn btn-primary" />
+                    @Html.ActionLink(" Nuevo", "New", "Paciente", new { ViewBag.RegistroOrdenRecepcion }, new { @class = "btn btn btn-primary btn-lg fa fa-user-plus " })*@
+                <button class="btn btn-primary" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+                <a href="@Url.Action("New", "Paciente", new { ViewBag.RegistroOrdenRecepcion,reniec})" class="btn btn-primary">
+                    <span class="fa fa-user-plus" aria-hidden="true"></span>
+                    Nuevo
+                </a>
+            </div>
+        </div>
+    </div>
+
+}
+<br />
+<br />
+<br />
+<br />
+<br />
+@*se quito el div de mas , se agrego tabla como valor , se comento js de scroll 29/05/19*@
+@if (Model != null && Model.TotalItemCount > 0)
+{
+    <table class="table table-responsive table-bordered" id="dtPaciente">
+        <thead>
+            <tr>
+                <th>
+                    Tipo de Documento
+                </th>
+                <th>
+                    Número de Documento
+                </th>
+                <th>
+                    Apellido Paterno
+                </th>
+                <th>
+                    Apellido Materno
+                </th>
+                <th>
+                    Nombres
+                </th>
+                <th>
+                    Fecha de Nacimiento
+                </th>
+                <th>Nueva Orden</th>
+                @*@if (ViewBag.CrearNuevaOrden && ViewBag.RegistroOrdenRecepcion == 1)
+                {
+                <th>Nueva Orden </th>
+                }*@
+                @*<th>Nueva Orden (PLANTILLA)</th>*@
+                <th>Referencia y Contrareferencia</th>
+
+                <th>Editar</th>
+                <th>Historial de Exámenes del Paciente</th>
+                <th>Info. NetLab v1</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.listaDetalleTipoDocumento.Glosa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NroDocumento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombres)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+        </td>
+
+        @if (ViewBag.RegistroOrdenRecepcion == 1)
+        {
+
+            if (ViewBag.CrearNuevaOrden)
+            {
+                <td>
+                    @Html.ActionLink(" Recepción", "Crear", "Orden", new { idPaciente = item.IdPaciente, codigoOrden = string.Empty, tipoRegistro = "1" }, new { @class = "btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink(" Recepción", "New", "Orden", new { idPaciente = item.IdPaciente, item.NroDocumento, Nombre = item.Nombres + " " + item.ApellidoPaterno + " " + item.ApellidoMaterno, tipoRegistro = "1" }, new { @class = "btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })
+                </td>
+            }
+            @*<td>
+                @Html.ActionLink(" Recepción", "ShowSelectorPlantilla", "Orden", new { idPaciente = item.IdPaciente, item.NroDocumento, Nombre = item.Nombres + " " + item.ApellidoPaterno + " " + item.ApellidoMaterno, tipoRegistro = "1" }, new { @class = "btn btn-default  btn-block fa fa-file-archive-o", style = "font-size: 13px", onclick = "selectorPlantilla(this); return false;" })
+            </td>*@
+        }
+        else
+        {
+            <td>
+                @Html.ActionLink(" ", "New", "Orden", new { idPaciente = item.IdPaciente, item.NroDocumento, Nombre = item.Nombres + " " + item.ApellidoPaterno + " " + item.ApellidoMaterno }, new { @class = "btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })
+            </td>
+            @*if (ViewBag.CrearNuevaOrden)
+            {
+            <td>
+                @Html.ActionLink(" Nuevo", "Crear", "Orden", new { idPaciente = item.IdPaciente, codigoOrden = string.Empty, tipoRegistro = "-1" }, new { @class = "btn btn-default btn-block fa fa-file-text-o ", style = "font-size: 13px" })
+            </td>
+            }*@
+            @*<td>
+                @Html.ActionLink("  ", "ShowSelectorPlantilla", "Orden", new { idPaciente = item.IdPaciente, item.NroDocumento, Nombre = item.Nombres + " " + item.ApellidoPaterno + " " + item.ApellidoMaterno }, new { @class = "btn btn-default btn-block fa fa-file-archive-o", style = "font-size: 13px", onclick = "selectorPlantilla(this); return false; " })
+            </td>*@
+        }
+
+        <td>
+            <button class="btn btn-default btn-block fa fa-user-md" id="Referenciar"
+                    data-toggle="collapse" data-target="#RefPaciente"
+                    onclick="Referenciar('@item.IdPaciente')" data-sIdPaciente="@item.IdPaciente"></button>
+        </td>
+        <td>
+            @Html.ActionLink(" ", "Edit", "Paciente", new { idPaciente = item.IdPaciente, ViewBag.RegistroOrdenRecepcion }, new { @class = "btn btn-default btn-block fa fa-pencil-square-o ", style = "font-size: 13px" })
+        </td>
+        <td>
+            @*<button class="HCPaciente btn btn-default btn-sm" data-nrodocumento="@item.NroDocumento"
+                    data-toggle="collapse" data-target="#HisClinica"
+                    href="@Url.Action("ShowHistoriaClinicaPaciente", "Paciente")">
+                Hist. de Laboratorio
+            </button>*@
+            <button class="btn btn-default btn-block fa fa-user-md" id="HCPaciente"
+                    data-toggle="collapse" data-target="#HisClinica"
+                    href="@Url.Action("ShowHistoriaClinicaPaciente", "Paciente")" data-nrodocumento="@item.NroDocumento"></button>
+        </td>
+        <td>
+            <button class="btn btn-default  btn-block fa fa-book" id="HCPacienteNetLab1"
+                    data-toggle="collapse" data-target="#HisNetLab1" onclick="Paginacion()"
+                    href="@Url.Action("ShowInformacionNetLabv1", "Paciente")" data-nrodocumento="@item.NroDocumento"></button>
+        </td>
+    </tr>
+        }
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    if (!reniec)
+    {
+        ViewBag.notFound = "Servicio de Reniec no operativo, por favor ingrese a la opción NUEVO para registrar a su paciente";
+    }
+    <div class="alert alert-danger">@ViewBag.notFound</div>
+}
+
+<br />
+<br />
+<div id="HisClinica" class="table-responsive">
+    @foreach (var item in Model)
+    {
+        if (item.EESSOrigen != null)
+        {
+            @Html.Partial("_Busqueda", (Model.Paciente)ViewBag.Paciente)
+        }
+    }
+</div>
+<div id="HisNetLab1" class="table-responsive">
+    @foreach (var item in Model)
+    {
+        if (item.EESSOrigen != null)
+        {
+            @Html.Partial("_PacienteNetLabv1", (Model.Paciente)ViewBag.Paciente)
+        }
+    }
+</div>
+<div id="RefPaciente" class="table-responsive">
+
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<div id="dialog-edit" style="display: none">
+</div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/App/Paciente.js")
+    @Scripts.Render("~/Scripts/App/NetLab.js")
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+@Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dtPaciente').DataTable({
+                //"scrollY": "100%,
+                //"scrollX": "100%",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+
+            
+        });
+    </script>
+}
+

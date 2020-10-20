@@ -1,0 +1,39 @@
+﻿@using Model.ViewModels
+@model List<OrdenMuestraRecepcionados>
+
+    <div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-md-2">Código de Muestra</th>
+                        <th class="col-md-1">Paciente</th>
+                        <th class="col-md-2">Motivos de Rechazo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var item = Model[i];
+                        <tr>
+                            <td>
+                                @item.CodigoMuestra
+                                @Html.Hidden(string.Format("OrdenMuestra[{0}].IdOrdenMuestra", i), item.IdOrdenMuestra)
+                            </td>
+                            <td>@item.Paciente</td>
+                            <td>
+                                @Html.DropDownList(string.Format("OrdenMuestra[{0}].MotivoRechazo", i), ((List<SelectListItem>)ViewBag.MotivosRechazo).Select(x => new SelectListItem { Value = x.Value, Text = x.Text }), new { @disabled = "disabled", @class = "motivorechazoddl motivorechazoddl" + item.IdOrdenMuestra, @multiple = "multiple" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 col-md-3">
+            <div class="row clearboth">
+                <div class="col-xs-12 col-md-4">
+                    <button class="btn btn-primary" id="btnExportar" value="Exportar">Exportar</button>
+                </div>
+            </div>
+        </div>
+    </div>

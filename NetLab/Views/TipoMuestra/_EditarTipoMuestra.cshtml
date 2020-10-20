@@ -1,0 +1,82 @@
+﻿@*  Descripción: Vista, muestra la pantalla para la edición de datos de tipo de muestra / Criterio Rechazo.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model Model.TipoMuestra
+
+@using (Html.BeginForm("EditarTipoMuestra", "TipoMuestra", new { ViewBag.page, ViewBag.search }, FormMethod.Post, new { @id = "formEditarTipoMuestra" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombre, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">
+                <label class="text-danger" style="font-size: 14px">*</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.descripcion, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control", @rows = 4 } })
+                @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nemo, new { @class = "control-label col-md-4" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.nemo, new { htmlAttributes = new { @class = "form-control", style = "width:100px" } })
+                @Html.ValidationMessageFor(model => model.nemo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Activo: ", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @if (Model.Estado == 1)
+                {
+                    @Html.CheckBox("chkActivoRol", true)
+                }
+                else
+                {
+                    @Html.CheckBox("chkActivoRol", false)
+                }
+            </div>
+        </div>
+        <input type="hidden" id="someDataFromPartialSomehow" value="@Model.nombre" />
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-7">
+                @*<input type="submit" value="Guardar" id="btnGuardar" class="btn-link" onclick="return ValidaCampoRequerido();"/>*@
+
+                <button type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary" onclick="return ValidaCampoRequerido();"> <span class="fa fa-floppy-o" aria-hidden="true"></span> Guardar </button>
+
+
+                @*<input type="button" value="Regresar" id="btnCerrar" class="btn-link hidden" />*@
+
+
+                <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-window-close" aria-hidden="true"></span> Cerrar </button>
+            </div>
+        </div>
+    </div>
+}
+<div id="TipoMuestraDialog">
+</div>
+<div>
+    @*@Html.ActionLink("Retroceder", "Index", new { ViewBag.page, ViewBag.search })*@
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

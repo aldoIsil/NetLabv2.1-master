@@ -1,0 +1,173 @@
+﻿@*  Descripción: Vista, muestra el popup para mostrar la informacion de los resultados
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@using NetLab.Helpers;
+@model Model.Orden
+
+<h4 class="center">Orden de An&aacute;lisis @Model.codigoOrden</h4>
+<input type="hidden" value="@Model.idOrden" id="CodigoOrdenEnvioRespuesta" name="CodigoOrdenEnvioRespuesta" />
+<br />
+<div class="cont-line">
+
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Motivo</label><br />
+            <span>@Model.Proyecto.Nombre</span>
+        </div>
+    </div>
+
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>EESS/LAB de Origen</label><br />
+            <span>@Model.establecimiento.Nombre</span>
+        </div>
+    </div>
+    <!--Establecimiento-->
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Fecha de Solicitud</label><br />
+            <span>@Model.fechaSolicitud.ToString().Substring(0, 10) </span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Tipo - Nro. Documento</label><br />
+            <span>@Model.Paciente.tipoDocumen @Model.Paciente.NroDocumento </span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Nombres y Apellidos Paciente</label><br />
+            <span>@Model.Paciente.Nombres</span>
+        </div>
+    </div>
+    <div class="block-line headerRegRes">
+        <div class="form-group">
+            <label>Edad</label><br />
+            <span>@Model.Paciente.edadPaciente</span>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs navbar-btn btn-info nav-justified">
+    <li class="active"><a data-toggle="tab" href="#Resultado">Resultados</a></li>
+    <li><a data-toggle="tab" href="#HistorialPaciente" onclick="HPacienteVerificadorClick(@Model.Paciente.NroDocumento)">Historial Paciente</a></li>
+</ul>
+<div class="tab-content">
+    <div id="Resultado" class="tab-pane fade in active">
+        <h3 class="text-primary">Verificación Resultados Pendientes</h3>
+        @if (ViewBag.IsSearch)
+        {
+            if (Model != null)
+            {
+                if (Model.resultadosList.Any())
+                {
+                    <div class="table-wrapper-scroll-x my-custom-scrollbar">
+                        <table id="tblResultados">
+                            <thead>
+                                <tr class="rowExamen">
+                                    <th class="rowExamen1">Enfermedad</th>
+                                    <th class="rowExamen2">Examen</th>
+                                    <th class="rowExamen2">Descripcion</th>
+                                    <th class="rowExamen">Metodo</th>
+                                    <th class="rowExamen">Codigo Muestra</th>
+                                    <th class="rowExamen">Tipo Muestra</th>
+                                    <th class="rowExamen3">Fecha-Hora Obtencion</th>
+                                    <th class="rowExamen3">Fecha-Hora Recepcion ROM</th>
+                                    <th class="rowExamen3">Fecha-Hora Recepcion LAB</th>
+                                    <th class="rowExamen3">Fecha Resultado</th>
+                                    <th class="rowExamen">Analista</th>
+                                    <th class="rowExamen"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.resultadosList)
+                                {
+                                    var nomFila = "fila_" + @item.idOrdenExamen;
+
+                                    <tr id=@nomFila style=@item.estiloColor>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Enfermedad)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Examen)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NombreExamen)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Metodo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CodigoMuestra)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NombreMuestra)
+                                        </td>
+                                        <td>
+                                            @item.fechaColeccion.ToString("dd/MM/yyyy") - @item.horaColeccionStr
+                                        </td>
+                                        <td>
+                                            @item.fechaRecepcion.ToString("dd/MM/yyyy") - @item.horaRecepcionStr
+                                        </td>
+                                        <td>
+                                            @item.fechaRecepcionP.ToString("dd/MM/yyyy") - @item.horaRecepcionPStr
+                                        </td>
+                                        <td style="text-align: center">
+                                            @item.fechaResultado.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Analista)
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="resultados" value="@item.idOrdenExamen" onclick="verDetalle(true);" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                        <div id="divDetalle">
+                        </div>
+                    
+                }
+                else
+                {
+        <br />
+        <div class="text-center">
+            @Html.EmptyTable("No tiene resultados pendientes")
+        </div>
+        <br />
+                }
+            }
+
+        }
+    </div>
+    <div id="HistorialPaciente" class="tab-pane fade">
+        <div id="DatoPaciente">
+        </div>       
+    </div>
+</div>
+
+@*<div class="linksForm">
+        <label id="CerrarPopUp" class="btn-link">Cerrar</label>
+    </div>*@
+
+<style type="text/css" media="all">
+    .comentWidth {
+        width: 850px !important;
+    }
+
+</style>
+
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.alerts/jquery.alerts.js")
+    @Scripts.Render("~/Scripts/jquery.sumoselect.min.js")
+}

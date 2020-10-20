@@ -1,0 +1,51 @@
+﻿<div style="clear:both;"></div>
+@if (string.IsNullOrEmpty(ViewBag.NoDataMessage))
+{
+    <br />
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <!--       Chart.js Canvas Tag -->
+            <canvas id="divbarChart"></canvas>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var canvasBar = document.getElementById("divbarChart");
+            var ctxBar = canvasBar.getContext('2d');
+
+            // Global Options:
+            Chart.defaults.global.defaultFontColor = 'maroon';
+            Chart.defaults.global.defaultFontSize = 16;
+
+            var barChartData = {
+                labels: @Html.Raw(ViewBag.Labels),
+                datasets: [
+                    {
+                        fillColor: "#8DB986",
+                        strokeColor: "#8DB986",
+                        highlightFill: "#ACCE91",
+                        highlightStroke: "#ACCE91",
+                        data: @Html.Raw(ViewBag.DataNumero),
+                    }
+                ],
+                scaleGridLineColor: "#000"
+            }
+            
+            var options = {
+                title:{display:false},
+                rotation: -0.7 * Math.PI
+            };
+
+            var myBarChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: barChartData,
+                options: options
+            });
+        });
+    </script>
+}
+else
+{
+    <div>@ViewBag.NoDataMessage</div>
+}

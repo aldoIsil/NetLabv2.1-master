@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function subst() {
+            var vars = {};
+            var x = document.location.search.substring(1).split('&');
+            for (var i in x) { var z = x[i].split('=', 2); vars[z[0]] = unescape(z[1]); }
+            var x = ['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection', 'date', 'isodate', 'time', 'idFooter'];
+            for (var i in x) {
+                var y = document.getElementsByClassName(x[i]);
+                for (var j = 0; j < y.length; ++j) y[j].textContent = vars[x[i]];
+            }
+        }
+    </script>
+</head>
+<body  onload="subst()">
+    <table style="width:100%; font-family: Consolas">
+        <tr>
+            <td colspan="2">Página <span class="page"></span>  de  <span class="topage"></span></td>
+            <td colspan="5" style="text-align:right">
+                <span> Fecha y Hora de impresión: </span><span class="date"></span> - <span class="time"></span>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="7" style="text-align:center">    
+                <br />            
+                <span>https://netlabv2.ins.gob.pe</span>                
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

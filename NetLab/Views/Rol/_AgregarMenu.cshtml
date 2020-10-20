@@ -1,0 +1,81 @@
+﻿@*  Descripción: Vista, permite agregar un nuevo Menu.
+    Author: Terceros.
+    Fecha Creacion: 01/01/2017
+    Fecha Modificación: 02/02/2017.
+    Modificación: Se agregaron comentarios.*@
+@model PagedList.IPagedList<Model.Menu>
+
+@using PagedList.Mvc;
+
+@using (Ajax.BeginForm("AgregarMenu", new { ViewBag.idRol }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+{
+    <label>Ingrese filtro de búsqueda:</label>
+    @Html.TextBox("search", (string)ViewBag.search)
+    @*<input type="submit" value="Buscar" class="btn-link" />*@
+
+    <button class="btn btn-primary" type="submit" id="btnBuscar" value="Buscar"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
+
+
+
+
+}
+<br />
+@using (Html.BeginForm("GuardarMenu", "Rol", new { ViewBag.idRol }, FormMethod.Post, new { @id = "formAgregarRolMenu" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model != null)
+    {
+
+        <table class="table">
+            <tr>
+                <th>
+                    <input type='checkbox' name="chkAll" id="chkAll" />
+                </th>
+                <th>Menú</th>
+
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width:15px">
+                        <input type="checkbox" name="menues" value="@item.idMenu" class="chkMenuAgregar" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombre)
+                    </td>
+                </tr>
+            }
+        </table>
+        @*<input id="btnVolverRolMenu" type="submit" value="Volver a la Lista" class="btn-link" />*@
+
+        @*<input type="Submit" value="Guardar" class="btn btn-primary" id="guardarMenu" />*@
+
+
+
+
+        <button type="submit" value="Guardar" id="guardarMenu" class="btn btn-primary"><span class="fa fa-floppy-o"></span> Guardar</button>
+        <button type="button" value="Regresar" id="btnCerrar" class="btn btn-default hidden"><span class="fa fa-angle-double-left"></span> Regresar</button>
+
+
+
+
+                @Html.PagedListPager(Model, page => Url.Action("AgregarMenu", new { page, ViewBag.search, ViewBag.idRol }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "dialog-edit" }))
+    }
+    else
+    {
+        @*<input id="btnVolverRolMenu2" type="submit" value="Volver a la Lista" class="btn-link" />*@
+    }
+
+
+}
+
+@*seleccionar todos los checkbox*@
+
+<script type="text/javascript">
+$('#chkAll').click(function (e) {
+    var table = $(e.target).closest('table');
+    $('td input:checkbox', table).prop('checked', this.checked);
+});    </script>
